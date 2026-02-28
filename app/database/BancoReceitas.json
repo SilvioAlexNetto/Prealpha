@@ -1,0 +1,5341 @@
+[
+    {
+        "nome": "Omelete com Abacate e Tomate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Abacate",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 5,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Bata os ovos.",
+            "Adicione abacate e tomate.",
+            "Cozinhe com azeite até dourar."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Pão Integral com Ricota e Espinafre",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Refogue levemente o espinafre.",
+            "Monte no pão com ricota."
+        ],
+        "tempo_preparo": "8 minutos"
+    },
+    {
+        "nome": "Vitamina de Banana com Abacate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Abacate",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Bata todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Iogurte Natural com Morango e Aveia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Iogurte natural",
+                "quantidade": 170,
+                "unidade": "g"
+            },
+            {
+                "nome": "Morango",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Misture todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Tapioca com Frango e Mussarela",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Goma de tapioca",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Queijo mussarela",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Prepare a tapioca.",
+            "Adicione frango e mussarela.",
+            "Dobre e sirva."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Cuscuz com Tomate e Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Flocão de milho",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o cuscuz.",
+            "Adicione tomate e ricota."
+        ],
+        "tempo_preparo": "12 minutos"
+    },
+    {
+        "nome": "Panqueca de Aveia com Banana e Chia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Chia",
+                "quantidade": 10,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Amasse a banana.",
+            "Misture com ovo, aveia e chia.",
+            "Grelhe até dourar."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Pão Integral com Frango e Mussarela",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Queijo mussarela",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Monte o frango e mussarela no pão."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Mingau de Aveia com Abacate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Aveia",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Abacate",
+                "quantidade": 60,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe a aveia com leite.",
+            "Finalize com abacate."
+        ],
+        "tempo_preparo": "8 minutos"
+    },
+    {
+        "nome": "Omelete com Espinafre e Tomate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Bata os ovos.",
+            "Adicione espinafre e tomate.",
+            "Cozinhe até dourar."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Vitamina de Mamão com Aveia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Mamão",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Bata todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Tapioca com Ovo e Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Goma de tapioca",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Prepare a tapioca.",
+            "Grelhe o ovo.",
+            "Adicione ricota."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Cuscuz com Frango e Tomate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Flocão de milho",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o cuscuz.",
+            "Adicione frango e tomate."
+        ],
+        "tempo_preparo": "12 minutos"
+    },
+    {
+        "nome": "Pão Integral com Banana e Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Amasse a banana.",
+            "Espalhe no pão com ricota."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Iogurte com Morango e Banana",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Iogurte natural",
+                "quantidade": 170,
+                "unidade": "g"
+            },
+            {
+                "nome": "Morango",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            }
+        ],
+        "modo_preparo": [
+            "Misture todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Omelete com Frango e Tomate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 5,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Bata os ovos.",
+            "Adicione frango e tomate.",
+            "Aqueça a frigideira com azeite.",
+            "Cozinhe até dourar."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Pão Integral com Abacate e Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Abacate",
+                "quantidade": 70,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Amasse o abacate.",
+            "Espalhe no pão.",
+            "Adicione ricota."
+        ],
+        "tempo_preparo": "6 minutos"
+    },
+    {
+        "nome": "Vitamina de Morango com Leite",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Morango",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Bata todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Iogurte Natural com Banana e Chia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Iogurte natural",
+                "quantidade": 170,
+                "unidade": "g"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Chia",
+                "quantidade": 10,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Corte a banana.",
+            "Misture com iogurte e chia."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Tapioca com Ovo e Mussarela",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Goma de tapioca",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Queijo mussarela",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Prepare a tapioca.",
+            "Grelhe o ovo.",
+            "Adicione mussarela e dobre."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Cuscuz com Frango e Azeite",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Flocão de milho",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 5,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o cuscuz.",
+            "Adicione frango.",
+            "Finalize com azeite."
+        ],
+        "tempo_preparo": "12 minutos"
+    },
+    {
+        "nome": "Panqueca de Aveia com Morango",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Morango",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Misture ovo e aveia.",
+            "Grelhe a massa.",
+            "Sirva com morango."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Pão Integral com Frango e Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Monte o frango e ricota no pão."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Mingau de Aveia com Banana",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Aveia",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe aveia com leite.",
+            "Finalize com banana fatiada."
+        ],
+        "tempo_preparo": "8 minutos"
+    },
+    {
+        "nome": "Omelete com Espinafre e Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Bata os ovos.",
+            "Adicione espinafre e ricota.",
+            "Cozinhe até dourar."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Vitamina de Abacate com Leite",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Abacate",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Bata tudo até ficar homogêneo."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Tapioca com Frango e Tomate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Goma de tapioca",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Prepare a tapioca.",
+            "Adicione frango e tomate.",
+            "Dobre e sirva."
+        ],
+        "tempo_preparo": "8 minutos"
+    },
+    {
+        "nome": "Cuscuz com Ovo e Mussarela",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Flocão de milho",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Queijo mussarela",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o cuscuz.",
+            "Grelhe o ovo.",
+            "Adicione mussarela."
+        ],
+        "tempo_preparo": "12 minutos"
+    },
+    {
+        "nome": "Pão Integral com Banana e Aveia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Amasse a banana.",
+            "Espalhe no pão.",
+            "Finalize com aveia."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Iogurte com Mamão e Chia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Iogurte natural",
+                "quantidade": 170,
+                "unidade": "g"
+            },
+            {
+                "nome": "Mamão",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Chia",
+                "quantidade": 10,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Misture todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Omelete com Tomate e Mussarela",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Queijo mussarela",
+                "quantidade": 30,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 5,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Bata os ovos.",
+            "Adicione tomate e mussarela.",
+            "Aqueça a frigideira com azeite.",
+            "Cozinhe até dourar."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Pão Integral com Ovo Mexido e Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Prepare ovos mexidos.",
+            "Monte no pão com ricota."
+        ],
+        "tempo_preparo": "8 minutos"
+    },
+    {
+        "nome": "Vitamina de Banana com Morango",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Morango",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Bata todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Iogurte com Abacate e Aveia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Iogurte natural",
+                "quantidade": 170,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abacate",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Misture todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Tapioca com Ricota e Espinafre",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Goma de tapioca",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Prepare a tapioca.",
+            "Adicione ricota e espinafre.",
+            "Dobre e sirva."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Cuscuz com Ovo e Tomate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Flocão de milho",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o cuscuz.",
+            "Grelhe o ovo.",
+            "Sirva com tomate."
+        ],
+        "tempo_preparo": "12 minutos"
+    },
+    {
+        "nome": "Panqueca de Aveia com Abacate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abacate",
+                "quantidade": 60,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Misture ovo e aveia.",
+            "Grelhe.",
+            "Sirva com abacate."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Pão Integral com Frango e Tomate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Monte o frango e tomate no pão."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Mingau de Aveia com Morango",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Aveia",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Morango",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe aveia com leite.",
+            "Finalize com morango."
+        ],
+        "tempo_preparo": "8 minutos"
+    },
+    {
+        "nome": "Omelete com Frango e Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Bata os ovos.",
+            "Adicione frango e ricota.",
+            "Cozinhe até dourar."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Vitamina de Mamão com Banana",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Mamão",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Bata todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Tapioca com Mussarela e Espinafre",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Goma de tapioca",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Queijo mussarela",
+                "quantidade": 30,
+                "unidade": "g"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Prepare a tapioca.",
+            "Adicione mussarela e espinafre."
+        ],
+        "tempo_preparo": "8 minutos"
+    },
+    {
+        "nome": "Cuscuz com Frango e Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Flocão de milho",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o cuscuz.",
+            "Adicione frango e ricota."
+        ],
+        "tempo_preparo": "12 minutos"
+    },
+    {
+        "nome": "Pão Integral com Abacate e Mussarela",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Abacate",
+                "quantidade": 70,
+                "unidade": "g"
+            },
+            {
+                "nome": "Queijo mussarela",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Amasse o abacate.",
+            "Monte com mussarela no pão."
+        ],
+        "tempo_preparo": "6 minutos"
+    },
+    {
+        "nome": "Iogurte com Banana e Aveia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Iogurte natural",
+                "quantidade": 170,
+                "unidade": "g"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Misture todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Omelete com Ricota e Tomate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 5,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Bata os ovos.",
+            "Misture a ricota e o tomate picado.",
+            "Aqueça a frigideira com azeite.",
+            "Cozinhe até firmar e dourar."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Pão Integral com Ovo e Mussarela",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Queijo mussarela",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe o ovo.",
+            "Monte no pão com mussarela.",
+            "Sirva quente."
+        ],
+        "tempo_preparo": "8 minutos"
+    },
+    {
+        "nome": "Vitamina de Banana com Aveia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Bata todos os ingredientes.",
+            "Sirva imediatamente."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Iogurte Natural com Mamão e Aveia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Iogurte natural",
+                "quantidade": 170,
+                "unidade": "g"
+            },
+            {
+                "nome": "Mamão",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Misture todos os ingredientes em uma tigela."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Tapioca com Frango e Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Goma de tapioca",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Frango desfiado",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Prepare a tapioca na frigideira.",
+            "Adicione frango e ricota.",
+            "Dobre e sirva."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Cuscuz com Ovo e Azeite",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Flocão de milho",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 5,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Hidrate e cozinhe o flocão.",
+            "Grelhe o ovo.",
+            "Finalize com azeite."
+        ],
+        "tempo_preparo": "12 minutos"
+    },
+    {
+        "nome": "Panqueca de Aveia e Banana",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Amasse a banana.",
+            "Misture com ovo e aveia.",
+            "Grelhe até dourar."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Pão Integral com Abacate e Ovo",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Abacate",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            }
+        ],
+        "modo_preparo": [
+            "Amasse o abacate.",
+            "Grelhe o ovo.",
+            "Monte no pão."
+        ],
+        "tempo_preparo": "8 minutos"
+    },
+    {
+        "nome": "Iogurte com Morango e Chia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Iogurte natural",
+                "quantidade": 170,
+                "unidade": "g"
+            },
+            {
+                "nome": "Morango",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Chia",
+                "quantidade": 10,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Misture todos os ingredientes."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Mingau de Aveia com Leite",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Aveia",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Canela",
+                "quantidade": 2,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe a aveia com leite até engrossar.",
+            "Finalize com canela."
+        ],
+        "tempo_preparo": "7 minutos"
+    },
+    {
+        "nome": "Omelete com Espinafre e Mussarela",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Queijo mussarela",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Bata os ovos.",
+            "Adicione espinafre e mussarela.",
+            "Cozinhe até dourar."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Pão Integral com Ricota e Tomate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatia"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 50,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Espalhe a ricota no pão.",
+            "Adicione tomate fatiado."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Vitamina de Mamão com Leite",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Mamão",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Aveia",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Bata tudo no liquidificador."
+        ],
+        "tempo_preparo": "5 minutos"
+    },
+    {
+        "nome": "Tapioca com Mussarela e Tomate",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Goma de tapioca",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Queijo mussarela",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Prepare a tapioca.",
+            "Adicione mussarela e tomate.",
+            "Dobre e sirva."
+        ],
+        "tempo_preparo": "8 minutos"
+    },
+    {
+        "nome": "Cuscuz com Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Flocão de milho",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 5,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o cuscuz.",
+            "Finalize com ricota e azeite."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Pão Integral com Ovo Mexido",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatias"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidades"
+            },
+            {
+                "nome": "Azeite de oliva",
+                "quantidade": 1,
+                "unidade": "colher de chá"
+            }
+        ]
+    },
+    {
+        "nome": "Mingau de Aveia com Banana",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Aveia em flocos",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            }
+        ]
+    },
+    {
+        "nome": "Iogurte Natural com Mamão",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Iogurte natural",
+                "quantidade": 170,
+                "unidade": "g"
+            },
+            {
+                "nome": "Mamão",
+                "quantidade": 0.5,
+                "unidade": "unidade"
+            }
+        ]
+    },
+    {
+        "nome": "Tapioca com Queijo Branco",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Goma de tapioca",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Queijo branco",
+                "quantidade": 40,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Vitamina de Banana com Aveia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 250,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Aveia em flocos",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Cuscuz com Ovo",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Cuscuz",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 1,
+                "unidade": "unidade"
+            }
+        ]
+    },
+    {
+        "nome": "Pão Francês com Queijo",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão francês",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Queijo muçarela",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Omelete Simples",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 30,
+                "unidade": "ml"
+            },
+            {
+                "nome": "achocolatados",
+                "quantidade": 30,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Quebre os ovos em um recipiente.",
+            "Bata levemente os ovos com um garfo ou fouet.",
+            "Adicione o leite e misture até ficar homogêneo.",
+            "Aqueça uma frigideira antiaderente em fogo médio.",
+            "Despeje a mistura na frigideira.",
+            "Cozinhe até firmar e dourar levemente.",
+            "Dobre ou vire a omelete e finalize o cozimento.",
+            "Sirva quente."
+        ],
+        "tempo_preparo": "10 minutos"
+    },
+    {
+        "nome": "Frutas com Aveia",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Maçã",
+                "quantidade": 1,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Aveia em flocos",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Iogurte com Granola",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Iogurte natural",
+                "quantidade": 170,
+                "unidade": "g"
+            },
+            {
+                "nome": "Granola",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Pão Integral com Ricota",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Pão integral",
+                "quantidade": 2,
+                "unidade": "fatias"
+            },
+            {
+                "nome": "Ricota",
+                "quantidade": 50,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Tapioca com Banana",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Goma de tapioca",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Banana",
+                "quantidade": 1,
+                "unidade": "unidade"
+            }
+        ]
+    },
+    {
+        "nome": "Ovo Cozido com Pão",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidades"
+            },
+            {
+                "nome": "Pão integral",
+                "quantidade": 1,
+                "unidade": "fatia"
+            }
+        ]
+    },
+    {
+        "nome": "Vitamina de Mamão com Leite",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Mamão",
+                "quantidade": 0.5,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 250,
+                "unidade": "ml"
+            }
+        ]
+    },
+    {
+        "nome": "Aveia com Leite e Maçã",
+        "categoria": "café",
+        "ingredientes": [
+            {
+                "nome": "Aveia em flocos",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Leite",
+                "quantidade": 200,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Maçã",
+                "quantidade": 1,
+                "unidade": "unidade"
+            }
+        ]
+    },
+    {
+        "nome": "Frango com Abobrinha e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Grelhe o frango.",
+            "Refogue a abobrinha em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Carne Moída com Espinafre e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Carne moída bovina",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue a carne moída.",
+            "Refogue o espinafre em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia com Couve e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Couve",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe arroz e feijão.",
+            "Refogue a couve em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Brócolis e Batata Doce",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata doce",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe a batata doce e o arroz.",
+            "Grelhe o frango.",
+            "Cozinhe o brócolis no vapor.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Omelete com Tomate e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Bata os ovos e misture com tomate picado.",
+            "Cozinhe em frigideira com azeite.",
+            "Sirva com arroz e feijão."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Carne Bovina com Abobrinha e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Patinho bovino",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue a carne até dourar.",
+            "Refogue a abobrinha em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Frango com Repolho e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Repolho",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Grelhe o frango.",
+            "Refogue o repolho em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia com Cenoura e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe arroz e feijão.",
+            "Refogue a cenoura em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Brócolis e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Grelhe o frango.",
+            "Cozinhe o brócolis no vapor.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Ovos Mexidos com Espinafre e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue o espinafre em azeite.",
+            "Adicione os ovos e mexa até cozinhar.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Frango com Cenoura e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Grelhe o frango.",
+            "Refogue a cenoura em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Carne Moída com Abóbora e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Carne moída bovina",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abóbora",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue a carne moída.",
+            "Cozinhe a abóbora até ficar macia.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Tilápia com Brócolis e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe arroz e feijão.",
+            "Cozinhe o brócolis no vapor.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Couve e Batata Doce",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Couve",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata doce",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe a batata doce e o arroz.",
+            "Grelhe o frango.",
+            "Refogue a couve em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Omelete com Abobrinha e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Bata os ovos e misture com abobrinha ralada.",
+            "Cozinhe em frigideira com azeite.",
+            "Sirva com arroz e feijão."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Carne Bovina com Espinafre e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Patinho bovino",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue a carne até dourar.",
+            "Refogue o espinafre em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Frango com Repolho e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Repolho",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Grelhe o frango.",
+            "Refogue o repolho em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia com Cenoura e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe arroz e feijão.",
+            "Refogue a cenoura em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Brócolis e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Grelhe o frango.",
+            "Cozinhe o brócolis no vapor.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Ovos Mexidos com Couve e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Couve",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue a couve em azeite.",
+            "Adicione os ovos e mexa até cozinhar.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Frango com Abóbora e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abóbora",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Grelhe o frango até dourar.",
+            "Cozinhe a abóbora até ficar macia.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Carne Moída com Cenoura e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Carne moída bovina",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue a carne moída.",
+            "Adicione a cenoura ralada e cozinhe.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia com Abobrinha e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe arroz e feijão.",
+            "Refogue a abobrinha.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Brócolis e Batata Doce",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata doce",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe a batata doce e o arroz.",
+            "Grelhe o frango.",
+            "Cozinhe o brócolis.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Omelete com Espinafre e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue o espinafre em azeite.",
+            "Adicione os ovos e mexa até cozinhar.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Carne Bovina com Couve e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Patinho bovino",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Couve",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue a carne até dourar.",
+            "Refogue a couve em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Frango com Repolho e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Repolho",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Grelhe o frango.",
+            "Refogue o repolho em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia com Cenoura e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe arroz e feijão.",
+            "Refogue a cenoura.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Brócolis e Batata Inglesa",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata inglesa",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe batata e arroz.",
+            "Grelhe o frango.",
+            "Cozinhe o brócolis.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Ovos Cozidos com Couve e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Couve",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe os ovos.",
+            "Cozinhe arroz e feijão.",
+            "Refogue a couve em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Frango com Abobrinha e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Grelhe o frango.",
+            "Refogue a abobrinha em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Carne Moída com Brócolis e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Carne moída bovina",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Refogue a carne moída.",
+            "Cozinhe o brócolis no vapor.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia Grelhada com Batata Doce e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata doce",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Asse ou grelhe a tilápia.",
+            "Cozinhe a batata doce e o arroz.",
+            "Cozinhe o feijão.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Frango com Espinafre e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Grelhe o frango.",
+            "Refogue o espinafre em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Omelete com Tomate e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Bata os ovos e misture com tomate picado.",
+            "Cozinhe em frigideira com azeite.",
+            "Sirva com arroz e feijão."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Carne Bovina com Abobrinha e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Patinho bovino",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue o patinho até dourar.",
+            "Refogue a abobrinha em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Frango com Repolho e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Repolho",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Grelhe o frango.",
+            "Refogue o repolho em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia com Cenoura e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe arroz e feijão.",
+            "Refogue a cenoura em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Brócolis e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Grelhe o frango.",
+            "Cozinhe o brócolis no vapor.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Ovos Mexidos com Espinafre e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue o espinafre em azeite.",
+            "Adicione os ovos e mexa até cozinhar.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Frango com Cenoura e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Grelhe o frango.",
+            "Refogue a cenoura em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Carne Moída com Abobrinha e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Carne moída bovina",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Refogue a carne moída até cozinhar.",
+            "Adicione a abobrinha e cozinhe.",
+            "Sirva no prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia com Couve e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Couve",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe o arroz e o feijão.",
+            "Refogue a couve em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Batata Doce e Feijão Preto",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata doce",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe a batata doce.",
+            "Cozinhe o arroz e o feijão.",
+            "Grelhe o frango.",
+            "Sirva equilibradamente."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Omelete com Brócolis e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Cozinhe o brócolis.",
+            "Bata os ovos e misture com brócolis.",
+            "Cozinhe em frigideira com azeite.",
+            "Sirva com arroz e feijão."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Carne Bovina com Repolho e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Patinho bovino",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Repolho",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe arroz e feijão.",
+            "Refogue o patinho.",
+            "Refogue o repolho em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Frango com Abóbora e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abóbora",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e feijão.",
+            "Grelhe o frango.",
+            "Cozinhe a abóbora.",
+            "Sirva no prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Tilápia com Espinafre e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe o arroz e feijão.",
+            "Refogue o espinafre.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Brócolis e Batata Inglesa",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata inglesa",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe a batata e o arroz.",
+            "Grelhe o frango.",
+            "Cozinhe o brócolis.",
+            "Sirva juntos."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Ovos Cozidos com Couve e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Couve",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe os ovos.",
+            "Cozinhe arroz e feijão.",
+            "Refogue a couve.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Frango com Quiabo e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Quiabo",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Refogue o frango até dourar.",
+            "Cozinhe o quiabo até ficar macio.",
+            "Monte o prato e finalize com azeite."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Carne Moída com Cenoura e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Carne moída bovina",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz integral e o feijão.",
+            "Refogue a carne moída até cozinhar.",
+            "Adicione a cenoura ralada e cozinhe.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia com Abobrinha e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe o arroz e o feijão.",
+            "Refogue a abobrinha em azeite.",
+            "Sirva todos os alimentos juntos."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Couve Refogada e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Couve",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Grelhe o frango.",
+            "Refogue a couve em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Omelete com Cenoura e Feijão",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Bata os ovos e misture com cenoura ralada.",
+            "Cozinhe em frigideira com azeite.",
+            "Sirva com arroz e feijão."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Carne Bovina com Abóbora e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Patinho bovino",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abóbora",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Refogue o patinho até cozinhar.",
+            "Cozinhe a abóbora até macia.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Frango com Repolho e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Repolho",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Grelhe o frango.",
+            "Refogue o repolho em azeite.",
+            "Sirva no prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia com Cenoura e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Grelhe a tilápia.",
+            "Cozinhe o arroz e o feijão.",
+            "Refogue a cenoura em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Frango com Brócolis e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Grelhe o frango.",
+            "Cozinhe o brócolis no vapor.",
+            "Sirva todos juntos."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Ovos Mexidos com Espinafre e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Refogue o espinafre em azeite.",
+            "Adicione os ovos e mexa até cozinhar.",
+            "Sirva com arroz e feijão."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Frango Grelhado com Arroz Branco e Feijão Preto",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Alface",
+                "quantidade": 50,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão separadamente.",
+            "Tempere e grelhe o frango até dourar.",
+            "Lave e corte os vegetais.",
+            "Monte o prato e finalize a salada com azeite."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Carne Moída com Abóbora e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Carne moída bovina",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abóbora",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz integral e o feijão.",
+            "Refogue a carne moída até cozinhar completamente.",
+            "Cozinhe a abóbora até ficar macia.",
+            "Monte o prato com todos os ingredientes."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Tilápia Assada com Arroz e Salada de Cenoura",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Alface",
+                "quantidade": 50,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Asse a tilápia até dourar.",
+            "Cozinhe o arroz.",
+            "Rale a cenoura e lave a alface.",
+            "Monte o prato e finalize com azeite."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Omelete com Tomate e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cebola",
+                "quantidade": 50,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz integral.",
+            "Bata os ovos e misture tomate e cebola.",
+            "Cozinhe em frigideira com azeite até firmar.",
+            "Sirva com arroz integral."
+        ],
+        "tempo_preparo": "25 minutos"
+    },
+    {
+        "nome": "Frango Desfiado com Batata Inglesa e Feijão",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata inglesa",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe e desfie o frango.",
+            "Cozinhe a batata até ficar macia.",
+            "Cozinhe o arroz e o feijão.",
+            "Monte o prato equilibradamente."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Carne Bovina com Brócolis e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Patinho bovino",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Refogue o patinho até dourar.",
+            "Cozinhe o brócolis no vapor.",
+            "Monte o prato e finalize com azeite."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Frango com Abobrinha e Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Grelhe o frango até dourar.",
+            "Refogue a abobrinha em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Tilápia com Purê de Batata Doce e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata doce",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Alface",
+                "quantidade": 50,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Asse ou grelhe a tilápia.",
+            "Cozinhe e amasse a batata doce.",
+            "Cozinhe o arroz integral.",
+            "Sirva com salada temperada com azeite."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Ovos Cozidos com Arroz e Feijão",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe os ovos por 10 minutos.",
+            "Cozinhe o arroz e o feijão.",
+            "Rale a cenoura.",
+            "Monte o prato e finalize com azeite."
+        ],
+        "tempo_preparo": "30 minutos"
+    },
+    {
+        "nome": "Frango com Espinafre e Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão.",
+            "Grelhe o frango.",
+            "Refogue o espinafre em azeite.",
+            "Monte o prato."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Arroz Integral com Frango Grelhado e Salada",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Arroz integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Alface",
+                "quantidade": 50,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 50,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz integral até ficar macio.",
+            "Cozinhe o feijão até ficar macio.",
+            "Tempere o frango e grelhe até dourar.",
+            "Lave e corte os vegetais.",
+            "Monte o prato com arroz, feijão, frango e salada.",
+            "Finalize a salada com azeite."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Tilápia Grelhada com Batata Doce e Brócolis",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de tilápia",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata doce",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe a batata doce até ficar macia.",
+            "Cozinhe o arroz integral.",
+            "Grelhe a tilápia até dourar.",
+            "Cozinhe o brócolis no vapor.",
+            "Monte o prato e finalize com azeite."
+        ],
+        "tempo_preparo": "35 minutos"
+    },
+    {
+        "nome": "Carne Bovina Magra com Arroz e Feijão",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Patinho bovino",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz branco",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão preto",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz e o feijão separadamente.",
+            "Refogue o patinho até cozinhar completamente.",
+            "Refogue a abobrinha em azeite.",
+            "Monte o prato com todos os ingredientes."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Omelete de Espinafre com Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidade"
+            },
+            {
+                "nome": "Espinafre",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe o arroz integral.",
+            "Refogue o espinafre no azeite.",
+            "Bata os ovos e misture com o espinafre e tomate.",
+            "Cozinhe em frigideira até firmar.",
+            "Sirva com arroz integral."
+        ],
+        "tempo_preparo": "25 minutos"
+    },
+    {
+        "nome": "Frango Desfiado com Purê de Abóbora",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abóbora",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão carioca",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ],
+        "modo_preparo": [
+            "Cozinhe e desfie o frango.",
+            "Cozinhe a abóbora e amasse até formar purê.",
+            "Cozinhe o arroz e o feijão.",
+            "Monte o prato equilibrando os alimentos."
+        ],
+        "tempo_preparo": "40 minutos"
+    },
+    {
+        "nome": "Arroz, Feijão e Filé de Frango Grelhado",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite de oliva",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ]
+    },
+    {
+        "nome": "Carne Moída com Arroz e Cenoura",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Carne moída",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Frango Desfiado com Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Omelete com Arroz e Salada",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidades"
+            },
+            {
+                "nome": "Arroz",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 50,
+                "unidade": "g"
+            },
+            {
+                "nome": "Alface",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Peixe Grelhado com Arroz Branco",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de peixe",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Limão",
+                "quantidade": 20,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Frango Grelhado com Batata Doce",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata doce",
+                "quantidade": 200,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Carne Grelhada com Arroz Integral",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Carne bovina",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 100,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Arroz, Feijão e Ovo Cozido",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Arroz",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Feijão",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidades"
+            }
+        ]
+    },
+    {
+        "nome": "Frango Assado com Batata",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Frango",
+                "quantidade": 200,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata",
+                "quantidade": 200,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Macarrão Integral com Frango",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Macarrão integral",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Arroz com Lentilha",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Arroz",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Lentilha",
+                "quantidade": 100,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Frango com Legumes Refogados",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Carne Moída com Batata",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Carne moída",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata",
+                "quantidade": 200,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Peixe Assado com Legumes",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Filé de peixe",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Frango com Arroz e Brócolis",
+        "categoria": "almoço",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Sopa de Legumes com Frango",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata",
+                "quantidade": 100,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Omelete de Legumes",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidades"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 50,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cebola",
+                "quantidade": 30,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Frango Grelhado com Salada",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Filé de frango",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Alface",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 50,
+                "unidade": "g"
+            },
+            {
+                "nome": "Azeite de oliva",
+                "quantidade": 10,
+                "unidade": "ml"
+            }
+        ]
+    },
+    {
+        "nome": "Peixe Grelhado com Legumes",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Filé de peixe",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Sopa de Feijão Leve",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Feijão",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 60,
+                "unidade": "g"
+            },
+            {
+                "nome": "Alho",
+                "quantidade": 5,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Arroz Integral com Ovo Cozido",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Arroz integral",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Ovo",
+                "quantidade": 2,
+                "unidade": "unidades"
+            }
+        ]
+    },
+    {
+        "nome": "Frango Desfiado com Legumes",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Brócolis",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Ovos Mexidos com Tomate",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidades"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 60,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Sopa de Legumes Simples",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Batata",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Peixe Assado com Batata",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Filé de peixe",
+                "quantidade": 150,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata",
+                "quantidade": 150,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Frango com Arroz Integral",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Arroz integral",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Carne Moída com Legumes",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Carne moída",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Abobrinha",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Salada de Frango Desfiado",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Alface",
+                "quantidade": 40,
+                "unidade": "g"
+            },
+            {
+                "nome": "Tomate",
+                "quantidade": 50,
+                "unidade": "g"
+            }
+        ]
+    },
+    {
+        "nome": "Omelete Simples",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Ovo",
+                "quantidade": 3,
+                "unidade": "unidades"
+            },
+            {
+                "nome": "Azeite de oliva",
+                "quantidade": 5,
+                "unidade": "ml"
+            }
+        ]
+    },
+    {
+        "nome": "Sopa de Frango com Legumes",
+        "categoria": "jantar",
+        "ingredientes": [
+            {
+                "nome": "Peito de frango",
+                "quantidade": 120,
+                "unidade": "g"
+            },
+            {
+                "nome": "Cenoura",
+                "quantidade": 80,
+                "unidade": "g"
+            },
+            {
+                "nome": "Batata",
+                "quantidade": 100,
+                "unidade": "g"
+            }
+        ]
+    }
+]

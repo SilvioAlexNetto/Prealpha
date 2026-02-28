@@ -1,0 +1,43 @@
+Heath Care - uso de apenas uma pessoa
+
+how to use
+
+	Cria a conta
+	Dados do perfil
+	user - inseri itens - registra no BD
+	IA - valida os itens - valida restrições alimentar do perfil - valida o tipo de account - gera um cardapio para o mes de acordo com os itens inseridos - salva o cardapio
+	cardapio e processado e mostrado ao usuario
+
+Free Acont (0,00)
+	1 cardapio por mês;
+	não pode adicionar itens apos a geração do cardapio
+	1 ads por geração de cardapio (1 min)
+	1 ads ao entrar no app (30 seg)
+	ads de rodapé (infinito)
+
+Premiun Acount (09,99)
+	
+	sem ads
+	pode gerar mais de 1 cardapio por mês
+	pode adicionar itens ao estoque ao decorrer do mês
+	
+
+HUD
+
+	Perfil
+	Cardapio
+	Botão para comprar o Premiun Account
+		
+		EXCLUSIVO PREMIUM ACCOUNT
+		
+			Botão estoque (pode adicionar novos itens, pode gerar novos cardapios)
+
+			
+
+
+Tecnologias utilizadas
+
+	Backend - Python
+	Banco de dados - Python - Django
+	Frontend - Python - Kivy / KivyMD
+	IA - OpenAI API

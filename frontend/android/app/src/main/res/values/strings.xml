@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Health Pantry</string>
+    <string name="title_activity_main">Health Pantry</string>
+    <string name="package_name">com.silvionetto.HealthPantry</string>
+    <string name="custom_url_scheme">com.silvionetto.HealthPantry</string>
+</resources>
