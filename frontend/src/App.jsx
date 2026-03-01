@@ -5,7 +5,7 @@ import ModalTermos from "./components/ModalTermos";
 import ModalCadastroPerfil from "./components/ModalCadastroPerfil";
 import Perfil from "./pages/Perfil";
 import Loja from "./pages/Loja";
-const BASE_URL = "https://prealpha.onrender.com"
+
 
 /* =========================
    CONFIG TERMOS
@@ -13,6 +13,7 @@ const BASE_URL = "https://prealpha.onrender.com"
 const TERMOS_VERSAO_ATUAL = "1.2";
 
 function App() {
+  const BASE_URL = "https://prealpha.onrender.com"
   const [abaAtiva, setAbaAtiva] = useState("cardapio");
   const [erro, setErro] = useState(null);
 
