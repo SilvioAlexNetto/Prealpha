@@ -54,20 +54,10 @@ function App() {
   /* =======================
      FETCH RECEITAS
   ========================= */
-  const [receitas, setReceitas] = useState([]);
   useEffect(() => {
-    async function carregarReceitas() {
-      try {
-        const res = await fetch(`${BASE_URL}/receitas`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const dados = await res.json();
-        setReceitas(dados); // ⚡️ Guardando no estado
-      } catch (err) {
-        console.error("Erro ao carregar receitas:", err);
-        setErro("Erro ao carregar receitas");
-      }
-    }
-    carregarReceitas();
+    fetch(`${BASE_URL}/receitas`)
+      .then((res) => res.json())
+      .catch(() => setErro("Erro ao carregar receitas"));
   }, []);
 
   /* =========================
@@ -106,7 +96,7 @@ function App() {
      CONTEÚDO DAS ABAS
   ========================= */
   function renderConteudo() {
-    if (abaAtiva === "cardapio") return <Cardapio receitas={receitas} />
+    if (abaAtiva === "cardapio") return <Cardapio />;
     if (abaAtiva === "estoque") return <Stocks />;
     if (abaAtiva === "perfil") return <Perfil />;
     if (abaAtiva === "loja") return <Loja />;
