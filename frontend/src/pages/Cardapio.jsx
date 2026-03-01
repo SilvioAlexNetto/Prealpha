@@ -39,10 +39,11 @@ export default function Cardapio() {
     async function gerarCardapio() {
         setCarregando(true);
         try {
-            const res = await fetch("https://prealpha.onrender.com/cardapio", {
+            const res = await fetch('${BASE_URL}/cardapio', {
                 method: "POST"
             });
             const data = await res.json();
+            console.log("Retorno do cardapio", data);
 
             setCardapio(data.cardapio || {});
 
