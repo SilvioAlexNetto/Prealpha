@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.services.cardapio_service import carregar_receitas
+from app.backend.services.cardapio_service import carregar_receitas
 
 app = FastAPI()
 
