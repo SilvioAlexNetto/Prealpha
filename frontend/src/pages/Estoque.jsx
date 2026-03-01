@@ -32,7 +32,7 @@ export default function Estoque() {
     const quaggaAtivoRef = useRef(false);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/ingredientes")
+        fetch("${BASE_URL}/ingredientes")
             .then(res => res.json())
             .then(data => {
                 setIngredientesBanco(data.ingredientes || []);
@@ -98,7 +98,7 @@ export default function Estoque() {
     }
 
     function enviarEstoqueParaAPI(novoEstoque) {
-        fetch("http://127.0.0.1:8000/estoque", {
+        fetch("${BASE_URL}/estoque", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(novoEstoque),

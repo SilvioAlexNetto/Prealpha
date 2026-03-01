@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+const BASE_URL = "https://prealpha.onrender.com"
 
 export default function Cardapio() {
     const [dias, setDias] = useState([]);
@@ -38,7 +39,7 @@ export default function Cardapio() {
     async function gerarCardapio() {
         setCarregando(true);
         try {
-            const res = await fetch("http://127.0.0.1:8000/cardapio", {
+            const res = await fetch("${BASE_URL}/cardapio", {
                 method: "POST"
             });
             const data = await res.json();

@@ -5,6 +5,7 @@ import ModalTermos from "./components/ModalTermos";
 import ModalCadastroPerfil from "./components/ModalCadastroPerfil";
 import Perfil from "./pages/Perfil";
 import Loja from "./pages/Loja";
+const BASE_URL = "https://prealpha.onrender.com"
 
 /* =========================
    CONFIG TERMOS
@@ -53,7 +54,7 @@ function App() {
      FETCH RECEITAS
   ========================= */
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/receitas")
+    fetch("${BASE_URL}/receitas")
       .then((res) => res.json())
       .catch(() => setErro("Erro ao carregar receitas"));
   }, []);
