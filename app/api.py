@@ -2,14 +2,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 
-from app.backend.services.cardapio_service import (
+from .backend.services.cardapio_service import (
     carregar_receitas,
     gerar_cardapio,
     listar_ingredientes_e_unidades
 )
 
 
-from app.database.database import (
+from .database.database import (
     listar_estoque_atual,
     adicionar_item_estoque_atual,
     get_connection
