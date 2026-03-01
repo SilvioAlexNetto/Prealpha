@@ -54,7 +54,7 @@ function App() {
      FETCH RECEITAS
   ========================= */
   useEffect(() => {
-    fetch('/receitas')
+    fetch('${BASE_URL}s/receitas')
       .then((res) => res.json())
       .catch(() => setErro("Erro ao carregar receitas"));
   }, []);
