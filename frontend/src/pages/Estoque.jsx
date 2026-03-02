@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Quagga from "quagga";
+const BASE_URL = "https://prealpha.onrender.com"
 
 export default function Estoque() {
     const [nomeDigitado, setNomeDigitado] = useState("");
