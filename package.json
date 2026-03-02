@@ -17,5 +17,8 @@
     "url": "https://github.com/SilvioAlexNetto/Prealpha/issues"
   },
   "homepage": "https://github.com/SilvioAlexNetto/Prealpha#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@capacitor/camera": "^8.0.1"
+  }
 }
