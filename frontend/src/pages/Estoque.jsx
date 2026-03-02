@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Quagga from "quagga";
 const BASE_URL = "https://prealpha.onrender.com"
+import { Camera, CameraResultType } from '@capacitor/camera';
 
 export default function Estoque() {
     const [nomeDigitado, setNomeDigitado] = useState("");
@@ -153,9 +154,19 @@ export default function Estoque() {
     // ============================
     // 🔥 SUA FUNÇÃO ORIGINAL (NÃO REMOVIDO NADA)
     // ============================
+    async function solicitarPermissao() {
+        const permission = await Camera.requestPermissions();
+        return permission.camera === "granted";
+    }
 
     async function iniciarLeituraCodigo() {
         if (quaggaAtivoRef.current) return;
+        const permitido = await solicitarPermissao();
+
+        if (!permitido) {
+            alert("Permissão de câmera negada.");
+            return;
+        }
 
         try {
             const devices = await navigator.mediaDevices.enumerateDevices();
@@ -166,8 +177,7 @@ export default function Estoque() {
                 return;
             }
 
-            const cameraPreferida =
-                cameras.find(c => /iriun|webion|virtual/i.test(c.label)) || cameras[0];
+            const cameraPreferida = cameras[0];
 
             setCameraAtiva(true);
             setTempoRestante(10);
