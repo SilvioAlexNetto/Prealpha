@@ -5,6 +5,7 @@ import ModalTermos from "./components/ModalTermos";
 import ModalCadastroPerfil from "./components/ModalCadastroPerfil";
 import Perfil from "./pages/Perfil";
 import Loja from "./pages/Loja";
+import "./styles/global.css";
 
 
 /* =========================

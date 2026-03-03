@@ -1,70 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --verde-principal: #6FAF3A;
+  --verde-escuro: #4E8B2C;
+  --bege-card: #F5EBDD;
+  --bege-card-2: #EFE2CF;
+  --dourado: #E8D8B0;
   padding-bottom: env(safe-area-inset-bottom);
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-a:hover {
-  color: #535bf2;
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+.hp-title-main {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.hp-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.hp-text {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.hp-small {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* ================= HEADER GLASS ================= */
+
+.hp-header {
+  position: sticky;
+  top: 0;
+  padding: 16px 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 100;
+}
+
+.hp-header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hp-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.hp-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--dourado);
+  letter-spacing: 1px;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(to bottom, var(--verde-principal), var(--verde-escuro));
+  overflow: hidden;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  all: unset;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+footer {
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
 }

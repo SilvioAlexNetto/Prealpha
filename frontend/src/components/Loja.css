@@ -1,0 +1,36 @@
+/* ================= CONTAINER ================= */
+
+.hp-loja-container {
+  padding: 20px;
+}
+
+/* ================= CARD ================= */
+
+.hp-loja-card {
+  background: linear-gradient(to bottom,var(--bege-card),var(--bege-card-2));
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 420px;
+  margin: 0 auto;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* ================= LISTA ================= */
+
+.hp-loja-lista {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+/* ================= STATUS ATIVO ================= */
+
+.hp-loja-ativo {
+  text-align: center;
+  padding: 14px;
+  background: linear-gradient(to right, #DFF2E1, #C8E6C9);
+  color: #2E7D32;
+  border-radius: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}

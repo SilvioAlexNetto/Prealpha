@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Quagga from "quagga";
 const BASE_URL = "https://prealpha.onrender.com"
 import { Camera, CameraResultType } from '@capacitor/camera';
+import "../components/Estoque.css";
 
 export default function Estoque() {
     const [nomeDigitado, setNomeDigitado] = useState("");
@@ -411,11 +412,11 @@ export default function Estoque() {
                     />
 
                     {nomeDigitado && !ingredienteSelecionado && (
-                        <div style={listaSugestoes}>
+                        <div className="hp-sugestoes">
                             {sugestoes.map((nome, index) => (
                                 <div
                                     key={index}
-                                    style={itemSugestao}
+                                    className="hp-sugestao-item"
                                     onClick={() => {
                                         setIngredienteSelecionado({
                                             nome,
@@ -488,7 +489,7 @@ export default function Estoque() {
                     <hr />
 
                     {estoque.map((e, index) => (
-                        <div key={index} style={linha}>
+                        <div key={index} className="hp-estoque-linha">
                             <span>{e.nome} — {e.quantidade} {e.unidade}</span>
                             <button onClick={() => removerItem(index)}>🗑️</button>
                         </div>
@@ -510,7 +511,7 @@ export default function Estoque() {
                     {historico.length === 0 && <p>Nenhum histórico disponível.</p>}
 
                     {historico.map((e, index) => (
-                        <div key={index} style={linha}>
+                        <div key={index} className="hp-estoque-linha">
                             <span>{e.nome} — {e.quantidade} {e.unidade}</span>
                         </div>
                     ))}
@@ -518,8 +519,8 @@ export default function Estoque() {
             )}
 
             {cameraAtiva && (
-                <div style={overlay}>
-                    <div style={cameraBox}>
+                <div className="hp-overlay">
+                    <div className="hp-camera-box">
                         <p>📷 Aponte para o código ({tempoRestante}s)</p>
                         <div id="camera" style={{ width: 280, height: 200 }} />
                         <button onClick={encerrarCamera}>Cancelar</button>
@@ -528,8 +529,8 @@ export default function Estoque() {
             )}
 
             {produtoEscaneado && (
-                <div style={overlay}>
-                    <div style={cameraBox}>
+                <div className="hp-overlay">
+                    <div className="hp-camera-box">
                         <h3>Produto Reconhecido</h3>
 
                         {/* ========================= */}
@@ -693,43 +694,3 @@ export default function Estoque() {
         </div>
     );
 }
-
-const linha = {
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: 8,
-    border: "1px solid #ddd",
-    padding: 8,
-    borderRadius: 6,
-};
-
-const listaSugestoes = {
-    border: "1px solid #ccc",
-    borderRadius: 6,
-    marginBottom: 8,
-    maxHeight: 150,
-    overflowY: "auto"
-};
-
-const itemSugestao = {
-    padding: 8,
-    cursor: "pointer",
-    borderBottom: "1px solid #eee"
-};
-
-const overlay = {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.6)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 999
-};
-
-const cameraBox = {
-    background: "#fff",
-    padding: 16,
-    borderRadius: 8,
-    textAlign: "center"
-};

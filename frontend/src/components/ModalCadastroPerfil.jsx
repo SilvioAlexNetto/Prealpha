@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./ModalCadastroPerfil.css";
 
 export default function ModalCadastroPerfil({ onSalvar }) {
     const [form, setForm] = useState({
@@ -48,14 +49,14 @@ export default function ModalCadastroPerfil({ onSalvar }) {
     }
 
     return (
-        <div style={overlay}>
-            <div style={modal}>
+        <div className="hp-overlay">
+            <div className="hp-modal">
                 <h2>👤 Cadastro Inicial</h2>
                 <p style={{ fontSize: 14, color: "#666" }}>
                     Precisamos de alguns dados básicos para continuar.
                 </p>
 
-                <div style={conteudo}>
+                <div className="hp-modal-conteudo">
                     <input name="nome" placeholder="Nome *" onChange={handleChange} />
                     <input name="idade" type="number" placeholder="Idade *" onChange={handleChange} />
 
@@ -90,7 +91,7 @@ export default function ModalCadastroPerfil({ onSalvar }) {
                     disabled={!podeSalvar}
                     onClick={salvar}
                     style={{
-                        ...botao,
+                        ...className = "hp-btn",
                         background: podeSalvar ? "#28a745" : "#ccc",
                     }}
                 >
@@ -100,42 +101,3 @@ export default function ModalCadastroPerfil({ onSalvar }) {
         </div>
     );
 }
-
-/* ===== estilos ===== */
-
-const overlay = {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.7)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 9999,
-};
-
-const modal = {
-    background: "#fff",
-    padding: 20,
-    borderRadius: 12,
-    width: "90%",
-    maxWidth: 520,
-};
-
-const conteudo = {
-    display: "flex",
-    flexDirection: "column",
-    gap: 10,
-    maxHeight: 420,
-    overflowY: "auto",
-    marginBottom: 15,
-};
-
-const botao = {
-    width: "100%",
-    padding: 12,
-    borderRadius: 8,
-    border: "none",
-    color: "#fff",
-    fontSize: 16,
-    cursor: "pointer",
-};

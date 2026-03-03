@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import "../components/Cardapio.css";
+
 const BASE_URL = "https://prealpha.onrender.com"
 
 export default function Cardapio() {
@@ -79,13 +81,13 @@ export default function Cardapio() {
                 {carregando ? "Gerando..." : "Gerar Cardápio do Mês"}
             </button>
 
-            <div style={grid}>
+            <div className="hp-grid">
                 {dias.map(dia => {
                     const dados = cardapio[dia] || {};
                     return (
                         <div
                             key={dia}
-                            style={card}
+                            className="hp-card"
                             onClick={() => {
                                 setDiaSelecionado({ dia, dados });
                                 setPreparoAberto({});
@@ -108,10 +110,10 @@ export default function Cardapio() {
 
             {/* ===== MODAL ===== */}
             {diaSelecionado && (
-                <div style={overlay}>
-                    <div style={modal}>
+                <div className="hp-overlay">
+                    <div className="hp-modal">
                         <button
-                            style={fechar}
+                            className="hp-fechar"
                             onClick={() => setDiaSelecionado(null)}
                         >
                             ✖
@@ -146,14 +148,14 @@ export default function Cardapio() {
                                     {receita.modo_preparo && (
                                         <>
                                             <p
-                                                style={toggle}
+                                                className="hp-toggle"
                                                 onClick={() => togglePreparo(tipo)}
                                             >
                                                 {preparoAberto[tipo] ? "🔼 Ocultar preparo" : "🔽 Como fazer"}
                                             </p>
 
                                             {preparoAberto[tipo] && (
-                                                <div style={preparo}>
+                                                <div className="hp-preparo">
                                                     <p><b>Modo de preparo:</b></p>
                                                     <ol>
                                                         {receita.modo_preparo.map((passo, idx) => (
@@ -180,65 +182,3 @@ export default function Cardapio() {
         </div>
     );
 }
-
-/* ===== ESTILOS ===== */
-
-const grid = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-    gap: 16,
-    marginTop: 20
-};
-
-const card = {
-    background: "#f5f5f5",
-    borderRadius: 12,
-    padding: 12,
-    cursor: "pointer"
-};
-
-const overlay = {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100vw",
-    height: "100vh",
-    background: "rgba(0,0,0,0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000
-};
-
-const modal = {
-    background: "#fff",
-    padding: 20,
-    borderRadius: 12,
-    width: "90%",
-    maxWidth: 520,
-    maxHeight: "80vh",
-    overflowY: "auto",
-    position: "relative"
-};
-
-const fechar = {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    border: "none",
-    background: "none",
-    fontSize: 18,
-    cursor: "pointer"
-};
-
-const toggle = {
-    cursor: "pointer",
-    color: "#007bff",
-    marginTop: 8
-};
-
-const preparo = {
-    background: "#f5f5f5",
-    padding: 12,
-    borderRadius: 8
-};

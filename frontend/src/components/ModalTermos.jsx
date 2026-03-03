@@ -15,11 +15,11 @@ export default function ModalTermos({ onAceitar }) {
     const podeAceitar = scrollFinal && confirmado;
 
     return (
-        <div style={overlay}>
-            <div style={modal}>
+        <div className="hp-overlay">
+            <div className="hp-modal">
                 <h2>📄 Termos e Condições de Uso</h2>
 
-                <div style={conteudo} onScroll={handleScroll}>
+                <div className="hp-modal-content" onScroll={handleScroll}>
                     {/* 1️⃣ Natureza do aplicativo */}
                     <h3>1. Natureza e Finalidade do Aplicativo</h3>
                     <p>
@@ -114,7 +114,7 @@ export default function ModalTermos({ onAceitar }) {
                     </p>
                 </div>
 
-                <label style={checkboxContainer}>
+                <label className="hp-checkbox">
                     <input
                         type="checkbox"
                         disabled={!scrollFinal}
@@ -129,11 +129,7 @@ export default function ModalTermos({ onAceitar }) {
                 <button
                     disabled={!podeAceitar}
                     onClick={onAceitar}
-                    style={{
-                        ...botao,
-                        background: podeAceitar ? "#28a745" : "#ccc",
-                        cursor: podeAceitar ? "pointer" : "not-allowed",
-                    }}
+                    className="hp-btn hp-btn-success"
                 >
                     ✅ Aceito os Termos
                 </button>
@@ -141,50 +137,3 @@ export default function ModalTermos({ onAceitar }) {
         </div>
     );
 }
-
-/* =========================
-   ESTILOS
-========================= */
-
-const overlay = {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100vw",
-    height: "100vh",
-    background: "rgba(0,0,0,0.7)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 9999,
-};
-
-const modal = {
-    background: "#fff",
-    borderRadius: 12,
-    padding: 20,
-    width: "90%",
-    maxWidth: 520,
-};
-
-const conteudo = {
-    maxHeight: 300,
-    overflowY: "auto",
-    marginBottom: 15,
-};
-
-const checkboxContainer = {
-    display: "flex",
-    alignItems: "center",
-    marginBottom: 15,
-    fontSize: 14,
-};
-
-const botao = {
-    width: "100%",
-    padding: 12,
-    borderRadius: 8,
-    border: "none",
-    color: "#fff",
-    fontSize: 16,
-};

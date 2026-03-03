@@ -1,0 +1,56 @@
+/* ================= GRID ================= */
+
+.hp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* ================= CARD ================= */
+
+.hp-card {
+  background: linear-gradient(
+    to bottom,
+    var(--bege-card),
+    var(--bege-card-2)
+  );
+  border-radius: 18px;
+  padding: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  transition: transform 0.15s ease;
+}
+
+.hp-card:active {
+  transform: scale(0.97);
+}
+
+/* ================= BOTÃO FECHAR ================= */
+
+.hp-fechar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 20px;
+  color: var(--verde-escuro);
+  cursor: pointer;
+}
+
+/* ================= TOGGLE ================= */
+
+.hp-toggle {
+  cursor: pointer;
+  color: var(--verde-escuro);
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* ================= PREPARO ================= */
+
+.hp-preparo {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 10px;
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./ModalEditarCampo.css";
 
 /* =========================
    VALIDADORES
@@ -53,15 +54,15 @@ export default function ModalEditarCampo({
     }, [valor, campo]);
 
     return (
-        <div style={overlay}>
-            <div style={modal}>
+        <div className="hp-overlay">
+            <div className="hp-modal-editar">
                 <h3>Editar</h3>
 
                 {tipo === "select" ? (
                     <select
                         value={valor}
                         onChange={(e) => setValor(e.target.value)}
-                        style={input}
+                        className="hp-input"
                     >
                         <option value="">Selecione</option>
                         {opcoes.map((op) => (
@@ -74,24 +75,24 @@ export default function ModalEditarCampo({
                     <input
                         value={valor}
                         onChange={(e) => setValor(e.target.value)}
-                        style={input}
+                        className="hp-input"
                     />
                 )}
 
                 {!valido && (
-                    <p style={erro}>
+                    <p className="hp-erro">{erroMsg}
                         {campo === "nome"
                             ? "Este campo aceita somente letras."
                             : "Este campo aceita somente números."}
                     </p>
                 )}
 
-                <div style={botoes}>
+                <div className="hp-modal-botoes">
                     <button
                         onClick={() => onSalvar(campo, valor)}
                         disabled={!valido}
                         style={{
-                            ...botaoSalvar,
+                            ...className = "hp-btn",
                             opacity: valido ? 1 : 0.5,
                             cursor: valido ? "pointer" : "not-allowed",
                         }}
@@ -99,7 +100,7 @@ export default function ModalEditarCampo({
                         Salvar
                     </button>
 
-                    <button onClick={onCancelar} style={botaoCancelar}>
+                    <button onClick={onCancelar} className="hp-btn-secundario">
                         Cancelar
                     </button>
                 </div>
@@ -107,59 +108,3 @@ export default function ModalEditarCampo({
         </div>
     );
 }
-
-/* =========================
-   ESTILOS
-========================= */
-
-const overlay = {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.6)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 9999,
-};
-
-const modal = {
-    background: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    width: "90%",
-    maxWidth: 400,
-};
-
-const input = {
-    width: "100%",
-    padding: 10,
-    marginBottom: 10,
-};
-
-const erro = {
-    color: "#d32f2f",
-    fontSize: 12,
-    marginBottom: 10,
-};
-
-const botoes = {
-    display: "flex",
-    gap: 10,
-};
-
-const botaoSalvar = {
-    flex: 1,
-    padding: 10,
-    background: "#4CAF50",
-    color: "#fff",
-    border: "none",
-    borderRadius: 6,
-};
-
-const botaoCancelar = {
-    flex: 1,
-    padding: 10,
-    background: "#ccc",
-    border: "none",
-    borderRadius: 6,
-};

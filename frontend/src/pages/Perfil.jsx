@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ModalEditarCampo from "../components/ModalEditarCampo";
-
+import "../components/Perfil.css";
 
 /* =========================
    TEXTOS EXPLICATIVOS
@@ -107,10 +107,10 @@ export default function Perfil() {
                 : perfil[campo];
 
         return (
-            <div style={linhaStyle}>
+            <div className="hp-linha">
                 <div style={labelContainer}>
                     <strong>{label}</strong>
-                    <button style={botaoInfo} onClick={() => setCampoInfo(campo)}>
+                    <button className="hp-btn-info" onClick={() => setCampoInfo(campo)}>
                         ?
                     </button>
                     <span>
@@ -128,7 +128,7 @@ export default function Perfil() {
                             opcoes,
                         })
                     }
-                    style={botaoEditar}
+                    className="hp-btn-icon"
                 >
                     ✏️
                 </button>
@@ -138,11 +138,11 @@ export default function Perfil() {
 
     function fichaLinha(label, valor, chave, unidade = "") {
         return (
-            <div style={linhaStyle}>
+            <div className="hp-linha">
                 <strong>
                     {label}
                     <button
-                        style={botaoInfo}
+                        className="hp-btn-info"
                         onClick={() => setCampoInfo(chave)}
                     >
                         ?
@@ -231,30 +231,26 @@ export default function Perfil() {
         <div>
             {/* HEADER */}
 
-            <div style={header}>
+            <div className="hp-perfil-header">
                 <h2>👤 Perfil</h2>
 
-                <div style={subAbas}>
+                <div className="hp-subabas">
+
+                    {/* DADOS */}
                     <button
-                        style={{
-                            ...botaoSubAba,
-                            ...(subAba === "perfil" && subAbaAtiva),
-                        }}
+                        className={`hp-subaba-btn ${subAba === "perfil" ? "hp-subaba-ativa" : ""
+                            }`}
                         onClick={() => setSubAba("perfil")}
                     >
                         Dados
                     </button>
 
+                    {/* FICHA */}
                     <button
-                        style={{
-                            ...botaoSubAba,
-                            ...(subAba === "ficha" && isPremium && subAbaAtiva),
-                            ...(isPremium ? {} : subAbaBloqueada),
-                        }}
+                        className={`hp-subaba-btn ${subAba === "ficha" && isPremium ? "hp-subaba-ativa" : ""
+                            } ${!isPremium ? "hp-subaba-bloqueada" : ""}`}
                         onClick={() => {
-                            if (isPremium) {
-                                setSubAba("ficha");
-                            }
+                            if (isPremium) setSubAba("ficha");
                         }}
                         title={
                             isPremium
@@ -264,6 +260,7 @@ export default function Perfil() {
                     >
                         📋 Ficha nutricional
                     </button>
+
                 </div>
             </div>
 
@@ -306,7 +303,7 @@ export default function Perfil() {
             )}
 
             {subAba === "ficha" && (
-                <div style={fichaContainer}>
+                <div className="hp-ficha">
                     {fichaLinha("IMC", imc, "imc")}
                     {fichaLinha("Classificação IMC", imcClass, "imcClass")}
                     {fichaLinha("TMB", tmb, "tmb", "kcal")}
@@ -351,13 +348,13 @@ export default function Perfil() {
 
             {campoInfo && (
                 <div style={overlay}>
-                    <div style={modalInfo}>
+                    <div className="hp-modal-info">
                         <h3>ℹ️ O que é isso?</h3>
                         <p style={{ whiteSpace: "pre-line" }}>
                             {explicacoes[campoInfo]}
                         </p>
                         <button
-                            style={botaoFechar}
+                            className="hp-btn"
                             onClick={() => setCampoInfo(null)}
                         >
                             Fechar
@@ -368,89 +365,3 @@ export default function Perfil() {
         </div>
     );
 }
-
-/* =========================
-   ESTILOS
-========================= */
-const subAbaBloqueada = {
-    opacity: 0.4,
-    cursor: "not-allowed",
-    background: "#f0f0f0",
-    borderColor: "#ccc",
-};
-
-const header = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-};
-const subAbas = { display: "flex", gap: 6 };
-const botaoSubAba = {
-    border: "1px solid #ccc",
-    background: "#fff",
-    padding: "4px 8px",
-    borderRadius: 6,
-    cursor: "pointer",
-    fontSize: 12,
-};
-const subAbaAtiva = {
-    background: "#E8F5E9",
-    borderColor: "#4CAF50",
-    fontWeight: "bold",
-};
-const fichaContainer = {
-    padding: 10,
-    background: "#FAFAFA",
-    borderRadius: 8,
-};
-const linhaStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    borderBottom: "1px solid #eee",
-};
-const labelContainer = { display: "flex", alignItems: "center", gap: 4 };
-const botaoEditar = {
-    background: "none",
-    border: "none",
-    fontSize: 18,
-    cursor: "pointer",
-};
-const botaoInfo = {
-    background: "#E8F5E9",
-    border: "1px solid #4CAF50",
-    borderRadius: "50%",
-    width: 16,
-    height: 16,
-    fontSize: 11,
-    fontWeight: "bold",
-    color: "#2E7D32",
-    cursor: "pointer",
-    padding: 0,
-};
-const overlay = {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.4)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 999,
-};
-const modalInfo = {
-    background: "#fff",
-    padding: 20,
-    borderRadius: 8,
-    maxWidth: 320,
-    textAlign: "center",
-};
-const botaoFechar = {
-    marginTop: 12,
-    padding: "8px 16px",
-    border: "none",
-    background: "#4CAF50",
-    color: "#fff",
-    borderRadius: 4,
-    cursor: "pointer",
-};
