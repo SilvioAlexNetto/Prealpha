@@ -1,12 +1,12 @@
-plugins {id 'com.android.application'}
+apply plugin: 'com.android.application'
 
 android {
     namespace = "com.silvionetto.HealthPantry"
-    compileSdk = rootProject.ext.compileSdkVersion
+    compileSdk 34
     defaultConfig {
         applicationId "com.silvionetto.HealthPantry"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdk 24
+        targetSdk 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
