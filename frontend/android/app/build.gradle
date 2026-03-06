@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     namespace = "com.silvionetto.HealthPantry"
-    compileSdk 34
+    compileSdk 36
     defaultConfig {
         applicationId "com.silvionetto.HealthPantry"
         minSdk 24
-        targetSdk 34
+        targetSdk 36
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -18,7 +18,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
