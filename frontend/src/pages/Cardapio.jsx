@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "../components/Cardapio.css";
 
-const BASE_URL = "https://prealpha.onrender.com"
+const BASE_URL = "https://prealpha.onrender.com";
 
 export default function Cardapio() {
     const [dias, setDias] = useState([]);
