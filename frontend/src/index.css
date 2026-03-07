@@ -75,7 +75,7 @@ html, body, #root {
 body {
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background: linear-gradient(to bottom, var(--verde-principal), var(--verde-escuro));
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 button {
