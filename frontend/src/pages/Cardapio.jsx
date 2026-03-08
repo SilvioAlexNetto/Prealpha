@@ -73,7 +73,7 @@ export default function Cardapio() {
     }
 
     return (
-        <div>
+        <div className="hp-grid">
             <h2>📅 Cardápio Mensal</h2>
             <p>{mesNome} / {ano}</p>
 
@@ -81,7 +81,7 @@ export default function Cardapio() {
                 {carregando ? "Gerando..." : "Gerar Cardápio do Mês"}
             </button>
 
-            <div className="hp-grid">
+            <div >
                 {dias.map(dia => {
                     const dados = cardapio[dia] || {};
                     return (
