@@ -88,10 +88,10 @@ export default function ModalCadastroPerfil({ onSalvar }) {
                 </div>
 
                 <button
+                    className="hp-btn"
                     disabled={!podeSalvar}
                     onClick={salvar}
                     style={{
-                        ...className = "hp-btn",
                         background: podeSalvar ? "#28a745" : "#ccc",
                     }}
                 >
