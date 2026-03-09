@@ -80,7 +80,7 @@ export default function ModalEditarCampo({
                 )}
 
                 {!valido && (
-                    <p className="hp-erro">{erroMsg}
+                    <p className="hp-erro">
                         {campo === "nome"
                             ? "Este campo aceita somente letras."
                             : "Este campo aceita somente números."}
@@ -91,8 +91,8 @@ export default function ModalEditarCampo({
                     <button
                         onClick={() => onSalvar(campo, valor)}
                         disabled={!valido}
+                        className="hp-btn"
                         style={{
-                            ...className = "hp-btn",
                             opacity: valido ? 1 : 0.5,
                             cursor: valido ? "pointer" : "not-allowed",
                         }}

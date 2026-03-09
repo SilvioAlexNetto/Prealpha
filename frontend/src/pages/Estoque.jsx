@@ -200,14 +200,22 @@ export default function Estoque() {
                             target,
                             constraints: {
                                 deviceId: cameraPreferida.deviceId,
-                                facingMode: "environment"
+                                facingMode: "environment",
+                                width: { ideal: 640 },
+                                height: { ideal: 480 }
                             }
                         },
                         locator: { patchSize: "medium", halfSample: true },
                         numOfWorkers: navigator.hardwareConcurrency || 4,
                         frequency: 10,
                         decoder: { readers: ["ean_reader"] },
-                        locate: true
+                        locate: true,
+                        area: {
+                            top: "25%",
+                            right: "10%",
+                            left: "10%",
+                            bottom: "25%"
+                        }
                     },
                     err => {
                         if (err) {
@@ -522,7 +530,7 @@ export default function Estoque() {
                 <div className="hp-overlay">
                     <div className="hp-camera-box">
                         <p>📷 Aponte para o código ({tempoRestante}s)</p>
-                        <div id="camera" style={{ width: 280, height: 200 }} />
+                        <div id="camera" className="hp-camera" />
                         <button onClick={encerrarCamera}>Cancelar</button>
                     </div>
                 </div>

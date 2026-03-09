@@ -62,3 +62,46 @@
   max-width: 420px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
+
+.hp-camera {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 12px;
+  position: relative;
+}
+
+.hp-camera video,
+.hp-camera canvas {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.hp-camera::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  width: 80%;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    #00ff88,
+    transparent
+  );
+  box-shadow: 0 0 8px #00ff88;
+  animation: hp-scan-line 2s linear infinite;
+}
+
+@keyframes hp-scan-line {
+  0% {
+    top: 15%;
+  }
+  50% {
+    top: 70%;
+  }
+  100% {
+    top: 15%;
+  }
+}

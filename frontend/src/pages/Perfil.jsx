@@ -5,7 +5,7 @@ import "../components/Perfil.css";
 /* =========================
    TEXTOS EXPLICATIVOS
 ========================= */
-const isPremium = localStorage.getItem("isPremium") === "true";
+
 
 const explicacoes = {
     nome: "Seu nome ou apelido usado apenas dentro do aplicativo.",
@@ -47,9 +47,14 @@ const fatorAtividade = {
 };
 
 export default function Perfil() {
-    const [perfil, setPerfil] = useState(
-        () => JSON.parse(localStorage.getItem("perfil_usuario")) || {}
-    );
+    const isPremium = localStorage.getItem("isPremium") === "true";
+    const [perfil, setPerfil] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem("perfil_usuario")) || {};
+        } catch {
+            return {};
+        }
+    });
     const [campoEditando, setCampoEditando] = useState(null);
     const [campoInfo, setCampoInfo] = useState(null);
     const [subAba, setSubAba] = useState("perfil");
@@ -108,7 +113,7 @@ export default function Perfil() {
 
         return (
             <div className="hp-linha">
-                <div style={labelContainer}>
+                <div className="hp-label">
                     <strong>{label}</strong>
                     <button className="hp-btn-info" onClick={() => setCampoInfo(campo)}>
                         ?
@@ -148,7 +153,7 @@ export default function Perfil() {
                         ?
                     </button>
                 </strong>
-                <span style={{ whiteSpace: "pre-line", textAlign: "right" }}>
+                <span>
                     {valor !== null && valor !== undefined
                         ? `${valor} ${unidade}`
                         : "—"}
@@ -347,7 +352,7 @@ export default function Perfil() {
             )}
 
             {campoInfo && (
-                <div style={overlay}>
+                <div className="hp-overlay">
                     <div className="hp-modal-info">
                         <h3>ℹ️ O que é isso?</h3>
                         <p style={{ whiteSpace: "pre-line" }}>
