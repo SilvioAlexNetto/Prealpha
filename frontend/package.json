@@ -14,6 +14,7 @@
     "@capacitor/camera": "^8.0.2",
     "@capacitor/cli": "^8.1.0",
     "@capacitor/core": "^8.1.0",
+    "@capacitor/splash-screen": "^8.0.1",
     "quagga": "^0.12.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"

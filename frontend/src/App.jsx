@@ -3,6 +3,7 @@ import Stocks from "./pages/Estoque";
 import Cardapio from "./pages/Cardapio";
 import ModalTermos from "./components/ModalTermos";
 import ModalCadastroPerfil from "./components/ModalCadastroPerfil";
+import LoadingInicial from "./components/LoadingInicial";
 import Perfil from "./pages/Perfil";
 import Loja from "./pages/Loja";
 import "./styles/global.css";
@@ -13,7 +14,9 @@ import "./styles/global.css";
 ========================= */
 const TERMOS_VERSAO_ATUAL = "1.2";
 
+
 function App() {
+  const [loadingInicial, setLoadingInicial] = useState(true);
   const BASE_URL = "https://prealpha.onrender.com"
   const [abaAtiva, setAbaAtiva] = useState("cardapio");
   const [erro, setErro] = useState(null);
@@ -23,6 +26,7 @@ function App() {
 
   const [perfil, setPerfil] = useState(null);
   const [editarPerfil, setEditarPerfil] = useState(false);
+
 
   /* =========================
      VERIFICA TERMOS
@@ -60,6 +64,21 @@ function App() {
       .then((res) => res.json())
       .catch(() => setErro("Erro ao carregar receitas"));
   }, []);
+
+  /* LOADING INICIAL */
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoadingInicial(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  /* AQUI */
+  if (loadingInicial) {
+    return <LoadingInicial />;
+  }
+
 
   /* =========================
      ACEITAR TERMOS
