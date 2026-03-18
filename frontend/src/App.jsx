@@ -7,7 +7,10 @@ import LoadingInicial from "./components/LoadingInicial";
 import Perfil from "./pages/Perfil";
 import Loja from "./pages/Loja";
 import "./styles/global.css";
-
+import CalendarioIcon from "./assets/icons/CalendarioIcon.png";
+import LojaIcon from "./assets/icons/LojaIcon.png";
+import EstoqueIcon from "./assets/icons/EstoqueIcon.png";
+import PerfilIcon from "./assets/icons/PerfilIcon.png";
 
 /* =========================
    CONFIG TERMOS
@@ -152,10 +155,29 @@ function App() {
           </div>
 
           <div style={tabBarStyle}>
-            <Tab label="📅" ativo={abaAtiva === "cardapio"} onClick={() => setAbaAtiva("cardapio")} />
-            <Tab label="📦" ativo={abaAtiva === "estoque"} onClick={() => setAbaAtiva("estoque")} />
-            <Tab label="👤" ativo={abaAtiva === "perfil"} onClick={() => setAbaAtiva("perfil")} />
-            <Tab label="🛒" ativo={abaAtiva === "loja"} onClick={() => setAbaAtiva("loja")} />
+            <Tab
+              icon={CalendarioIcon}
+              ativo={abaAtiva === "cardapio"}
+              onClick={() => setAbaAtiva("cardapio")}
+            />
+
+            <Tab
+              icon={EstoqueIcon}
+              ativo={abaAtiva === "estoque"}
+              onClick={() => setAbaAtiva("estoque")}
+            />
+
+            <Tab
+              icon={PerfilIcon}
+              ativo={abaAtiva === "perfil"}
+              onClick={() => setAbaAtiva("perfil")}
+            />
+
+            <Tab
+              icon={LojaIcon}
+              ativo={abaAtiva === "loja"}
+              onClick={() => setAbaAtiva("loja")}
+            />
           </div>
         </div>
       )}
@@ -163,19 +185,32 @@ function App() {
   );
 }
 
-function Tab({ label, ativo, onClick }) {
+function Tab({ icon, ativo, onClick }) {
   return (
     <button
       onClick={onClick}
       style={{
         flex: 1,
-        fontSize: 20,
         background: ativo ? "#E8F5E9" : "#fff",
         border: "none",
         padding: 10,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      {label}
+      <img
+        src={icon}
+        alt="icon"
+        style={{
+          width: 24,
+          height: 24,
+          transition: "0.2s",
+          filter: ativo
+            ? "none"
+            : "grayscale(100%) opacity(0.5)",
+        }}
+      />
     </button>
   );
 }

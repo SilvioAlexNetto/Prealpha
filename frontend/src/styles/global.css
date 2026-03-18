@@ -157,6 +157,31 @@ body {
   gap: 10px;
 }
 
+.hp-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.hp-titulo img {
+  width: 22px;
+  height: 22px;
+}
+
+.hp-titulo-h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.hp-titulo-h3 img {
+  width: 18px;
+  height: 18px;
+}
+
 /* ================================
    ✨ ANIMAÇÃO
 ================================ */

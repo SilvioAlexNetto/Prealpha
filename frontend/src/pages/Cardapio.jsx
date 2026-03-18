@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "../components/Cardapio.css";
+import CalendarioIcon from "../assets/icons/CalendarioIcon.png";
 
 const BASE_URL = "https://prealpha.onrender.com";
 
@@ -74,7 +75,10 @@ export default function Cardapio() {
 
     return (
         <div>
-            <h2>📅 Cardápio Mensal</h2>
+            <h2 className="hp-titulo">
+                <img src={CalendarioIcon} />
+                Cardápio Mensal
+            </h2>
             <p>{mesNome} / {ano}</p>
 
             <button onClick={gerarCardapio} disabled={carregando}>
@@ -119,7 +123,7 @@ export default function Cardapio() {
                             ✖
                         </button>
 
-                        <h3>📅 Dia {diaSelecionado.dia}</h3>
+                        <h3 className="hp-titulo-h3"> <img src={CalendarioIcon} alt="" /> Dia {diaSelecionado.dia}</h3>
 
                         {["cafe", "almoco", "jantar"].map(tipo => {
                             const receita = diaSelecionado.dados[tipo];
