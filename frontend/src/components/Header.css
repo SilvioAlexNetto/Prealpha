@@ -1,0 +1,73 @@
+.hp-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: calc(20px + env(safe-area-inset-top)) 16px 14px;
+
+  background: linear-gradient(90deg, #2e7d32, #66bb6a);
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.hp-header-logo {
+  width: 44px;
+  height: 44px;
+}
+
+.hp-header-title {
+  font-size: 18px;
+  font-weight: 600;
+
+  background: linear-gradient(90deg, #FFD700, #FFB300, #FFF8E1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.hp-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hp-header-help {
+  width: 23px;
+  height: 23px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #1976d2; /* azul padrão ajuda */
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+  
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+/* Ícone dentro */
+.hp-header-help img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+/* Hover */
+.hp-header-help:hover {
+  background: #1565c0;
+}
+
+/* Clique */
+.hp-header-help:active {
+  transform: scale(0.9);
+}

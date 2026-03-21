@@ -1,6 +1,12 @@
 import { useState } from "react";
 import ModalEditarCampo from "../components/ModalEditarCampo";
 import "../components/Perfil.css";
+import EditarIcon from "../assets/icons/EditarIcon.png";
+import PerfilIcon from "../assets/icons/PerfilIcon.png";
+import InfoIcon from "../assets/icons/InfoIcon.png";
+import FichaIcon from "../assets/icons/FichaIcon.png";
+import DuvidaIcon from "../assets/icons/DuvidaIcon.png";
+import AccountIcon from "../assets/icons/AccountIcon.png";
 
 /* =========================
    TEXTOS EXPLICATIVOS
@@ -116,7 +122,7 @@ export default function Perfil() {
                 <div className="hp-label">
                     <strong>{label}</strong>
                     <button className="hp-btn-info" onClick={() => setCampoInfo(campo)}>
-                        ?
+                        <img src={DuvidaIcon} alt="" className="hp-icon" />
                     </button>
                     <span>
                         {valorExibido !== undefined && valorExibido !== null
@@ -135,7 +141,11 @@ export default function Perfil() {
                     }
                     className="hp-btn-icon"
                 >
-                    ✏️
+                    <img
+                        src={EditarIcon}
+                        alt=""
+                        className="hp-icon"
+                    />
                 </button>
             </div>
         );
@@ -150,7 +160,7 @@ export default function Perfil() {
                         className="hp-btn-info"
                         onClick={() => setCampoInfo(chave)}
                     >
-                        ?
+                        <img src={DuvidaIcon} alt="" className="hp-icon" />
                     </button>
                 </strong>
                 <span>
@@ -237,7 +247,7 @@ export default function Perfil() {
             {/* HEADER */}
 
             <div className="hp-perfil-header">
-                <h2>👤 Perfil</h2>
+                <h2 className="hp-titulo"> <img src={PerfilIcon} /> Perfil </h2>
 
                 <div className="hp-subabas">
 
@@ -263,7 +273,11 @@ export default function Perfil() {
                                 : "Disponível apenas para conta Premium"
                         }
                     >
-                        📋 Ficha nutricional
+                        <img
+                            src={FichaIcon}
+                            alt=""
+                            className="hp-icon"
+                        /> Ficha nutricional
                     </button>
 
                 </div>
@@ -309,30 +323,30 @@ export default function Perfil() {
 
             {subAba === "ficha" && (
                 <div className="hp-ficha">
-                    {fichaLinha("IMC", imc, "imc")}
-                    {fichaLinha("Classificação IMC", imcClass, "imcClass")}
-                    {fichaLinha("TMB", tmb, "tmb", "kcal")}
-                    {fichaLinha("GET", get, "get", "kcal")}
+                    {fichaLinha("IMC ", imc, "imc")}
+                    {fichaLinha("Classificação IMC ", imcClass, "imcClass")}
+                    {fichaLinha("TMB ", tmb, "tmb", "kcal")}
+                    {fichaLinha("GET ", get, "get", "kcal")}
                     {fichaLinha(
-                        "Macronutrientes",
+                        "Macronutrientes ",
                         macros
                             ? `${macros.carbo}g C\n${macros.proteina}g P\n${macros.gordura}g G`
                             : null,
                         "macros"
                     )}
                     {fichaLinha(
-                        "Relação Cintura–Quadril",
+                        "Relação Cintura–Quadril ",
                         rcq,
                         "rcq"
                     )}
                     {fichaLinha(
-                        "Peso ideal estimado",
+                        "Peso ideal estimado ",
                         pesoIdeal,
                         "pesoIdeal",
                         "kg"
                     )}
                     {fichaLinha(
-                        "Idade metabólica",
+                        "Idade metabólica ",
                         idadeMeta,
                         "idadeMeta"
                     )}
@@ -354,7 +368,7 @@ export default function Perfil() {
             {campoInfo && (
                 <div className="hp-overlay">
                     <div className="hp-modal-info">
-                        <h3>ℹ️ O que é isso?</h3>
+                        <h3 className="hp-titulo-h3"> <img src={InfoIcon} /> O que é isso?</h3>
                         <p style={{ whiteSpace: "pre-line" }}>
                             {explicacoes[campoInfo]}
                         </p>

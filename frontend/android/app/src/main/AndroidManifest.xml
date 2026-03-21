@@ -25,6 +25,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
+            android:fitsSystemWindows="true"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarLaunch"
             android:launchMode="singleTask"

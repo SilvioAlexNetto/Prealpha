@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { StatusBar } from '@capacitor/status-bar';
 import Stocks from "./pages/Estoque";
 import Cardapio from "./pages/Cardapio";
+import Header from "./components/Header";
 import ModalTermos from "./components/ModalTermos";
 import ModalCadastroPerfil from "./components/ModalCadastroPerfil";
 import LoadingInicial from "./components/LoadingInicial";
@@ -11,6 +13,7 @@ import CalendarioIcon from "./assets/icons/CalendarioIcon.png";
 import LojaIcon from "./assets/icons/LojaIcon.png";
 import EstoqueIcon from "./assets/icons/EstoqueIcon.png";
 import PerfilIcon from "./assets/icons/PerfilIcon.png";
+
 
 /* =========================
    CONFIG TERMOS
@@ -34,6 +37,7 @@ function App() {
   /* =========================
      VERIFICA TERMOS
   ========================= */
+
   useEffect(() => {
     const termosSalvos = localStorage.getItem("termos_aceitos");
     if (!termosSalvos) return;
@@ -47,6 +51,11 @@ function App() {
       setTermosAceitos(false);
     }
   }, []);
+
+  useEffect(() => {
+    StatusBar.setOverlaysWebView({ overlay: false });
+  }, []);
+
 
   /* =========================
      VERIFICA PERFIL
@@ -150,6 +159,7 @@ function App() {
       {/* 3️⃣ APP NORMAL */}
       {termosAceitos && perfilCadastrado && (
         <div style={appStyle}>
+          <Header />
           <div style={conteudoStyle}>
             {erro ? erro : renderConteudo()}
           </div>

@@ -105,3 +105,44 @@
     top: 15%;
   }
 }
+
+/* ================= BOTÃO ================= */
+
+.hp-btn-danger {
+  width: 28%;
+  padding: 5px;
+
+  border: none;
+  border-radius: 10px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  color: white;
+
+  background: linear-gradient(90deg, #d32f2f, #f44336);
+
+  margin: 12px 0;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.hp-btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+/* Clique */
+.hp-btn-danger:active {
+  transform: scale(0.97);
+}
+
+/* Desabilitado (opcional) */
+.hp-btn-danger:disabled {
+  background: #ccc;
+  color: #666;
+  box-shadow: none;
+}

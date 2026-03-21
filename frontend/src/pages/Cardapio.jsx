@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import "../components/Cardapio.css";
-import CalendarioIcon from "../assets/icons/CalendarioIcon.png";
+import CalendarioTwoIcon from "../assets/icons/CalendarioTwoIcon.png";
+import CafeIcon from "../assets/icons/CafeIcon.png";
+import JantarIcon from "../assets/icons/JantarIcon.png";
+import AlmocoIcon from "../assets/icons/AlmocoIcon.png";
 
 const BASE_URL = "https://prealpha.onrender.com";
 
@@ -75,13 +78,14 @@ export default function Cardapio() {
 
     return (
         <div>
-            <h2 className="hp-titulo">
-                <img src={CalendarioIcon} />
-                Cardápio Mensal
-            </h2>
+            <h2 className="hp-titulo"> <img src={CalendarioTwoIcon} /> Cardápio Mensal </h2>
             <p>{mesNome} / {ano}</p>
 
-            <button onClick={gerarCardapio} disabled={carregando}>
+            <button
+                className="hp-btn-gerar"
+                onClick={gerarCardapio}
+                disabled={carregando}
+            >
                 {carregando ? "Gerando..." : "Gerar Cardápio do Mês"}
             </button>
 
@@ -99,13 +103,25 @@ export default function Cardapio() {
                         >
                             <h4>Dia {dia}</h4>
 
-                            <p>☕ Café da manhã</p>
+                            {/* CAFÉ */}
+                            <p className="hp-refeicao">
+                                <img src={CafeIcon} alt="Café" className="hp-icon" />
+                                Café da manhã
+                            </p>
                             <span>{dados.cafe?.nome || "—"}</span>
 
-                            <p>🍛 Almoço</p>
+                            {/* ALMOÇO */}
+                            <p className="hp-refeicao">
+                                <img src={AlmocoIcon} alt="Almoço" className="hp-icon" />
+                                Almoço
+                            </p>
                             <span>{dados.almoco?.nome || "—"}</span>
 
-                            <p>🌙 Jantar</p>
+                            {/* JANTAR */}
+                            <p className="hp-refeicao">
+                                <img src={JantarIcon} alt="Jantar" className="hp-icon" />
+                                Jantar
+                            </p>
                             <span>{dados.jantar?.nome || "—"}</span>
                         </div>
                     );
@@ -123,7 +139,7 @@ export default function Cardapio() {
                             ✖
                         </button>
 
-                        <h3 className="hp-titulo-h3"> <img src={CalendarioIcon} alt="" /> Dia {diaSelecionado.dia}</h3>
+                        <h3 className="hp-titulo-h3"> <img src={CalendarioTwoIcon} alt="" /> Dia {diaSelecionado.dia}</h3>
 
                         {["cafe", "almoco", "jantar"].map(tipo => {
                             const receita = diaSelecionado.dados[tipo];
@@ -132,9 +148,9 @@ export default function Cardapio() {
                             return (
                                 <div key={tipo} style={{ marginBottom: 20 }}>
                                     <h4>
-                                        {tipo === "cafe" && "☕ Café da manhã"}
-                                        {tipo === "almoco" && "🍛 Almoço"}
-                                        {tipo === "jantar" && "🌙 Jantar"}
+                                        {tipo === "cafe" && (<><img src={CafeIcon} alt="Café da manhã" className="hp-icon" /> Café da manhã </>)}
+                                        {tipo === "almoco" && (<><img src={AlmocoIcon} alt="Almoço" className="hp-icon" /> Almoço </>)}
+                                        {tipo === "jantar" && (<><img src={JantarIcon} alt="Jantar" className="hp-icon" /> Jantar </>)}
                                     </h4>
 
                                     <strong>{receita.nome}</strong>

@@ -45,6 +45,46 @@
   cursor: pointer;
 }
 
+.hp-btn-gerar {
+  width: 40%;
+  padding: 5px; 
+  margin-top: 16px;
+
+  border: none;
+  border-radius: 12px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  color: #1b5e20;
+
+  background: linear-gradient(90deg, #FFD700, #FFC107);
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+  transition: all 0.2s ease;
+}
+
+/* Hover (web) */
+.hp-btn-gerar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+/* Clique */
+.hp-btn-gerar:active {
+  transform: scale(0.97);
+}
+
+/* Desabilitado */
+.hp-btn-gerar:disabled {
+  background: #ccc;
+  color: #666;
+  box-shadow: none;
+}
+
+
+
 /* ================= TOGGLE ================= */
 
 .hp-toggle {
@@ -61,4 +101,12 @@
   padding: 12px;
   border-radius: 10px;
   margin-top: 10px;
+}
+
+.hp-refeicao {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  margin-top: 6px;
 }

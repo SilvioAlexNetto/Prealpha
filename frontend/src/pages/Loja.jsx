@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../components/Loja.css";
+import LojaIcon from "../assets/icons/LojaIcon.png";
 
 export default function Loja() {
     const [isPremium, setIsPremium] = useState(
@@ -13,7 +14,7 @@ export default function Loja() {
 
     return (
         <div className="hp-loja-container">
-            <h2>🛒 Loja</h2>
+            <h2 className="hp-titulo"> <img src={LojaIcon} /> Loja </h2>
 
             <div className="hp-loja-card">
                 <h3>🌟 Conta Premium</h3>

@@ -1739,9 +1739,9 @@
                 "unidade": "ml"
             },
             {
-                "nome": "achocolatados",
+                "nome": "achocolatado",
                 "quantidade": 30,
-                "unidade": "ml"
+                "unidade": "g"
             }
         ],
         "modo_preparo": [

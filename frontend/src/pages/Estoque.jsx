@@ -3,6 +3,10 @@ import Quagga from "quagga";
 const BASE_URL = "https://prealpha.onrender.com"
 import { Camera, CameraResultType } from '@capacitor/camera';
 import "../components/Estoque.css";
+import EstoqueTwoIcon from "../assets/icons/EstoqueTwoIcon.png";
+import HistoricoIcon from "../assets/icons/HistoricoIcon.png";
+import CameraIcon from "../assets/icons/CameraIcon.png";
+import DeleteIcon from "../assets/icons/DeleteIcon.png";
 
 export default function Estoque() {
     const [nomeDigitado, setNomeDigitado] = useState("");
@@ -396,15 +400,20 @@ export default function Estoque() {
 
     return (
         <div style={{ padding: 16 }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <h2>📦 Estoque</h2>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h2 className="hp-titulo"> <img src={EstoqueTwoIcon} /> Estoque </h2>
 
                 <button onClick={() => {
                     setModoHistorico(!modoHistorico);
                     const salvo = localStorage.getItem("estoque_historico");
                     setHistorico(salvo ? JSON.parse(salvo) : []);
                 }}>
-                    {modoHistorico ? "⬅ Voltar ao Estoque" : "📜 Ver Histórico"}
+                    <img
+                        src={modoHistorico ? EstoqueTwoIcon : HistoricoIcon}
+                        alt=""
+                        className="hp-icon"
+                    />
+                    {modoHistorico ? "Voltar" : "Histórico"}
                 </button>
             </div>
 
@@ -483,23 +492,32 @@ export default function Estoque() {
                         </button>
 
                         <button onClick={iniciarLeituraCodigo}>
-                            📷
+                            <img
+                                src={CameraIcon}
+                                alt=""
+                                className="hp-icon"
+                            />
                         </button>
                     </div>
 
                     <button
+                        className="hp-btn-danger"
                         onClick={limparEstoque}
-                        style={{ marginTop: 8, background: "red", color: "white" }}
                     >
                         Limpar Estoque
                     </button>
-
                     <hr />
 
                     {estoque.map((e, index) => (
                         <div key={index} className="hp-estoque-linha">
                             <span>{e.nome} — {e.quantidade} {e.unidade}</span>
-                            <button onClick={() => removerItem(index)}>🗑️</button>
+                            <button onClick={() => removerItem(index)}>
+                                <img
+                                    src={DeleteIcon}
+                                    alt=""
+                                    className="hp-icon"
+                                />
+                            </button>
                         </div>
                     ))}
                 </>
@@ -507,7 +525,7 @@ export default function Estoque() {
 
             {modoHistorico && (
                 <>
-                    <h3>📊 Histórico pós-cardápio</h3>
+                    <h3>Histórico pós-cardápio</h3>
 
                     <button
                         onClick={limparHistorico}
@@ -529,7 +547,7 @@ export default function Estoque() {
             {cameraAtiva && (
                 <div className="hp-overlay">
                     <div className="hp-camera-box">
-                        <p>📷 Aponte para o código ({tempoRestante}s)</p>
+                        <p><img src={CameraIcon} alt="" className="hp-icon" /> Aponte para o código ({tempoRestante}s)</p>
                         <div id="camera" className="hp-camera" />
                         <button onClick={encerrarCamera}>Cancelar</button>
                     </div>
