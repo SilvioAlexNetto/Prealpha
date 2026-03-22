@@ -9,7 +9,7 @@ from copy import deepcopy
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 sys.path.append(BASE_DIR)
 
-from FabricaReceitas import proteinasKG, proteinasUN, carboidratos, vegetais, massas, molhos, folhas_saladas, caldos
+from FabricaReceitas import proteinasKG, proteinasUN, carboidratos, vegetais, massas, molhos, folhas_saladas, caldos, gerar_receita
 
 # =========================
 # PATH DO JSON DE RECEITAS
@@ -245,7 +245,6 @@ def gerar_receitas_do_estoque(estoque, qtd=50):
     for _ in range(qtd):
         try:
             receita = gerar_receita()
-
             # 🔧 normaliza categoria
             receita["categoria"] = random.choice(["cafe", "almoco", "jantar"])
 
