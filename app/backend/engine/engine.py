@@ -1,9 +1,9 @@
 import random
 from copy import deepcopy
-from ...database.database import listar_estoque_atual
-from backend.engine.builders import gerar_pf, gerar_massa, gerar_sopa
+from app.database.database import listar_estoque_atual
+from app.backend.engine.builders import gerar_pf, gerar_massa, gerar_sopa
 
-from backend.engine.core import (
+from app.backend.engine.core import (
     escolher_tipo,
     escolher_proteina,
     escolher_carbo_compativel,

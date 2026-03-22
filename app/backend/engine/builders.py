@@ -1,6 +1,6 @@
 import random
 
-from backend.engine.core import (
+from app.backend.engine.core import (
     escolher_proteina,
     escolher_carbo_compativel,
     escolher_proteina_sopa,
@@ -12,7 +12,7 @@ from backend.engine.core import (
     folhas_saladas
 )
 
-from backend.engine.rules import (
+from app.backend.engine.rules import (
     preparar_proteina,
     metodo_para_nome,
     definir_caldo
