@@ -13,8 +13,10 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-/* SERVICE WORKER SOMENTE NO NAVEGADOR */
-if ("serviceWorker" in navigator && !Capacitor.isNativePlatform()) {
+/* SERVICE WORKER SOMENTE EM PRODUÇÃO */
+const isProduction = import.meta.env.PROD;
+
+if ("serviceWorker" in navigator && !Capacitor.isNativePlatform() && isProduction) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/service-worker.js")
