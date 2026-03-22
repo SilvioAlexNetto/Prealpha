@@ -513,14 +513,30 @@ def gerar_salada():
 
 
 def gerar_pf():
-    proteina = escolher_proteina()
-    carbo = escolher_carbo_compativel(proteina["nome"])
-    veg1, veg2 = random.sample(vegetais, 2)
+    # 🔹 PROTEÍNA OBRIGATÓRIA
+    if not proteinasKG and not proteinasUN:
+        raise Exception("Sem proteína disponível")
 
+    proteina = escolher_proteina()
+
+    # 🔹 CARBO OBRIGATÓRIO
+    if not carboidratos:
+        raise Exception("Sem carbo disponível")
+
+    carbo = escolher_carbo_compativel(proteina["nome"])
+
+    # 🔹 VEGETAIS FLEXÍVEL
+    vegetais_disponiveis = list(vegetais)
+
+    vegs_escolhidos = []
+    if len(vegetais_disponiveis) >= 2:
+        vegs_escolhidos = random.sample(vegetais_disponiveis, 2)
+    elif len(vegetais_disponiveis) == 1:
+        vegs_escolhidos = [vegetais_disponiveis[0]]
+
+    # 🔹 PREPARO
     prep = preparar_proteina(proteina["nome"])
     metodo = metodo_para_nome(prep["metodo"])
-
-    tem_salada = adicionar_salada()
 
     ingredientes = [
         {
@@ -532,51 +548,40 @@ def gerar_pf():
             "nome": carbo,
             "quantidade": 90,
             "unidade": "g"
-        },
-        {
-            "nome": veg1,
-            "quantidade": 80,
-            "unidade": "g"
-        },
-        {
-            "nome": veg2,
-            "quantidade": 80,
-            "unidade": "g"
         }
     ]
 
     modo = [
-    f"1. Tempere a {proteina['nome'].lower()} com sal e temperos naturais a gosto.",
-
-    f"2. Em uma frigideira, aqueça um fio de azeite ou óleo e {prep['texto'].lower()}",
-
-    f"3. Em uma panela, cozinhe o {carbo.lower()} em água com uma pitada de sal até ficar macio. Escorra e reserve.",
-
-    f"4. Prepare {veg1.lower()} cozinhando no vapor ou salteando levemente até ficar macio.",
-
-    f"5. Prepare {veg2.lower()} da mesma forma, mantendo leve crocância.",
-
-    "6. Monte o prato distribuindo o carboidrato como base.",
-
-    f"7. Adicione a {proteina['nome'].lower()} preparada por cima.",
-
-    f"8. Acrescente {veg1.lower()} e {veg2.lower()} ao lado ou sobre o prato.",
-
+        f"1. Tempere a {proteina['nome'].lower()} com sal e temperos naturais.",
+        f"2. {prep['texto']}",
+        f"3. Cozinhe o {carbo.lower()} até ficar macio."
     ]
 
-    nome = f"{proteina['nome']} {metodo} com {carbo} e legumes"
+    # 🔹 ADICIONA VEGETAIS SE EXISTIREM
+    for i, veg in enumerate(vegs_escolhidos):
+        ingredientes.append({
+            "nome": veg,
+            "quantidade": 80,
+            "unidade": "g"
+        })
+
+        modo.append(f"{len(modo)+1}. Prepare {veg.lower()} cozinhando ou refogando.")
+
+    # 🔹 SALADA OPCIONAL (SÓ SE TIVER)
+    tem_salada = adicionar_salada() and len(folhas_saladas) >= 2
 
     if tem_salada:
         salada = gerar_salada()
         ingredientes.extend(salada["ingredientes"])
+        modo.append(f"{len(modo)+1}. {salada['descricao']}")
 
-        modo.append(f"9. {salada['descricao']}")
+    nome = f"{proteina['nome']} {metodo} com {carbo}"
+
+    if vegs_escolhidos:
+        nome += " e legumes"
+
+    if tem_salada:
         nome += " com salada"
-
-        modo.extend([
-        "10. Finalize com um fio de azeite ou ervas frescas, se desejar.",
-        "11. Sirva quente."
-        ])
 
     return {
         "nome": nome,
@@ -584,7 +589,7 @@ def gerar_pf():
         "categoria": "almoco",
         "ingredientes": ingredientes,
         "modo_preparo": modo,
-        "tempo_preparo": f"{random.randint(25, 50)} min",
+        "tempo_preparo": f"{random.randint(20, 40)} min",
         "Porcao": "1"
     }
 
