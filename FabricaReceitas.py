@@ -243,4 +243,4 @@ if __name__ == "__main__":
     with open("receitas.json", "w", encoding="utf-8") as f:
         json.dump(receitas, f, ensure_ascii=False, indent=4)
 
-    print("receitas.json gerado com sucesso!")
+    print("receitas.json!")
