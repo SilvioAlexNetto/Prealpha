@@ -9,7 +9,7 @@ from copy import deepcopy
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 sys.path.append(BASE_DIR)
 
-from FabricaReceitas import proteinasKG, proteinasUN, carboidratos, vegetais
+from FabricaReceitas import proteinasKG, proteinasUN, carboidratos, vegetais, massas, molhos, folhas_saladas, caldos
 
 # =========================
 # PATH DO JSON DE RECEITAS
@@ -174,57 +174,86 @@ def normalizar_estoque(estoque):
 # MUDANÇAS
 # =========================
 
-estoque = [
-    {"nome": "Peito de frango", "quantidade": 500, "unidade": "g"},
-    {"nome": "arroz branco", "quantidade": 200, "unidade": "g"},
-]
 
 def classificar_estoque(estoque):
     categorias = {
-        "proteina": [],
-        "carbo": [],
-        "vegetal": []
+        "proteinasKG": [],
+        "proteinasUN": [],
+        "carboidratos": [],
+        "vegetais": [],
+        "massas": [],
+        "molhos": [],
+        "caldos": [],
+        "folhas_saladas": []
     }
 
     for item in estoque:
-        nome = item["nome"].lower()
+        nome = normalizar_ingrediente(item["nome"])
 
-        if any(nome in p.lower() for p in proteinasKG + proteinasUN):
-            categorias["proteina"].append(item)
+        if any(nome in normalizar_ingrediente(p) for p in proteinasKG):
+            categorias["proteinasKG"].append(item)
 
-        elif any(nome in c.lower() for c in carboidratos):
-            categorias["carbo"].append(item)
+        elif any(nome in normalizar_ingrediente(p) for p in proteinasUN):
+            categorias["proteinasUN"].append(item)
 
-        elif any(nome in v.lower() for v in vegetais):
-            categorias["vegetal"].append(item)
+        elif any(nome in normalizar_ingrediente(c) for c in carboidratos):
+            categorias["carboidratos"].append(item)
+
+        elif any(nome in normalizar_ingrediente(v) for v in vegetais):
+            categorias["vegetais"].append(item)
+
+        elif any(nome in normalizar_ingrediente(m) for m in massas):
+            categorias["massas"].append(item)
+
+        elif any(nome in normalizar_ingrediente(m) for m in molhos):
+            categorias["molhos"].append(item)
+
+        elif any(nome in normalizar_ingrediente(c["nome"]) for c in caldos):
+            categorias["caldos"].append(item)
+
+        elif any(nome in normalizar_ingrediente(f) for f in folhas_saladas):
+            categorias["folhas_saladas"].append(item)
 
     return categorias
 
-import random
+def aplicar_estoque_no_fabrica(categorias):
+    # limpa listas
+    proteinasKG.clear()
+    proteinasUN.clear()
+    carboidratos.clear()
+    vegetais.clear()
+    massas.clear()
+    molhos.clear()
+    folhas_saladas.clear()
 
-def gerar_receita_com_estoque(estoque):
-    cat = classificar_estoque(estoque)
+    # injeta apenas o que o usuário tem
+    proteinasKG.extend([i["nome"] for i in categorias["proteinasKG"]])
+    proteinasUN.extend([i["nome"] for i in categorias["proteinasUN"]])
+    carboidratos.extend([i["nome"] for i in categorias["carboidratos"]])
+    vegetais.extend([i["nome"] for i in categorias["vegetais"]])
+    massas.extend([i["nome"] for i in categorias["massas"]])
+    molhos.extend([i["nome"] for i in categorias["molhos"]])
+    folhas_saladas.extend([i["nome"] for i in categorias["folhas_saladas"]])
 
-    if not cat["proteina"] or not cat["carbo"]:
-        return None
+def gerar_receitas_do_estoque(estoque, qtd=50):
+    categorias = classificar_estoque(estoque)
 
-    proteina = random.choice(cat["proteina"])
-    carbo = random.choice(cat["carbo"])
+    aplicar_estoque_no_fabrica(categorias)
 
-    vegetais = []
-    if cat["vegetal"]:
-        vegetais = random.sample(cat["vegetal"], min(2, len(cat["vegetal"])))
+    receitas = []
 
-    ingredientes = [proteina, carbo] + vegetais
+    for _ in range(qtd):
+        try:
+            receita = gerar_receita()
 
-    return {
-        "nome": f"{proteina['nome']} com {carbo['nome']}",
-        "categoria": "almoco",
-        "ingredientes": ingredientes,
-        "modo_preparo": ["Prepare os ingredientes e cozinhe."],
-        "tempo_preparo": "30 min",
-        "Porcao": "1"
-    }
+            # 🔧 normaliza categoria
+            receita["categoria"] = random.choice(["cafe", "almoco", "jantar"])
+
+            receitas.append(receita)
+        except:
+            continue
+
+    return receitas
 
 
 
@@ -237,8 +266,16 @@ def gerar_cardapio(estoque, receitas=None):
 
     tipos = ["cafe", "almoco", "jantar"]
 
-    # ✅ ESTOQUE DE TRABALHO
     estoque_atual = normalizar_estoque(deepcopy(estoque))
+
+    # 🔥 1. GERA RECEITAS DINÂMICAS
+    receitas = gerar_receitas_do_estoque(estoque_atual, qtd=100)
+
+    # 🔥 2. SALVA NO JSON
+    salvar_receitas_dinamicas(receitas)
+
+    # 🔥 3. RECARREGA
+    receitas = carregar_receitas()
 
     cardapio = {}
 
@@ -247,44 +284,24 @@ def gerar_cardapio(estoque, receitas=None):
     ano = hoje.year
     total_dias = calendar.monthrange(ano, mes)[1]
 
-    if receitas is None:
-        receitas = carregar_receitas()
-
     for dia in range(1, total_dias + 1):
         cardapio[dia] = {}
 
         for tipo in tipos:
+            receitas_disponiveis = [
+                r for r in receitas if r["categoria"] == tipo
+            ]
+
+            random.shuffle(receitas_disponiveis)
+
             receita_escolhida = None
 
-            # =========================
-            # 🔥 1. TENTA GERAR DINÂMICO
-            # =========================
-            for tentativa in range(5):
-                receita = gerar_receita_com_estoque(estoque_atual)
-
-                if receita:
-                    receita_escolhida = receita
-                    estoque_atual = abater_estoque(receita, estoque_atual)
+            for r in receitas_disponiveis:
+                if receita_disponivel(r, estoque_atual):
+                    receita_escolhida = r
+                    estoque_atual = abater_estoque(r, estoque_atual)
                     break
 
-            # =========================
-            # 🛟 2. FALLBACK → JSON
-            # =========================
-            if not receita_escolhida:
-                receitas_disponiveis = [
-                    r for r in receitas if r["categoria"] == tipo
-                ]
-                random.shuffle(receitas_disponiveis)
-
-                for r in receitas_disponiveis:
-                    if receita_disponivel(r, estoque_atual):
-                        receita_escolhida = r
-                        estoque_atual = abater_estoque(r, estoque_atual)
-                        break
-
-            # =========================
-            # ✅ GARANTE ESTRUTURA
-            # =========================
             cardapio[dia][tipo] = receita_escolhida if receita_escolhida else {}
 
     return cardapio, estoque_atual
@@ -308,11 +325,6 @@ def listar_ingredientes_e_unidades():
         "unidades": sorted(unidades)
     }
 
-if __name__ == "__main__":
-    estoque = [
-        {"nome": "frango", "quantidade": 500, "unidade": "g"},
-        {"nome": "arroz", "quantidade": 200, "unidade": "g"},
-        {"nome": "cenoura", "quantidade": 100, "unidade": "g"}
-    ]
-
-    print(gerar_receita_com_estoque(estoque))
+def salvar_receitas_dinamicas(receitas):
+    with open(RECEITAS_PATH, "w", encoding="utf-8") as f:
+        json.dump(receitas, f, ensure_ascii=False, indent=4)
