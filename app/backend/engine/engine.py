@@ -48,85 +48,6 @@ def validar_carbo(carbo, estoque):
     return tem_no_estoque(carbo, estoque)
 
 
-# =========================
-# GERAR UMA RECEITA
-# =========================
-def gerar_receita_inteligente(estoque):
-
-    tipo = escolher_tipo()
-
-    # =========================
-    # PRATO FEITO
-    # =========================
-    if tipo == "pf":
-
-        proteina = escolher_proteina()
-
-        if not validar_proteina(proteina, estoque):
-            return None, estoque
-
-        carbo = escolher_carbo_compativel(proteina["nome"])
-
-        if not validar_carbo(carbo, estoque):
-            carbo = "Arroz branco"
-
-        salada = adicionar_salada()
-
-        if tipo == "pf":
-            receita = gerar_pf()
-
-        elif tipo == "massa":
-            receita = gerar_massa()
-
-        elif tipo == "sopa":
-            receita = gerar_sopa()
-
-        estoque = consumir_estoque(proteina["nome"], 1, estoque)
-        estoque = consumir_estoque(carbo, 1, estoque)
-
-        return receita, estoque
-
-
-    # =========================
-    # SOPA
-    # =========================
-    if tipo == "sopa":
-
-        proteina = escolher_proteina_sopa()
-
-        if not validar_proteina(proteina, estoque):
-            return None, estoque
-
-        receita = montar_receita(tipo, proteina, None, False)
-
-        estoque = consumir_estoque(proteina["nome"], 1, estoque)
-
-        return receita, estoque
-
-
-    # =========================
-    # MASSA
-    # =========================
-    if tipo == "massa":
-
-        proteina = escolher_proteina()
-
-        if not validar_proteina(proteina, estoque):
-            return None, estoque
-
-        carbo = "Macarrão"
-
-        if not validar_carbo(carbo, estoque):
-            carbo = "Arroz branco"
-
-        receita = montar_receita(tipo, proteina, carbo, False)
-
-        estoque = consumir_estoque(proteina["nome"], 1, estoque)
-        estoque = consumir_estoque(carbo, 1, estoque)
-
-        return receita, estoque
-
-    return None, estoque
 
 
 # =========================
@@ -188,7 +109,7 @@ def gerar_receita_inteligente(estoque, max_tentativas=10):
 
             salada = adicionar_salada()
 
-            receita = montar_receita(tipo, proteina, carbo, salada)
+            receita = gerar_pf()
 
             estoque = consumir_estoque(proteina["nome"], 1, estoque)
             estoque = consumir_estoque(carbo, 1, estoque)
@@ -205,7 +126,7 @@ def gerar_receita_inteligente(estoque, max_tentativas=10):
             if not validar_proteina(proteina, estoque):
                 continue  # 🔥 pula e tenta outra
 
-            receita = montar_receita(tipo, proteina, None, False)
+            receita = gerar_sopa()
 
             estoque = consumir_estoque(proteina["nome"], 1, estoque)
 
@@ -226,7 +147,7 @@ def gerar_receita_inteligente(estoque, max_tentativas=10):
             if not validar_carbo(carbo, estoque):
                 carbo = "Arroz branco"
 
-            receita = montar_receita(tipo, proteina, carbo, False)
+            receita = gerar_massa()
 
             estoque = consumir_estoque(proteina["nome"], 1, estoque)
             estoque = consumir_estoque(carbo, 1, estoque)

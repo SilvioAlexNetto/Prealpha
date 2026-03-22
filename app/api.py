@@ -97,7 +97,7 @@ def gerar_cardapio_api(mes: int, ano: int):
     if not estoque:
         return {"erro": "sem estoque"}
 
-    cardapio, estoque_final = gerar_cardapio(estoque)
+    cardapio, estoque_final = gerar_receita(estoque)
 
     salvar_cardapio(mes, ano, cardapio, estoque_final)
 

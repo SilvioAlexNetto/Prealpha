@@ -45,7 +45,7 @@ export default function Cardapio() {
     async function gerarCardapio() {
         setCarregando(true);
         try {
-            const res = await fetch(`${BASE_URL}/cardapio`, {
+            const res = await fetch(`${BASE_URL}/cardapio/gerar`, {
                 method: "POST"
             });
             const data = await res.json();
