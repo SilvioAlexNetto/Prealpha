@@ -1,5 +1,5 @@
 import random
-from backend.data.alimentos import *
+from app.backend.data.alimentos import *
 
 
 def escolher_tipo():
