@@ -581,7 +581,7 @@ def gerar_pf():
     return {
         "nome": nome,
         "tipo": "pf",
-        "categoria": "almoço",
+        "categoria": "almoco",
         "ingredientes": ingredientes,
         "modo_preparo": modo,
         "tempo_preparo": f"{random.randint(25, 50)} min",

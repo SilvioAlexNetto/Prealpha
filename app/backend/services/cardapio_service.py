@@ -235,37 +235,18 @@ def aplicar_estoque_no_fabrica(categorias):
     molhos.extend([i["nome"] for i in categorias["molhos"]])
     folhas_saladas.extend([i["nome"] for i in categorias["folhas_saladas"]])
 
-def gerar_receitas_do_estoque(estoque, qtd=50):
+def gerar_receitas_do_estoque(estoque, qtd=100):
     categorias = classificar_estoque(estoque)
+
+    aplicar_estoque_no_fabrica(categorias)  # ✅ AQUI
 
     receitas = []
 
     for _ in range(qtd):
         try:
-            # 🔥 USA SOMENTE ITENS DO ESTOQUE
-            proteina = random.choice(categorias["proteinasKG"] + categorias["proteinasUN"]) if (categorias["proteinasKG"] or categorias["proteinasUN"]) else None
-            carbo = random.choice(categorias["carboidratos"]) if categorias["carboidratos"] else None
+            receita = gerar_receita()
 
-            if not proteina or not carbo:
-                continue
-
-            vegetais_escolhidos = []
-            if categorias["vegetais"]:
-                vegetais_escolhidos = random.sample(
-                    categorias["vegetais"],
-                    min(2, len(categorias["vegetais"]))
-                )
-
-            ingredientes = [proteina, carbo] + vegetais_escolhidos
-
-            receita = {
-                "nome": f"{proteina['nome']} com {carbo['nome']}",
-                "categoria": random.choice(["cafe", "almoco", "jantar"]),
-                "ingredientes": ingredientes,
-                "modo_preparo": ["Prepare os ingredientes e cozinhe."],
-                "tempo_preparo": "30 min",
-                "Porcao": "1"
-            }
+            receita["categoria"] = random.choice(["cafe", "almoco", "jantar"])
 
             receitas.append(receita)
 
@@ -288,14 +269,8 @@ def gerar_cardapio(estoque, receitas=None):
     estoque_atual = normalizar_estoque(deepcopy(estoque))
 
     # 🔥 1. GERA RECEITAS DINÂMICAS
-    receitas = gerar_receitas_do_estoque(estoque_atual, qtd=100)
-
-    # 🔥 2. SALVA NO JSON
-    salvar_receitas_dinamicas(receitas)
-
-    # 🔥 3. RECARREGA
-    receitas = carregar_receitas()
-
+    receitas = gerar_receitas_do_estoque(estoque_atual, qtd=300)
+    
     cardapio = {}
 
     hoje = datetime.now()
