@@ -237,7 +237,7 @@ def aplicar_estoque_no_fabrica(categorias):
 
 def gerar_receitas_do_estoque(estoque, qtd=50):
     categorias = classificar_estoque(estoque)
-
+    print("CATEGORIAS:", categorias)
     aplicar_estoque_no_fabrica(categorias)
 
     receitas = []
@@ -306,21 +306,34 @@ def gerar_cardapio(estoque, receitas=None):
     return cardapio, estoque_atual
 
 def listar_ingredientes_e_unidades():
-    receitas = carregar_receitas()
-
-    ingredientes = {}
+    ingredientes = set()
     unidades = set()
 
-    for receita in receitas:
-        for item in receita.get("ingredientes", []):
-            nome = item["nome"].strip().lower()
-            unidade = item["unidade"].strip().lower()
+    # 🔥 TODAS AS LISTAS DO FABRICA
+    listas = [
+        proteinasKG,
+        proteinasUN,
+        carboidratos,
+        vegetais,
+        massas,
+        molhos,
+        folhas_saladas
+    ]
 
-            ingredientes[nome] = True
-            unidades.add(unidade)
+    for lista in listas:
+        for item in lista:
+            if isinstance(item, dict):
+                nome = item.get("nome")
+                if nome:
+                    ingredientes.add(nome.lower())
+            else:
+                ingredientes.add(str(item).lower())
+
+    # 🔥 UNIDADES PADRÃO DO SISTEMA
+    unidades.update(["g", "kg", "ml", "l", "unidade", "fatia"])
 
     return {
-        "ingredientes": sorted(ingredientes.keys()),
+        "ingredientes": sorted(ingredientes),
         "unidades": sorted(unidades)
     }
 
