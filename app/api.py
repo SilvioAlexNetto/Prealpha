@@ -1,21 +1,28 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from database.database import (
+    salvar_cardapio,
+    buscar_cardapio
+)
 
-from .backend.services.cardapio_service import (
+from backend.engine.engine import gerar_receita
+
+from backend.services.cardapio_service import (
     carregar_receitas,
     gerar_cardapio,
     listar_ingredientes_e_unidades
 )
 
-
-from .database.database import (
+from backend.database.database import (
     listar_estoque_atual,
     adicionar_item_estoque_atual,
     get_connection
 )
 
+
 app = FastAPI()
+
 
 # =========================
 # CORS
@@ -28,19 +35,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # =========================
-# ROTAS BÁSICAS
+# HEALTH CHECK
 # =========================
 @app.get("/")
 def root():
     return {"status": "API HealthCare rodando"}
 
+
 # =========================
-# RECEITAS
+# ENGINE (NOVA ROTA IMPORTANTE)
+# =========================
+@app.get("/gerar-receita")
+def api_gerar_receita():
+    return gerar_receita()
+
+
+# =========================
+# RECEITAS (BANCO)
 # =========================
 @app.get("/receitas")
 def get_receitas():
     return carregar_receitas()
+
 
 # =========================
 # ESTOQUE
@@ -49,9 +67,10 @@ def get_receitas():
 def get_estoque():
     return listar_estoque_atual()
 
+
 @app.post("/estoque")
 def salvar_estoque(itens: list[dict]):
-    # limpa estoque antes
+
     conn = get_connection()
     conn.execute("DELETE FROM estoque_atual")
     conn.commit()
@@ -59,33 +78,51 @@ def salvar_estoque(itens: list[dict]):
 
     for item in itens:
         adicionar_item_estoque_atual(
-            item["nome"],                 # ✅ nome preservado
+            item["nome"],
             float(item["quantidade"]),
             item["unidade"]
         )
 
     return {"status": "ok"}
 
-# =========================
-# CARDÁPIO
-# =========================
-@app.post("/cardapio")
-def gerar_cardapio_api():
-    estoque = listar_estoque_atual()
+@app.post("/cardapio/gerar")
+def gerar_cardapio_api(mes: int, ano: int):
 
-    # 🔒 proteção básica
-    if not estoque:
+    # 🔥 se já existe, NÃO gera de novo
+    existente = buscar_cardapio(mes, ano)
+    if existente:
         return {
-            "cardapio": {},
-            "estoque": []
+            "status": "já existe",
+            "cardapio": existente
         }
 
-    cardapio, estoque_atualizado = gerar_cardapio(estoque)
+    estoque = listar_estoque_atual()
+
+    if not estoque:
+        return {"erro": "sem estoque"}
+
+    cardapio, estoque_final = gerar_cardapio(estoque)
+
+    salvar_cardapio(mes, ano, cardapio, estoque_final)
 
     return {
-        "cardapio": cardapio,
-        "estoque": estoque_atualizado
+        "status": "gerado",
+        "cardapio": cardapio
     }
+
+@app.get("/cardapio")
+def get_cardapio(mes: int, ano: int):
+
+    data = buscar_cardapio(mes, ano)
+
+    if not data:
+        return {
+            "status": "não existe",
+            "cardapio": None
+        }
+
+    return data
+
 
 # =========================
 # INGREDIENTES
@@ -93,4 +130,3 @@ def gerar_cardapio_api():
 @app.get("/ingredientes")
 def get_ingredientes():
     return listar_ingredientes_e_unidades()
-
