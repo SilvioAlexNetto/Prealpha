@@ -1,23 +1,19 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database.database import (
+from app.database.database import (
     salvar_cardapio,
-    buscar_cardapio
-)
-
-from backend.engine.engine import gerar_receita
-
-from backend.services.cardapio_service import (
-    carregar_receitas,
-    gerar_cardapio,
-    listar_ingredientes_e_unidades
-)
-
-from backend.database.database import (
+    buscar_cardapio,
     listar_estoque_atual,
     adicionar_item_estoque_atual,
     get_connection
+)
+
+from app.backend.engine.engine import gerar_receita
+
+from backend.services.cardapio_service import (
+    carregar_receitas,
+    listar_ingredientes_e_unidades
 )
 
 
