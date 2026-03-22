@@ -17,10 +17,10 @@ export default function Loja() {
             <h2 className="hp-titulo"> <img src={LojaIcon} /> Loja </h2>
 
             <div className="hp-loja-card">
-                <h3>🌟 Conta Premium</h3>
+                <h3>🌟 Conta Plus</h3>
 
                 <ul className="hp-loja-lista">
-                    <li>✅ App sem anúncios</li>
+                    <li>✅ Livre de anúncios</li>
                     <li>✅ Acesso à ficha nutricional</li>
                     <li>✅ Cálculos avançados de saúde</li>
                 </ul>
@@ -35,6 +35,28 @@ export default function Loja() {
                     </button>
                 )}
             </div>
+
+            <div className="hp-loja-card">
+                <h3>🌟 Conta Family</h3>
+
+                <ul className="hp-loja-lista">
+                    <li>✅ App sem anúncios</li>
+                    <li>✅ Acesso à ficha nutricional</li>
+                    <li>✅ Cálculos avançados de saúde</li>
+                    <li>✅ Acesso até 4 perfis</li>
+                </ul>
+
+                {isPremium ? (
+                    <div className="hp-loja-ativo">
+                        🎉 Premium ativo
+                    </div>
+                ) : (
+                    <button className="hp-btn" onClick={ativarPremium}>
+                        Ativar Premium
+                    </button>
+                )}
+            </div>
+
         </div>
     );
 }

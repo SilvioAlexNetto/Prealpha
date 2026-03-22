@@ -403,7 +403,7 @@ export default function Estoque() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <h2 className="hp-titulo"> <img src={EstoqueTwoIcon} /> Estoque </h2>
 
-                <button onClick={() => {
+                <button className="hp-subaba-btn" onClick={() => {
                     setModoHistorico(!modoHistorico);
                     const salvo = localStorage.getItem("estoque_historico");
                     setHistorico(salvo ? JSON.parse(salvo) : []);
@@ -487,7 +487,7 @@ export default function Estoque() {
                     </select>
 
                     <div style={{ display: "flex", gap: 8 }}>
-                        <button onClick={adicionarItem} disabled={!ingredienteSelecionado}>
+                        <button className="hp-btn-save" onClick={adicionarItem} disabled={!ingredienteSelecionado}>
                             Salvar
                         </button>
 
@@ -529,7 +529,7 @@ export default function Estoque() {
 
                     <button
                         onClick={limparHistorico}
-                        style={{ background: "red", color: "white", marginBottom: 12 }}
+                        className="hp-btn-danger"
                     >
                         Limpar Histórico
                     </button>

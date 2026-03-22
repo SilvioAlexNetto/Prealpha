@@ -1,8 +1,15 @@
 import os
+import sys
 import json
 import random
 import unicodedata
 from copy import deepcopy
+
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+sys.path.append(BASE_DIR)
+
+from FabricaReceitas import proteinasKG, proteinasUN, carboidratos, vegetais
 
 # =========================
 # PATH DO JSON DE RECEITAS
@@ -164,8 +171,64 @@ def normalizar_estoque(estoque):
     return estoque_corrigido
 
 # =========================
-# GERAR CARDÁPIO
+# MUDANÇAS
 # =========================
+
+estoque = [
+    {"nome": "Peito de frango", "quantidade": 500, "unidade": "g"},
+    {"nome": "arroz branco", "quantidade": 200, "unidade": "g"},
+]
+
+def classificar_estoque(estoque):
+    categorias = {
+        "proteina": [],
+        "carbo": [],
+        "vegetal": []
+    }
+
+    for item in estoque:
+        nome = item["nome"].lower()
+
+        if any(nome in p.lower() for p in proteinasKG + proteinasUN):
+            categorias["proteina"].append(item)
+
+        elif any(nome in c.lower() for c in carboidratos):
+            categorias["carbo"].append(item)
+
+        elif any(nome in v.lower() for v in vegetais):
+            categorias["vegetal"].append(item)
+
+    return categorias
+
+import random
+
+def gerar_receita_com_estoque(estoque):
+    cat = classificar_estoque(estoque)
+
+    if not cat["proteina"] or not cat["carbo"]:
+        return None
+
+    proteina = random.choice(cat["proteina"])
+    carbo = random.choice(cat["carbo"])
+
+    vegetais = []
+    if cat["vegetal"]:
+        vegetais = random.sample(cat["vegetal"], min(2, len(cat["vegetal"])))
+
+    ingredientes = [proteina, carbo] + vegetais
+
+    return {
+        "nome": f"{proteina['nome']} com {carbo['nome']}",
+        "categoria": "almoco",
+        "ingredientes": ingredientes,
+        "modo_preparo": ["Prepare os ingredientes e cozinhe."],
+        "tempo_preparo": "30 min",
+        "Porcao": "1"
+    }
+
+
+
+
 def gerar_cardapio(estoque, receitas=None):
     from datetime import datetime
     import calendar
@@ -174,7 +237,7 @@ def gerar_cardapio(estoque, receitas=None):
 
     tipos = ["cafe", "almoco", "jantar"]
 
-    # ✅ ESTOQUE DE TRABALHO (NOME PRESERVADO)
+    # ✅ ESTOQUE DE TRABALHO
     estoque_atual = normalizar_estoque(deepcopy(estoque))
 
     cardapio = {}
@@ -191,23 +254,39 @@ def gerar_cardapio(estoque, receitas=None):
         cardapio[dia] = {}
 
         for tipo in tipos:
-            receitas_disponiveis = [
-                r for r in receitas if r["categoria"] == tipo
-            ]
-            random.shuffle(receitas_disponiveis)
-
             receita_escolhida = None
 
-            for r in receitas_disponiveis:
-                if receita_disponivel(r, estoque_atual):
-                    receita_escolhida = r
-                    estoque_atual = abater_estoque(r, estoque_atual)
+            # =========================
+            # 🔥 1. TENTA GERAR DINÂMICO
+            # =========================
+            for tentativa in range(5):
+                receita = gerar_receita_com_estoque(estoque_atual)
+
+                if receita:
+                    receita_escolhida = receita
+                    estoque_atual = abater_estoque(receita, estoque_atual)
                     break
 
-            # ✅ nunca deixa None "quebrar" o estado
+            # =========================
+            # 🛟 2. FALLBACK → JSON
+            # =========================
+            if not receita_escolhida:
+                receitas_disponiveis = [
+                    r for r in receitas if r["categoria"] == tipo
+                ]
+                random.shuffle(receitas_disponiveis)
+
+                for r in receitas_disponiveis:
+                    if receita_disponivel(r, estoque_atual):
+                        receita_escolhida = r
+                        estoque_atual = abater_estoque(r, estoque_atual)
+                        break
+
+            # =========================
+            # ✅ GARANTE ESTRUTURA
+            # =========================
             cardapio[dia][tipo] = receita_escolhida if receita_escolhida else {}
 
-    # ✅ retorno consistente para histórico
     return cardapio, estoque_atual
 
 def listar_ingredientes_e_unidades():
@@ -228,3 +307,12 @@ def listar_ingredientes_e_unidades():
         "ingredientes": sorted(ingredientes.keys()),
         "unidades": sorted(unidades)
     }
+
+if __name__ == "__main__":
+    estoque = [
+        {"nome": "frango", "quantidade": 500, "unidade": "g"},
+        {"nome": "arroz", "quantidade": 200, "unidade": "g"},
+        {"nome": "cenoura", "quantidade": 100, "unidade": "g"}
+    ]
+
+    print(gerar_receita_com_estoque(estoque))
