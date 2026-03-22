@@ -237,20 +237,40 @@ def aplicar_estoque_no_fabrica(categorias):
 
 def gerar_receitas_do_estoque(estoque, qtd=50):
     categorias = classificar_estoque(estoque)
-    print("CATEGORIAS:", categorias)
-    aplicar_estoque_no_fabrica(categorias)
 
     receitas = []
 
     for _ in range(qtd):
         try:
-            receita = gerar_receita()
-            # 🔧 normaliza categoria
-            receita["categoria"] = random.choice(["cafe", "almoco", "jantar"])
+            # 🔥 USA SOMENTE ITENS DO ESTOQUE
+            proteina = random.choice(categorias["proteinasKG"] + categorias["proteinasUN"]) if (categorias["proteinasKG"] or categorias["proteinasUN"]) else None
+            carbo = random.choice(categorias["carboidratos"]) if categorias["carboidratos"] else None
+
+            if not proteina or not carbo:
+                continue
+
+            vegetais_escolhidos = []
+            if categorias["vegetais"]:
+                vegetais_escolhidos = random.sample(
+                    categorias["vegetais"],
+                    min(2, len(categorias["vegetais"]))
+                )
+
+            ingredientes = [proteina, carbo] + vegetais_escolhidos
+
+            receita = {
+                "nome": f"{proteina['nome']} com {carbo['nome']}",
+                "categoria": random.choice(["cafe", "almoco", "jantar"]),
+                "ingredientes": ingredientes,
+                "modo_preparo": ["Prepare os ingredientes e cozinhe."],
+                "tempo_preparo": "30 min",
+                "Porcao": "1"
+            }
 
             receitas.append(receita)
-        except:
-            continue
+
+        except Exception as e:
+            print("Erro:", e)
 
     return receitas
 
