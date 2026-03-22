@@ -5,11 +5,14 @@ import random
 import unicodedata
 from copy import deepcopy
 
-
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 sys.path.append(BASE_DIR)
 
-from FabricaReceitas import proteinasKG, proteinasUN, carboidratos, vegetais, massas, molhos, folhas_saladas, caldos, gerar_receita
+from FabricaReceitas import (
+    proteinasKG, proteinasUN, carboidratos, vegetais,
+    massas, molhos, folhas_saladas, caldos,
+    gerar_receita
+)
 
 # =========================
 # PATH DO JSON DE RECEITAS
@@ -58,7 +61,6 @@ def carregar_receitas():
         receitas = json.load(f)
         
     for receita in receitas:
-        # dentro de carregar_receitas()
         receita["categoria"] = normalizar_ingrediente(receita["categoria"])
         for ing in receita["ingredientes"]:
             ing["nome"] = normalizar_ingrediente(ing["nome"])
@@ -81,7 +83,6 @@ def receita_disponivel(receita, estoque):
     estoque_dict = {}
 
     for item in estoque:
-        # 🔧 UPGRADE: proteção contra dados inválidos
         nome_bruto = item.get("nome") or item.get("item")
         if not nome_bruto:
             continue
@@ -91,7 +92,6 @@ def receita_disponivel(receita, estoque):
         estoque_dict[nome] = {"quantidade": qtd, "unidade": unid}
 
     for ing in receita["ingredientes"]:
-        # 🔧 UPGRADE: proteção extra
         if "nome" not in ing:
             continue
 
@@ -115,7 +115,6 @@ def receita_disponivel(receita, estoque):
 def abater_estoque(receita, estoque):
     estoque_dict = {}
 
-    # 🔹 Mapeia estoque preservando nome original (ROBUSTO)
     for item in estoque:
         nome_original = item.get("nome") or item.get("item")
         if not nome_original:
@@ -125,12 +124,11 @@ def abater_estoque(receita, estoque):
         qtd, unid = para_menor_unidade(item["quantidade"], item["unidade"])
 
         estoque_dict[nome_norm] = {
-            "nome": nome_original,   # ✅ nome garantido
+            "nome": nome_original,
             "quantidade": qtd,
             "unidade": unid
         }
 
-    # 🔹 Abate ingredientes
     for ing in receita["ingredientes"]:
         nome_norm = normalizar_ingrediente(ing["nome"])
         qtd_necessaria, _ = para_menor_unidade(
@@ -143,7 +141,6 @@ def abater_estoque(receita, estoque):
             if estoque_dict[nome_norm]["quantidade"] <= 0:
                 del estoque_dict[nome_norm]
 
-    # 🔹 Reconstrói estoque final (histórico)
     estoque_atualizado = []
     for dados in estoque_dict.values():
         estoque_atualizado.append({
@@ -160,7 +157,7 @@ def normalizar_estoque(estoque):
     for item in estoque:
         nome = item.get("nome") or item.get("item")
         if not nome:
-            continue  # ignora lixo
+            continue
 
         estoque_corrigido.append({
             "nome": nome,
@@ -171,10 +168,8 @@ def normalizar_estoque(estoque):
     return estoque_corrigido
 
 # =========================
-# MUDANÇAS
+# CLASSIFICAR ESTOQUE
 # =========================
-
-
 def classificar_estoque(estoque):
     categorias = {
         "proteinasKG": [],
@@ -216,61 +211,55 @@ def classificar_estoque(estoque):
 
     return categorias
 
-def aplicar_estoque_no_fabrica(categorias):
-    # limpa listas
-    proteinasKG.clear()
-    proteinasUN.clear()
-    carboidratos.clear()
-    vegetais.clear()
-    massas.clear()
-    molhos.clear()
-    folhas_saladas.clear()
+# =========================
+# GERAR RECEITA CUSTOM (SEM GLOBAL)
+# =========================
+def gerar_receita_custom(categorias):
 
-    # injeta apenas o que o usuário tem
-    proteinasKG.extend([i["nome"] for i in categorias["proteinasKG"]])
-    proteinasUN.extend([i["nome"] for i in categorias["proteinasUN"]])
-    carboidratos.extend([i["nome"] for i in categorias["carboidratos"]])
-    vegetais.extend([i["nome"] for i in categorias["vegetais"]])
-    massas.extend([i["nome"] for i in categorias["massas"]])
-    molhos.extend([i["nome"] for i in categorias["molhos"]])
-    folhas_saladas.extend([i["nome"] for i in categorias["folhas_saladas"]])
+    def escolher_proteina_local():
+        if categorias["proteinasKG"]:
+            nome = random.choice(categorias["proteinasKG"])["nome"]
+            return {"nome": nome, "quantidade": 120, "unidade": "g"}
+        if categorias["proteinasUN"]:
+            nome = random.choice(categorias["proteinasUN"])["nome"]
+            return {"nome": nome, "quantidade": 2, "unidade": "unidade"}
+        raise Exception("Sem proteína")
 
-def gerar_receitas_do_estoque(estoque, qtd=100):
-    categorias = classificar_estoque(estoque)
+    def escolher_item(lista, erro):
+        if not lista:
+            raise Exception(erro)
+        return random.choice(lista)["nome"]
 
-    aplicar_estoque_no_fabrica(categorias)  # ✅ AQUI
+    proteina = escolher_proteina_local()
+    carbo = escolher_item(categorias["carboidratos"], "Sem carboidrato")
 
-    receitas = []
+    if len(categorias["vegetais"]) < 2:
+        raise Exception("Sem vegetais suficientes")
 
-    for _ in range(qtd):
-        try:
-            receita = gerar_receita()
+    vegs = random.sample(categorias["vegetais"], 2)
 
-            receita["categoria"] = random.choice(["cafe", "almoco", "jantar"])
+    return {
+        "nome": f"{proteina['nome']} com {carbo}",
+        "categoria": random.choice(["cafe", "almoco", "jantar"]),
+        "ingredientes": [
+            proteina,
+            {"nome": carbo, "quantidade": 90, "unidade": "g"},
+            {"nome": vegs[0]["nome"], "quantidade": 80, "unidade": "g"},
+            {"nome": vegs[1]["nome"], "quantidade": 80, "unidade": "g"}
+        ]
+    }
 
-            receitas.append(receita)
-
-        except Exception as e:
-            print("Erro:", e)
-
-    return receitas
-
-
-
-
+# =========================
+# GERAR CARDÁPIO (FIXADO)
+# =========================
 def gerar_cardapio(estoque, receitas=None):
     from datetime import datetime
     import calendar
-    import random
-    from copy import deepcopy
 
     tipos = ["cafe", "almoco", "jantar"]
 
     estoque_atual = normalizar_estoque(deepcopy(estoque))
 
-    # 🔥 1. GERA RECEITAS DINÂMICAS
-    receitas = gerar_receitas_do_estoque(estoque_atual, qtd=300)
-    
     cardapio = {}
 
     hoje = datetime.now()
@@ -282,37 +271,36 @@ def gerar_cardapio(estoque, receitas=None):
         cardapio[dia] = {}
 
         for tipo in tipos:
-            receitas_disponiveis = [
-                r for r in receitas if r["categoria"] == tipo
-            ]
-
-            random.shuffle(receitas_disponiveis)
-
             receita_escolhida = None
 
-            for r in receitas_disponiveis:
-                if receita_disponivel(r, estoque_atual):
-                    receita_escolhida = r
-                    estoque_atual = abater_estoque(r, estoque_atual)
-                    break
+            for _ in range(50):
+                try:
+                    categorias = classificar_estoque(estoque_atual)
+                    receita = gerar_receita_custom(categorias)
+                    receita["categoria"] = tipo
+
+                    if receita_disponivel(receita, estoque_atual):
+                        receita_escolhida = receita
+                        estoque_atual = abater_estoque(receita, estoque_atual)
+                        break
+
+                except:
+                    continue
 
             cardapio[dia][tipo] = receita_escolhida if receita_escolhida else {}
 
     return cardapio, estoque_atual
 
+# =========================
+# UTILIDADES
+# =========================
 def listar_ingredientes_e_unidades():
     ingredientes = set()
     unidades = set()
 
-    # 🔥 TODAS AS LISTAS DO FABRICA
     listas = [
-        proteinasKG,
-        proteinasUN,
-        carboidratos,
-        vegetais,
-        massas,
-        molhos,
-        folhas_saladas
+        proteinasKG, proteinasUN, carboidratos,
+        vegetais, massas, molhos, folhas_saladas
     ]
 
     for lista in listas:
@@ -324,7 +312,6 @@ def listar_ingredientes_e_unidades():
             else:
                 ingredientes.add(str(item).lower())
 
-    # 🔥 UNIDADES PADRÃO DO SISTEMA
     unidades.update(["g", "kg", "ml", "l", "unidade", "fatia"])
 
     return {

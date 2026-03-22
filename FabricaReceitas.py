@@ -782,11 +782,11 @@ def gerar_receita():
 # LOTE
 # =========================
 
-def gerar_lote(qtd=50000):
+def gerar_lote(qtd=5000):
     return [gerar_receita() for _ in range(qtd)]
 
 if __name__ == "__main__":
-    receitas = gerar_lote(50000)
+    receitas = gerar_lote(5000)
 
     with open("receitas_almoco.json", "w", encoding="utf-8") as f:
         json.dump(receitas, f, ensure_ascii=False, indent=4)
