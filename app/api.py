@@ -11,7 +11,7 @@ from app.database.database import (
 
 from app.backend.engine.engine import gerar_receita
 
-from backend.services.cardapio_service import (
+from app.backend.services.cardapio_service import (
     carregar_receitas,
     listar_ingredientes_e_unidades
 )
