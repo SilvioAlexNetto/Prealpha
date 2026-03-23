@@ -44,29 +44,34 @@ export default function Cardapio() {
 
     async function gerarCardapio() {
         setCarregando(true);
+
         try {
+            const hoje = new Date();
+
+            const body = {
+                mes: hoje.getMonth() + 1,
+                ano: hoje.getFullYear()
+            };
+
             const res = await fetch(`${BASE_URL}/cardapio/gerar`, {
-                method: "POST"
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
             });
+
             const data = await res.json();
-            // 👇 COLOCA AQUI
+
             console.log("STATUS:", data.status);
             console.log("CARDAPIO:", data.cardapio);
-            console.log("FULL DATA:", JSON.stringify(data, null, 2));
-
-            console.log("Retorno do cardapio", data);
+            console.log("FULL DATA:", data);
 
             setCardapio(data.cardapio || {});
-
-            if (data.estoque) {
-                localStorage.setItem(
-                    "estoque_historico",
-                    JSON.stringify(data.estoque)
-                );
-            }
         } catch (err) {
             console.error("Erro ao gerar cardápio", err);
         }
+
         setCarregando(false);
     }
 
