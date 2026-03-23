@@ -13,6 +13,13 @@ self.addEventListener("install", event => {
 });
 
 self.addEventListener("fetch", event => {
+    const url = new URL(event.request.url);
+
+    // 🚨 IGNORA chamadas para API externa
+    if (url.origin !== location.origin) {
+        return; // deixa o browser fazer a requisição normal
+    }
+
     event.respondWith(
         caches.match(event.request).then(response => {
             return response || fetch(event.request);
