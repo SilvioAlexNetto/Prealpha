@@ -10,6 +10,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost",
         "https://localhost",
+        "https://prealpha.onrender.com/",
         "capacitor://localhost",
         "ionic://localhost"
     ],
