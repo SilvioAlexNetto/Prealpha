@@ -89,30 +89,42 @@ class CardapioRequest(BaseModel):
 
 @app.post("/cardapio/gerar")
 def gerar_cardapio_api(req: CardapioRequest):
+    try:
+        mes = req.mes
+        ano = req.ano
 
-    mes = req.mes
-    ano = req.ano
+        existente = buscar_cardapio(mes, ano)
+        if existente:
+            return {
+                "status": "já existe",
+                "cardapio": existente
+            }
 
-    existente = buscar_cardapio(mes, ano)
-    if existente:
+        estoque = listar_estoque_atual()
+
+        if not estoque:
+            return {"erro": "sem estoque"}
+
+        # 🔥 AQUI ESTÁ A CORREÇÃO
+        resultado = gerar_receita(estoque)
+
+        # Se veio erro da função
+        if "receita" not in resultado:
+            return resultado
+
+        cardapio = resultado["receita"]
+        estoque_final = resultado["estoque"]
+
+        salvar_cardapio(mes, ano, cardapio, estoque_final)
+
         return {
-            "status": "já existe",
-            "cardapio": existente
+            "status": "gerado",
+            "cardapio": cardapio
         }
 
-    estoque = listar_estoque_atual()
-
-    if not estoque:
-        return {"erro": "sem estoque"}
-
-    cardapio, estoque_final = gerar_receita(estoque)
-
-    salvar_cardapio(mes, ano, cardapio, estoque_final)
-
-    return {
-        "status": "gerado",
-        "cardapio": cardapio
-    }
+    except Exception as e:
+        print("ERRO BACKEND:", e)
+        return {"erro": str(e)}
 
 @app.get("/cardapio")
 def get_cardapio(mes: int, ano: int):
