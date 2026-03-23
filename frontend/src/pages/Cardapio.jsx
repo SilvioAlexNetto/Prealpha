@@ -49,6 +49,11 @@ export default function Cardapio() {
                 method: "POST"
             });
             const data = await res.json();
+            // 👇 COLOCA AQUI
+            console.log("STATUS:", data.status);
+            console.log("CARDAPIO:", data.cardapio);
+            console.log("FULL DATA:", JSON.stringify(data, null, 2));
+
             console.log("Retorno do cardapio", data);
 
             setCardapio(data.cardapio || {});

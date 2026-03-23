@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 from app.database.database import (
     salvar_cardapio,
@@ -81,10 +82,17 @@ def salvar_estoque(itens: list[dict]):
 
     return {"status": "ok"}
 
-@app.post("/cardapio/gerar")
-def gerar_cardapio_api(mes: int, ano: int):
+class CardapioRequest(BaseModel):
+    mes: int
+    ano: int
 
-    # 🔥 se já existe, NÃO gera de novo
+
+@app.post("/cardapio/gerar")
+def gerar_cardapio_api(req: CardapioRequest):
+
+    mes = req.mes
+    ano = req.ano
+
     existente = buscar_cardapio(mes, ano)
     if existente:
         return {
