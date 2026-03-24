@@ -1,169 +1,204 @@
 import random
 from copy import deepcopy
-from app.database.database import listar_estoque_atual
-from app.backend.engine.builders import gerar_pf, gerar_massa, gerar_sopa
 
-from app.backend.engine.core import (
-    escolher_tipo,
-    escolher_proteina,
-    escolher_carbo_compativel,
-    adicionar_salada,
-    escolher_proteina_sopa
+from app.backend.engine.builders import gerar_pf, gerar_massa, gerar_sopa
+from app.backend.data.alimentos import (
+    proteinasKG, proteinasUN, carboidratos, vegetais, massas
 )
 
 # =========================
-# VERIFICAR ESTOQUE
+# NORMALIZAÇÃO
 # =========================
-def tem_no_estoque(item_nome, estoque):
+def nome_igual(a, b):
+    return a.strip().lower() == b.strip().lower()
+
+
+# =========================
+# BUSCAR ITEM NO ESTOQUE
+# =========================
+def buscar_item(nome, estoque):
     for item in estoque:
-        if item["nome"].lower() == item_nome.lower():
-            return item["quantidade"] > 0
-    return False
+        if nome_igual(item["nome"], nome):
+            return item
+    return None
 
 
 # =========================
-# CONSUMIR ESTOQUE
+# VALIDAR QUANTIDADE REAL
 # =========================
-def consumir_estoque(item_nome, quantidade, estoque):
+def tem_quantidade(nome, quantidade, estoque):
+    item = buscar_item(nome, estoque)
+    if not item:
+        return False
+    return item["quantidade"] >= quantidade
 
-    for item in estoque:
-        if item["nome"].lower() == item_nome.lower():
 
-            item["quantidade"] -= quantidade
-
-            if item["quantidade"] < 0:
-                item["quantidade"] = 0
-
+# =========================
+# CONSUMIR ESTOQUE REAL
+# =========================
+def consumir_estoque(nome, quantidade, estoque):
+    item = buscar_item(nome, estoque)
+    if item:
+        item["quantidade"] -= quantidade
+        if item["quantidade"] < 0:
+            item["quantidade"] = 0
     return estoque
 
 
 # =========================
-# VALIDAÇÕES
+# FILTROS BASEADOS NO ESTOQUE
 # =========================
-def validar_proteina(proteina, estoque):
-    return tem_no_estoque(proteina["nome"], estoque)
+def filtrar_proteinas(estoque):
+    return [
+        item for item in estoque
+        if item["nome"] in proteinasKG + proteinasUN
+        and item["quantidade"] > 0
+    ]
 
 
-def validar_carbo(carbo, estoque):
-    return tem_no_estoque(carbo, estoque)
+def filtrar_carbo(estoque):
+    return [
+        item for item in estoque
+        if item["nome"] in carboidratos
+        and item["quantidade"] > 0
+    ]
 
 
+def filtrar_vegetais(estoque):
+    return [
+        item for item in estoque
+        if item["nome"] in vegetais
+        and item["quantidade"] > 0
+    ]
+
+
+def filtrar_massas(estoque):
+    return [
+        item for item in estoque
+        if item["nome"] in massas
+        and item["quantidade"] > 0
+    ]
 
 
 # =========================
-# 🔥 ENGINE PROCEDURAL MENSAL (NOVO CORE)
+# GERAR RECEITA INTELIGENTE
 # =========================
-
-def gerar_cardapio_mensal():
-
-    estoque_inicial = listar_estoque_atual()
-    estoque = deepcopy(estoque_inicial)
-
-    cardapio = {}
-
-    for dia in range(1, 32):
-
-        cardapio[dia] = {
-            "cafe": None,
-            "almoco": None,
-            "jantar": None
-        }
-
-        for refeicao in ["cafe", "almoco", "jantar"]:
-
-            receita, estoque = gerar_receita_inteligente(estoque)
-
-            # 🔥 fallback final de segurança
-            if receita is None:
-                cardapio[dia][refeicao] = {
-                    "nome": "Refeição alternativa",
-                    "ingredientes": [],
-                    "modo_preparo": [],
-                    "tempo_preparo": "0 min"
-                }
-            else:
-                cardapio[dia][refeicao] = receita
-
-    return cardapio, estoque
-
-def gerar_receita_inteligente(estoque, max_tentativas=10):
+def gerar_receita_inteligente(estoque, max_tentativas=20):
 
     for _ in range(max_tentativas):
 
-        tipo = escolher_tipo()
+        proteinas = filtrar_proteinas(estoque)
+        if not proteinas:
+            return None, estoque
+
+        proteina = random.choice(proteinas)
 
         # =========================
-        # PRATO FEITO
+        # PF
         # =========================
-        if tipo == "pf":
+        if random.random() < 0.5:
 
-            proteina = escolher_proteina()
+            carbos = filtrar_carbo(estoque)
+            vegetais_disp = filtrar_vegetais(estoque)
 
-            if not validar_proteina(proteina, estoque):
-                continue  # 🔥 FALLBACK: tenta outra receita
+            if not carbos or len(vegetais_disp) < 2:
+                continue
 
-            carbo = escolher_carbo_compativel(proteina["nome"])
+            carbo = random.choice(carbos)
+            vegs = random.sample(vegetais_disp, 2)
 
-            if not validar_carbo(carbo, estoque):
-                carbo = "Arroz branco"
+            # quantidades padrão
+            qtd_prot = proteina["quantidade"] >= 120 and 120 or proteina["quantidade"]
+            qtd_carbo = 90
+            qtd_veg = 80
 
-            salada = adicionar_salada()
+            # valida tudo
+            if not (
+                tem_quantidade(proteina["nome"], qtd_prot, estoque) and
+                tem_quantidade(carbo["nome"], qtd_carbo, estoque) and
+                tem_quantidade(vegs[0]["nome"], qtd_veg, estoque) and
+                tem_quantidade(vegs[1]["nome"], qtd_veg, estoque)
+            ):
+                continue
 
-            receita = gerar_pf()
+            receita = gerar_pf(
+                proteina["nome"], qtd_prot, proteina["unidade"],
+                carbo["nome"], qtd_carbo,
+                vegs
+            )
 
-            estoque = consumir_estoque(proteina["nome"], 1, estoque)
-            estoque = consumir_estoque(carbo, 1, estoque)
-
-            return receita, estoque
-
-        # =========================
-        # SOPA
-        # =========================
-        if tipo == "sopa":
-
-            proteina = escolher_proteina_sopa()
-
-            if not validar_proteina(proteina, estoque):
-                continue  # 🔥 pula e tenta outra
-
-            receita = gerar_sopa()
-
-            estoque = consumir_estoque(proteina["nome"], 1, estoque)
+            # consumir
+            consumir_estoque(proteina["nome"], qtd_prot, estoque)
+            consumir_estoque(carbo["nome"], qtd_carbo, estoque)
+            consumir_estoque(vegs[0]["nome"], qtd_veg, estoque)
+            consumir_estoque(vegs[1]["nome"], qtd_veg, estoque)
 
             return receita, estoque
 
         # =========================
         # MASSA
         # =========================
-        if tipo == "massa":
+        if random.random() < 0.75:
 
-            proteina = escolher_proteina()
+            massas_disp = filtrar_massas(estoque)
+            vegetais_disp = filtrar_vegetais(estoque)
 
-            if not validar_proteina(proteina, estoque):
+            if not massas_disp or len(vegetais_disp) < 2:
                 continue
 
-            carbo = "Macarrão"
+            massa = random.choice(massas_disp)
+            vegs = random.sample(vegetais_disp, 2)
 
-            if not validar_carbo(carbo, estoque):
-                carbo = "Arroz branco"
+            if not (
+                tem_quantidade(massa["nome"], 100, estoque) and
+                tem_quantidade(proteina["nome"], 120, estoque)
+            ):
+                continue
 
-            receita = gerar_massa()
+            receita = gerar_massa(
+                massa["nome"],
+                proteina["nome"], 120,
+                vegs
+            )
 
-            estoque = consumir_estoque(proteina["nome"], 1, estoque)
-            estoque = consumir_estoque(carbo, 1, estoque)
+            consumir_estoque(massa["nome"], 100, estoque)
+            consumir_estoque(proteina["nome"], 120, estoque)
 
             return receita, estoque
 
-    # 🔥 se nenhuma tentativa funcionar
+        # =========================
+        # SOPA
+        # =========================
+        vegetais_disp = filtrar_vegetais(estoque)
+
+        if len(vegetais_disp) < 3:
+            continue
+
+        vegs = random.sample(vegetais_disp, 3)
+
+        if not tem_quantidade(proteina["nome"], 100, estoque):
+            continue
+
+        receita = gerar_sopa(
+            proteina["nome"], 100,
+            vegs
+        )
+
+        consumir_estoque(proteina["nome"], 100, estoque)
+
+        return receita, estoque
+
     return None, estoque
 
 
 # =========================
-# API LEGACY (mantido)
+# API
 # =========================
 def gerar_receita(estoque):
 
-    receita, estoque_atual = gerar_receita_inteligente(estoque)
+    estoque_copia = deepcopy(estoque)
+
+    receita, estoque_final = gerar_receita_inteligente(estoque_copia)
 
     if not receita:
         return {
@@ -172,5 +207,5 @@ def gerar_receita(estoque):
 
     return {
         "receita": receita,
-        "estoque": estoque_atual
+        "estoque": estoque_final
     }
