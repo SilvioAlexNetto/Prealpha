@@ -108,7 +108,9 @@ export default function Estoque() {
         fetch(`${BASE_URL}/estoque`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(novoEstoque),
+            body: JSON.stringify({
+                estoque: novoEstoque
+            }),
         });
     }
 

@@ -46,30 +46,43 @@ export default function Cardapio() {
         setCarregando(true);
 
         try {
-            const hoje = new Date();
+            const estoque = JSON.parse(localStorage.getItem("estoque") || "[]");
 
-            const body = {
-                mes: hoje.getMonth() + 1,
-                ano: hoje.getFullYear()
-            };
+            setCardapio({});
 
-            const res = await fetch(`${BASE_URL}/cardapio/gerar`, {
+            // 🔥 PASSO 1: salva estoque no backend
+            await fetch(`${BASE_URL}/estoque`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(body)
+                body: JSON.stringify(estoque) // ✅ aqui é array mesmo
             });
 
-            const data = await res.json();
+            // 🔥 PASSO 2: gera cardápio
+            const res = await fetch(`${BASE_URL}/cardapio`, {
+                method: "POST"
+            });
 
-            console.log("STATUS:", data.status);
-            console.log("CARDAPIO:", data.cardapio);
-            console.log("FULL DATA:", data);
+            if (!res.ok) {
+                throw new Error("Erro ao gerar cardápio");
+            }
+
+            const data = await res.json();
+            console.log("Retorno do cardapio", data);
 
             setCardapio(data.cardapio || {});
+
+            if (data.estoque) {
+                localStorage.setItem(
+                    "estoque_historico",
+                    JSON.stringify(data.estoque)
+                );
+            }
+
         } catch (err) {
             console.error("Erro ao gerar cardápio", err);
+            alert("Erro ao gerar cardápio");
         }
 
         setCarregando(false);

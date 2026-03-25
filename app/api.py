@@ -1,25 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
-from app.database.database import (
-    salvar_cardapio,
-    buscar_cardapio,
+
+from .backend.services.cardapio_service import (
+    carregar_receitas,
+    gerar_cardapio,
+    listar_ingredientes_e_unidades
+)
+
+
+from .database.database import (
     listar_estoque_atual,
     adicionar_item_estoque_atual,
     get_connection
 )
 
-from app.backend.engine.engine import gerar_receita
-
-from app.backend.services.cardapio_service import (
-    carregar_receitas,
-    listar_ingredientes_e_unidades
-)
-
-
 app = FastAPI()
-
 
 # =========================
 # CORS
@@ -27,35 +23,24 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=False,
     allow_methods=["*"],
+    allow_credentials=True,
     allow_headers=["*"],
 )
 
-
 # =========================
-# HEALTH CHECK
+# ROTAS BÁSICAS
 # =========================
 @app.get("/")
 def root():
     return {"status": "API HealthCare rodando"}
 
-
 # =========================
-# ENGINE (NOVA ROTA IMPORTANTE)
-# =========================
-@app.get("/gerar-receita")
-def api_gerar_receita():
-    return gerar_receita()
-
-
-# =========================
-# RECEITAS (BANCO)
+# RECEITAS
 # =========================
 @app.get("/receitas")
 def get_receitas():
     return carregar_receitas()
-
 
 # =========================
 # ESTOQUE
@@ -64,16 +49,34 @@ def get_receitas():
 def get_estoque():
     return listar_estoque_atual()
 
-
 @app.post("/estoque")
-def salvar_estoque(itens: list[dict]):
+def salvar_estoque(payload: dict | list):
+    # 🔥 aceita dois formatos:
+    # 1. lista direta
+    # 2. { "estoque": [...] }
 
+    if isinstance(payload, list):
+        itens = payload
+    elif isinstance(payload, dict):
+        itens = payload.get("estoque", [])
+    else:
+        itens = []
+
+    # 🔒 proteção
+    if not isinstance(itens, list):
+        itens = []
+
+    # limpa estoque antes
     conn = get_connection()
     conn.execute("DELETE FROM estoque_atual")
     conn.commit()
     conn.close()
 
+    # salva itens
     for item in itens:
+        if not item.get("nome"):
+            continue
+
         adicionar_item_estoque_atual(
             item["nome"],
             float(item["quantidade"]),
@@ -82,63 +85,26 @@ def salvar_estoque(itens: list[dict]):
 
     return {"status": "ok"}
 
-class CardapioRequest(BaseModel):
-    mes: int
-    ano: int
+# =========================
+# CARDÁPIO
+# =========================
+@app.post("/cardapio")
+def gerar_cardapio_api():
+    estoque = listar_estoque_atual()
 
-
-@app.post("/cardapio/gerar")
-def gerar_cardapio_api(req: CardapioRequest):
-    try:
-        mes = req.mes
-        ano = req.ano
-
-        existente = buscar_cardapio(mes, ano)
-        if existente:
-            return {
-                "status": "já existe",
-                "cardapio": existente
-            }
-
-        estoque = listar_estoque_atual()
-
-        if not estoque:
-            return {"erro": "sem estoque"}
-
-        # 🔥 AQUI ESTÁ A CORREÇÃO
-        resultado = gerar_receita(estoque)
-
-        # Se veio erro da função
-        if "receita" not in resultado:
-            return resultado
-
-        cardapio = resultado["receita"]
-        estoque_final = resultado["estoque"]
-
-        salvar_cardapio(mes, ano, cardapio, estoque_final)
-
+    # 🔒 proteção básica
+    if not estoque:
         return {
-            "status": "gerado",
-            "cardapio": cardapio
+            "cardapio": {},
+            "estoque": []
         }
 
-    except Exception as e:
-        print("ERRO BACKEND:", e)
-        return {"erro": str(e)}
+    cardapio, estoque_atualizado = gerar_cardapio(estoque)
 
-@app.get("/cardapio")
-def get_cardapio(mes: int, ano: int):
-
-    data = buscar_cardapio(mes, ano)
-
-    if not data:
-        return {
-            "status": "não existe",
-            "cardapio": None
-        }
-
-    return data
-
+    return {
+        "cardapio": cardapio,
+        "estoque": estoque_atualizado
+    }
 
 # =========================
 # INGREDIENTES
@@ -146,3 +112,4 @@ def get_cardapio(mes: int, ano: int):
 @app.get("/ingredientes")
 def get_ingredientes():
     return listar_ingredientes_e_unidades()
+
