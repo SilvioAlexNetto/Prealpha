@@ -355,4 +355,10 @@ legumes = [
 
     "Quiabo", "Jiló", "Maxixe",
     "Batata salsa", "Inhame", "Cará"
+
 ]
+
+unidades = [
+     "kg","g","litros","ml",
+     "unidade","fatia"
+ ]

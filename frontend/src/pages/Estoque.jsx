@@ -69,7 +69,7 @@ export default function Estoque() {
         const novoEstoque = [
             ...estoque,
             {
-                nome: ingredienteSelecionado.nome,
+                nome: ingredienteSelecionado,
                 quantidade: quantidadeFinal,
                 unidade
             }
@@ -108,16 +108,13 @@ export default function Estoque() {
         fetch(`${BASE_URL}/estoque`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                estoque: novoEstoque
-            }),
+            body: JSON.stringify(novoEstoque)
         });
     }
 
     const sugestoes = ingredientesBanco.filter(nome =>
         nome.toLowerCase().includes(nomeDigitado.toLowerCase())
     );
-
     // ============================
     // 🔥 NOVOS STATES (ADICIONE JUNTO AOS OUTROS STATES DO COMPONENTE)
     // ============================
@@ -432,20 +429,16 @@ export default function Estoque() {
 
                     {nomeDigitado && !ingredienteSelecionado && (
                         <div className="hp-sugestoes">
-                            {sugestoes.map((nome, index) => (
+                            {sugestoes.map((item, index) => (
                                 <div
                                     key={index}
                                     className="hp-sugestao-item"
                                     onClick={() => {
-                                        setIngredienteSelecionado({
-                                            nome,
-                                            unidades: unidadesBanco
-                                        });
-                                        setNomeDigitado(nome);
-                                        setUnidade(unidadesBanco[0] || "");
+                                        setIngredienteSelecionado(item.nome);
+                                        setNomeDigitado(item.nome);
                                     }}
                                 >
-                                    {nome}
+                                    {item.nome}
                                 </div>
                             ))}
                         </div>
@@ -480,10 +473,9 @@ export default function Estoque() {
                     <select
                         value={unidade}
                         onChange={(e) => setUnidade(e.target.value)}
-                        disabled={!ingredienteSelecionado}
                     >
                         <option value="">Selecione a unidade</option>
-                        {ingredienteSelecionado?.unidades.map((u, index) => (
+                        {unidadesBanco.map((u, index) => (
                             <option key={index} value={u}>{u}</option>
                         ))}
                     </select>
@@ -666,13 +658,13 @@ export default function Estoque() {
                                 }
                             >
                                 <option value="">Selecione</option>
-                                {[
-                                    ...new Set(ingredientesBanco.map(item => item.unidade))
-                                ].map((uni, index) => (
-                                    <option key={index} value={uni}>
-                                        {uni}
-                                    </option>
-                                ))}
+                                {
+                                    unidadesBanco.map((uni, index) => (
+                                        <option key={index} value={uni}>
+                                            {uni}
+                                        </option>
+                                    ))
+                                }
                             </select>
                         </div>
 
@@ -683,7 +675,7 @@ export default function Estoque() {
                         <div style={{ display: "flex", gap: 8 }}>
                             <button
                                 onClick={() => {
-                                    const ingredienteExiste = ingredientesBanco.find(
+                                    const ingredienteExiste = ingredientesBanco.some(
                                         item =>
                                             item.nome.toLowerCase() ===
                                             produtoEscaneado.nome.toLowerCase()
