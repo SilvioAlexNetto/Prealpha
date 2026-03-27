@@ -171,7 +171,7 @@ def gerar_cafe(estoque):
 
         receita = {
             "nome": f"Café com {proteina['nome']} e {carbo['nome']}",
-            "categoria": "café",
+            "categoria": "cafe",
             "ingredientes": [proteina, carbo],
             "modo_preparo": [
                 "Prepare os ingredientes.",
@@ -219,7 +219,7 @@ def gerar_almoco(estoque):
 
             receita = {
                 "nome": f"{proteina['nome']} com {carbo['nome']}",
-                "categoria": "almoço",
+                "categoria": "almoco",
                 "ingredientes": ingredientes,
                 "modo_preparo": [
                     f"Grelhe {proteina['nome']}.",
@@ -263,7 +263,7 @@ def gerar_almoco(estoque):
 
             receita = {
                 "nome": f"{massa['nome']} com {molho['nome']} e {proteina['nome']}",
-                "categoria": "almoço",
+                "categoria": "almoco",
                 "ingredientes": ingredientes,
                 "modo_preparo": [
                     "Cozinhe a massa.",
