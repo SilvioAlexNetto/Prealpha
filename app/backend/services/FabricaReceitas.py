@@ -3,7 +3,7 @@ import random
 import unicodedata
 from copy import deepcopy
 
-from bases import (
+from app.backend.services.bases import (
     proteinasUN, proteinasKG, legumes, carboidratos,
     folhas_saladas, massas, proteinas_proibidas_sopa,
     molhos, caldos
