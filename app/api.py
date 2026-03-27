@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .backend.services.cardapio_service import (
     carregar_receitas,
-    gerar_cardapio,
+    obter_cardapio,
     listar_ingredientes_e_unidades
 )
 
@@ -99,7 +99,7 @@ def gerar_cardapio_api():
             "estoque": []
         }
 
-    cardapio, estoque_atualizado = gerar_cardapio(estoque)
+    cardapio, estoque_atualizado = obter_cardapio(estoque)
 
     return {
         "cardapio": cardapio,
