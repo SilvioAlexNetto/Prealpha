@@ -1,6 +1,7 @@
 import json
 import random
 import unicodedata
+import os
 from copy import deepcopy
 
 from app.backend.services.bases import (
@@ -8,6 +9,11 @@ from app.backend.services.bases import (
     folhas_saladas, massas, proteinas_proibidas_sopa,
     molhos, caldos
 )
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+RECEITAS_PATH = os.path.join(BASE_DIR, "database", "BancoReceitas.json")
+SOBRAS_PATH = os.path.join(BASE_DIR, "database", "Sobras.json")
 
 # =========================
 # NORMALIZAÇÃO
@@ -433,12 +439,12 @@ def gerar_tudo(estoque_usuario):
 
     todas_receitas = cafe + almoco + janta
 
-    with open("BancoReceitas.json", "w", encoding="utf-8") as f:
+    with open(RECEITAS_PATH, "w", encoding="utf-8") as f:
         json.dump(todas_receitas, f, ensure_ascii=False, indent=4)
 
     sobras = [i for i in estoque_classificado if i["quantidade"] > 0]
 
-    with open("Sobras.json", "w", encoding="utf-8") as f:
+    with open(SOBRAS_PATH, "w", encoding="utf-8") as f:
         json.dump(sobras, f, ensure_ascii=False, indent=4)
 
     return {

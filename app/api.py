@@ -5,7 +5,9 @@ from app.backend.services.FabricaReceitas import gerar_tudo
 from .backend.services.cardapio_service import (
     carregar_receitas,
     obter_cardapio,
-    listar_ingredientes_e_unidades
+    listar_ingredientes_e_unidades,
+    carregar_sobras,
+    montar_cardapio
 )
 
 
@@ -96,22 +98,25 @@ async def salvar_estoque(request: Request):
 def gerar_cardapio_api():
     estoque = listar_estoque_atual()
 
-    # 🔒 proteção
     if not estoque:
         return {
             "cardapio": {},
             "estoque": []
         }
 
-    # 🔥 gera receitas com base no estoque
+    # 🔥 PASSO 1: gerar receitas com base no estoque
     gerar_tudo(estoque)
 
-    # 🔥 monta cardápio com receitas geradas
-    resultado = obter_cardapio()
+    # 🔥 PASSO 2: carregar receitas recém-geradas
+    receitas = carregar_receitas()
+    sobras = carregar_sobras()
+
+    # 🔥 PASSO 3: montar cardápio
+    cardapio = montar_cardapio(receitas)
 
     return {
-        "cardapio": resultado["cardapio"],
-        "estoque": resultado["sobras"]
+        "cardapio": cardapio,
+        "estoque": sobras
     }
 
 # =========================
