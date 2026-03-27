@@ -1,6 +1,6 @@
 import os
 import json
-from app.backend.services.bases import ( proteinasKG, proteinasUN, folhas_saladas, carboidratos, liquidos, massas, molhos, legumes, unidades)
+from app.backend.services.bases import ( proteinasKG, proteinasUN, folhas_saladas, carboidratos, massas, molhos, legumes, unidades)
 
 # =========================
 # PATHS
@@ -71,7 +71,7 @@ def listar_ingredientes_e_unidades():
         carboidratos +
         massas +
         molhos +
-        liquidos +
+        
         legumes
     )
 
