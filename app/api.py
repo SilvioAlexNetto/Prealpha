@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -50,10 +50,8 @@ def get_estoque():
     return listar_estoque_atual()
 
 @app.post("/estoque")
-def salvar_estoque(payload: dict | list):
-    # 🔥 aceita dois formatos:
-    # 1. lista direta
-    # 2. { "estoque": [...] }
+async def salvar_estoque(request: Request):
+    payload = await request.json()
 
     if isinstance(payload, list):
         itens = payload
@@ -62,25 +60,31 @@ def salvar_estoque(payload: dict | list):
     else:
         itens = []
 
-    # 🔒 proteção
     if not isinstance(itens, list):
         itens = []
 
-    # limpa estoque antes
     conn = get_connection()
     conn.execute("DELETE FROM estoque_atual")
     conn.commit()
     conn.close()
 
-    # salva itens
     for item in itens:
-        if not item.get("nome"):
+        nome = item.get("nome")
+        quantidade = item.get("quantidade")
+        unidade = item.get("unidade")
+
+        if not nome or not quantidade or not unidade:
+            continue
+
+        try:
+            quantidade = float(quantidade)
+        except:
             continue
 
         adicionar_item_estoque_atual(
-            item["nome"],
-            float(item["quantidade"]),
-            item["unidade"]
+            nome,
+            quantidade,
+            unidade
         )
 
     return {"status": "ok"}
