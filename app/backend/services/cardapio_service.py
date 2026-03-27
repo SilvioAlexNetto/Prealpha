@@ -1,5 +1,6 @@
 import os
 import json
+from app.backend.services.bases import ( proteinasKG, proteinasUN, folhas_saladas, carboidratos, liquidos, massas, molhos, caldos, legumes, unidades)
 
 # =========================
 # PATHS
@@ -62,25 +63,32 @@ def montar_cardapio(receitas):
 # LISTAR INGREDIENTES
 # =========================
 def listar_ingredientes_e_unidades():
-    receitas = carregar_receitas()
+
+    todas_listas = (
+        proteinasKG +
+        proteinasUN +
+        folhas_saladas +
+        carboidratos +
+        massas +
+        molhos +
+        liquidos +
+        caldos +
+        legumes
+    )
 
     ingredientes = set()
-    unidades = set()
 
-    for receita in receitas:
-        for item in receita.get("ingredientes", []):
-            nome = item.get("nome")
-            unidade = item.get("unidade")
+    for item in todas_listas:
+        nome = item.get("nome")
 
-            if nome:
-                ingredientes.add(nome.strip().lower())
-
-            if unidade:
-                unidades.add(unidade.strip().lower())
+        if nome:
+            ingredientes.add(nome.strip().lower())
 
     return {
         "ingredientes": sorted(ingredientes),
-        "unidades": sorted(unidades)
+
+        # 🔥 USA DIRETO DO BASES.PY
+        "unidades": unidades
     }
 
 

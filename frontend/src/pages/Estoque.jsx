@@ -108,13 +108,14 @@ export default function Estoque() {
         fetch(`${BASE_URL}/estoque`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(novoEstoque)
+            body: JSON.stringify({ estoque: novoEstoque })
         });
     }
 
-    const sugestoes = ingredientesBanco.filter(nome =>
-        nome.toLowerCase().includes(nomeDigitado.toLowerCase())
+    const sugestoes = ingredientesBanco.filter(item =>
+        item.toLowerCase().includes(nomeDigitado.toLowerCase())
     );
+
     // ============================
     // 🔥 NOVOS STATES (ADICIONE JUNTO AOS OUTROS STATES DO COMPONENTE)
     // ============================
@@ -434,11 +435,11 @@ export default function Estoque() {
                                     key={index}
                                     className="hp-sugestao-item"
                                     onClick={() => {
-                                        setIngredienteSelecionado(item.nome);
-                                        setNomeDigitado(item.nome);
+                                        setIngredienteSelecionado(item);
+                                        setNomeDigitado(item);
                                     }}
                                 >
-                                    {item.nome}
+                                    {item}
                                 </div>
                             ))}
                         </div>

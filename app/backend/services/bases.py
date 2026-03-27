@@ -57,6 +57,10 @@ proteinasUN = [
     "Hambúrguer vegetal", "Proteína vegetal"
 ]
 
+liquidos = [
+ "leite"
+]
+
 folhas_saladas = [
 "Alface",
 "Alface americana",
