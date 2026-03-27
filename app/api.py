@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.backend.services.FabricaReceitas import gerar_tudo
 
 from .backend.services.cardapio_service import (
     carregar_receitas,
@@ -96,18 +96,22 @@ async def salvar_estoque(request: Request):
 def gerar_cardapio_api():
     estoque = listar_estoque_atual()
 
-    # 🔒 proteção básica
+    # 🔒 proteção
     if not estoque:
         return {
             "cardapio": {},
             "estoque": []
         }
 
-    cardapio, estoque_atualizado = obter_cardapio(estoque)
+    # 🔥 gera receitas com base no estoque
+    gerar_tudo(estoque)
+
+    # 🔥 monta cardápio com receitas geradas
+    resultado = obter_cardapio()
 
     return {
-        "cardapio": cardapio,
-        "estoque": estoque_atualizado
+        "cardapio": resultado["cardapio"],
+        "estoque": resultado["sobras"]
     }
 
 # =========================
