@@ -92,10 +92,36 @@ def classificar_estoque(estoque):
         # SALVA SE FOI CLASSIFICADO
         # =========================
         if categoria:
+            # =========================
+            # NORMALIZA UNIDADE
+            # =========================
+            unidade = str(item.get("unidade", "")).lower()
+            quantidade = float(item.get("quantidade", 0))
+
+            if unidade in ["kg", "quilo", "quilos"]:
+                quantidade = quantidade * 1000
+                unidade = "g"
+
+            elif unidade in ["g", "grama", "gramas"]:
+                unidade = "g"
+
+            elif unidade in ["l", "litro", "litros"]:
+                quantidade = quantidade * 1000
+                unidade = "ml"
+
+            elif unidade in ["ml"]:
+                unidade = "ml"
+
+            elif unidade in ["un", "unidade", "unidades"]:
+                unidade = "unidade"
+
+            elif unidade in ["fatia", "fatias"]:
+                unidade = "fatia"
+
             estoque_classificado.append({
                 "nome": nome_original,
-                "quantidade": float(item.get("quantidade", 0)),
-                "unidade": item["unidade"],
+                "quantidade": quantidade,
+                "unidade": unidade,
                 "categoria": categoria
             })
 
@@ -162,134 +188,94 @@ def gerar_cafe(estoque):
 
 
 # =========================
-# ALMOÇO - PRATO SIMPLES
-# =========================
-def gerar_almoco_simples(estoque):
-    # tenta consumir
-    proteina = consumir(estoque, "proteina", 120)
-    carbo = consumir(estoque, "carbo", 100)
-
-    if not receita_valida(proteina, carbo):
-        return None
-
-    ingredientes = [proteina, carbo]
-
-    # opcionais
-    legume = consumir(estoque, "legume", 80)
-    if legume:
-        ingredientes.append(legume)
-
-    folha = consumir(estoque, "folha", 50)
-    if folha:
-        ingredientes.append(folha)
-
-    return {
-        "nome": f"{proteina['nome']} com {carbo['nome']}",
-        "categoria": "almoço",
-        "ingredientes": ingredientes,
-        "modo_preparo": [
-            f"Grelhe {proteina['nome']} até dourar.",
-            f"Cozinhe {carbo['nome']}.",
-            "Prepare acompanhamentos.",
-            "Monte o prato.",
-            "Sirva quente."
-        ],
-        "tempo_preparo": "30 minutos",
-        "Porcao": "1"
-    }
-
-
-# =========================
-# ALMOÇO - MASSA (SEM BUG DE CONSUMO)
-# =========================
-def gerar_almoco_massa(estoque):
-    # 🔥 copia temporária (evita consumir errado)
-    estoque_temp = deepcopy(estoque)
-
-    massa = consumir(estoque_temp, "massa", 100)
-    molho = consumir(estoque_temp, "molho", 50)
-    proteina = consumir(estoque_temp, "proteina", 100)
-
-    if not massa or not molho or not proteina:
-        return None
-
-    ingredientes = [massa, molho, proteina]
-
-    folha = consumir(estoque_temp, "folha", 50)
-    if folha:
-        ingredientes.append(folha)
-
-    # 🔥 aplica consumo real só se receita for válida
-    for item_temp in estoque_temp:
-        for item_real in estoque:
-            if item_temp["nome"] == item_real["nome"]:
-                item_real["quantidade"] = item_temp["quantidade"]
-
-    return {
-        "nome": f"{massa['nome']} com {molho['nome']} e {proteina['nome']}",
-        "categoria": "almoço",
-        "ingredientes": ingredientes,
-        "modo_preparo": [
-            f"Cozinhe {massa['nome']} até al dente.",
-            f"Aqueça {molho['nome']}.",
-            f"Prepare {proteina['nome']}.",
-            "Misture tudo.",
-            "Sirva quente."
-        ],
-        "tempo_preparo": "25 minutos",
-        "Porcao": "1"
-    }
-
-
-# =========================
-# GERADOR PRINCIPAL (50/50 + FALLBACK)
+# ALMOÇO 
 # =========================
 def gerar_almoco(estoque):
     receitas = []
 
-    total = 31
-    metade = total // 2
-    restante = total - metade
+    for _ in range(31):
+        tipo = random.choice(["pf", "massa"])
 
-    # =========================
-    # SIMPLES
-    # =========================
-    for _ in range(metade):
-        receita = gerar_almoco_simples(estoque)
+        # =========================
+        # 🍽️ PF
+        # =========================
+        if tipo == "pf":
+            proteina = consumir(estoque, "proteina", 120)
+            carbo = consumir(estoque, "carbo", 100)
 
-        # fallback: tenta massa
-        if not receita:
-            receita = gerar_almoco_massa(estoque)
+            if not receita_valida(proteina, carbo):
+                continue
 
-        if receita:
-            receitas.append(receita)
+            ingredientes = [proteina, carbo]
 
-    # =========================
-    # MASSA
-    # =========================
-    for _ in range(restante):
-        receita = gerar_almoco_massa(estoque)
+            # 🔥 SE TIVER, USA (SEM RANDOM)
+            legume = consumir(estoque, "legume", 80)
+            if legume:
+                ingredientes.append(legume)
 
-        # fallback: vira simples
-        if not receita:
-            receita = gerar_almoco_simples(estoque)
+            folha = consumir(estoque, "folha", 50)
+            if folha:
+                ingredientes.append(folha)
 
-        if receita:
-            receitas.append(receita)
+            receita = {
+                "nome": f"{proteina['nome']} com {carbo['nome']}",
+                "categoria": "almoço",
+                "ingredientes": ingredientes,
+                "modo_preparo": [
+                    f"Grelhe {proteina['nome']}.",
+                    f"Cozinhe {carbo['nome']}.",
+                    "Monte o prato.",
+                    "Sirva."
+                ],
+                "tempo_preparo": "30 minutos",
+                "Porcao": "1"
+            }
 
-    # =========================
-    # GARANTIR 31 (tentar completar)
-    # =========================
-    tentativas = 0
-    while len(receitas) < 31 and tentativas < 20:
-        receita = gerar_almoco_simples(estoque) or gerar_almoco_massa(estoque)
+        # =========================
+        # 🍝 MASSA
+        # =========================
+        else:
+            estoque_temp = deepcopy(estoque)
 
-        if receita:
-            receitas.append(receita)
+            massa = consumir(estoque_temp, "massa", 100)
+            molho = consumir(estoque_temp, "molho", 50)
+            proteina = consumir(estoque_temp, "proteina", 100)
 
-        tentativas += 1
+            if not receita_valida(massa, molho, proteina):
+                continue
 
-    random.shuffle(receitas)
+            ingredientes = [massa, molho, proteina]
+
+            # opcionais
+            legume = consumir(estoque_temp, "legume", 80)
+            if legume:
+                ingredientes.append(legume)
+
+            folha = consumir(estoque_temp, "folha", 50)
+            if folha:
+                ingredientes.append(folha)
+
+            # 🔥 aplica consumo real
+            for item_temp in estoque_temp:
+                for item_real in estoque:
+                    if item_temp["nome"] == item_real["nome"]:
+                        item_real["quantidade"] = item_temp["quantidade"]
+
+            receita = {
+                "nome": f"{massa['nome']} com {molho['nome']} e {proteina['nome']}",
+                "categoria": "almoço",
+                "ingredientes": ingredientes,
+                "modo_preparo": [
+                    "Cozinhe a massa.",
+                    "Prepare o molho.",
+                    "Misture tudo.",
+                    "Sirva."
+                ],
+                "tempo_preparo": "25 minutos",
+                "Porcao": "1"
+            }
+
+        receitas.append(receita)
 
     return receitas
 
@@ -354,15 +340,13 @@ def gerar_janta(estoque):
             ingredientes.extend([massa, molho])
 
             # opcionais
-            if random.random() < 0.7:
-                legume = consumir(estoque, "legume", 70)
-                if legume:
-                    ingredientes.append(legume)
+            legume = consumir(estoque, "legume", 80)
+            if legume:
+                ingredientes.append(legume)
 
-            if random.random() < 0.5:
-                salada = consumir(estoque, "folha", 50)
-                if salada:
-                    ingredientes.append(salada)
+            salada = consumir(estoque, "folha", 50)
+            if salada:
+                ingredientes.append(salada)
 
             receita = {
                 "nome": f"{massa['nome']} com {molho['nome']}",
@@ -390,20 +374,14 @@ def gerar_janta(estoque):
 
             ingredientes.extend([proteina, carbo])
 
-            # opcionais
-            if random.random() < 0.8:
-                legume1 = consumir(estoque, "legume", 80)
-                legume2 = consumir(estoque, "legume", 80)
+           # opcionais
+            legume = consumir(estoque, "legume", 80)
+            if legume:
+                ingredientes.append(legume)
 
-                if legume1:
-                    ingredientes.append(legume1)
-                if legume2:
-                    ingredientes.append(legume2)
-
-            if random.random() < 0.5:
-                salada = consumir(estoque, "folha", 50)
-                if salada:
-                    ingredientes.append(salada)
+            salada = consumir(estoque, "folha", 50)
+            if salada:
+                ingredientes.append(salada)
 
             receita = {
                 "nome": f"{proteina['nome']} com {carbo['nome']}",
