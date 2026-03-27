@@ -575,7 +575,7 @@ export default function Estoque() {
                                     if (valor.length >= 1) {
                                         const filtrados = ingredientesBanco
                                             .filter(item =>
-                                                item.nome
+                                                item
                                                     .toLowerCase()
                                                     .includes(valor.toLowerCase())
                                             )
@@ -611,14 +611,14 @@ export default function Estoque() {
                                             onClick={() => {
                                                 setProdutoEscaneado({
                                                     ...produtoEscaneado,
-                                                    nome: item.nome,
-                                                    unidade: item.unidade
+                                                    nome: item,
+                                                    unidade: item
                                                 });
 
                                                 setSugestoesIngredientes([]);
                                             }}
                                         >
-                                            {item.nome}
+                                            {item}
                                         </div>
                                     ))}
                                 </div>
@@ -678,7 +678,7 @@ export default function Estoque() {
                                 onClick={() => {
                                     const ingredienteExiste = ingredientesBanco.some(
                                         item =>
-                                            item.nome.toLowerCase() ===
+                                            item.toLowerCase() ===
                                             produtoEscaneado.nome.toLowerCase()
                                     );
 
