@@ -37,27 +37,21 @@ def carregar_sobras():
 # ORGANIZAR CARDÁPIO
 # =========================
 def montar_cardapio(receitas):
-    """
-    Espera lista de receitas já prontas (93 idealmente)
-    Estrutura:
-    dia -> cafe / almoco / jantar
-    """
-
     cardapio = {}
     total_dias = 31
 
-    i = 0
+    cafes = receitas[0:31]
+    almocos = receitas[31:62]
+    jantas = receitas[62:93]
 
     for dia in range(1, total_dias + 1):
         cardapio[dia] = {
-            "cafe": receitas[i] if i < len(receitas) else {},
-            "almoco": receitas[i + 1] if i + 1 < len(receitas) else {},
-            "jantar": receitas[i + 2] if i + 2 < len(receitas) else {},
+            "cafe": cafes[dia - 1] if dia - 1 < len(cafes) else {},
+            "almoco": almocos[dia - 1] if dia - 1 < len(almocos) else {},
+            "jantar": jantas[dia - 1] if dia - 1 < len(jantas) else {},
         }
-        i += 3
 
     return cardapio
-
 
 # =========================
 # LISTAR INGREDIENTES
