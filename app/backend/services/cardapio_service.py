@@ -78,15 +78,17 @@ def listar_ingredientes_e_unidades():
     ingredientes = set()
 
     for item in todas_listas:
-        nome = item.get("nome")
+        # 🔥 PROTEÇÃO TOTAL
+        if isinstance(item, dict):
+            nome = item.get("nome")
+        else:
+            nome = str(item)
 
         if nome:
             ingredientes.add(nome.strip().lower())
 
     return {
         "ingredientes": sorted(ingredientes),
-
-        # 🔥 USA DIRETO DO BASES.PY
         "unidades": unidades
     }
 
