@@ -98,11 +98,20 @@ def listar_ingredientes_e_unidades():
 # =========================
 def obter_cardapio():
     receitas = carregar_receitas()
+
+    # 🔒 proteção
+    if not receitas:
+        return {
+            "cardapio": {},
+            "sobras": [],
+            "total_receitas": 0
+        }
+
     cardapio = montar_cardapio(receitas)
     sobras = carregar_sobras()
 
     return {
         "cardapio": cardapio,
-        "sobras": sobras,
+        "sobras": sobras or [],
         "total_receitas": len(receitas)
     }

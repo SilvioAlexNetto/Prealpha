@@ -88,7 +88,7 @@ def classificar_estoque(estoque):
         if categoria:
             estoque_classificado.append({
                 "nome": nome_original,
-                "quantidade": float(item["quantidade"]),
+                "quantidade": float(item.get("quantidade", 0)),
                 "unidade": item["unidade"],
                 "categoria": categoria
             })
@@ -120,8 +120,8 @@ def consumir(estoque, categoria, qtd):
 # =========================
 # VALIDAÇÃO
 # =========================
-def receita_valida(proteina, carbo):
-    return proteina is not None and carbo is not None
+def receita_valida(*args):
+    return all(arg is not None for arg in args)
 
 
 # =========================
