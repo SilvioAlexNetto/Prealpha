@@ -468,7 +468,6 @@ def gerar_cafe(estoque):
         # COMPLEMENTO (fruta OU bebida)
         # =========================
         complemento = None
-
         usar_fruta = random.choice([True, False])
 
         if usar_fruta:
@@ -478,24 +477,13 @@ def gerar_cafe(estoque):
                 if complemento["unidade"] == "unidade":
                     complemento["quantidade"] = 1
                 elif complemento["unidade"] == "g":
-                 complemento["quantidade"] = 100
+                    complemento["quantidade"] = 100
 
+        # 🔥 CORREÇÃO AQUI
         if not complemento:
             usar_fruta = False
-
-        if not usar_fruta:
             complemento = {
                 "nome": random.choice(["café", "café com leite", "leite", "suco natural"]),
-                "quantidade": 200,
-                "unidade": "ml"
-            }
-        else:
-            bebida_nome = random.choice([
-                "café", "café com leite", "leite", "suco natural"
-            ])
-
-            complemento = {
-                "nome": bebida_nome,
                 "quantidade": 200,
                 "unidade": "ml"
             }
@@ -505,18 +493,40 @@ def gerar_cafe(estoque):
         # =========================
         # NOME DO PRATO (identidade)
         # =========================
-        if usar_fruta:
-            nome = f"{carbo['nome']} com {proteina['nome']} e {complemento['nome']}"
-        else:
-            nome = f"{carbo['nome']} com {proteina['nome']} e {complemento['nome']}"
+        nome = f"{carbo['nome']} com {proteina['nome']} e {complemento['nome']}"
 
         # =========================
         # MODO DE PREPARO REALISTA
         # =========================
         modo_preparo = []
 
-        # proteína (leve)
-        modo_preparo += preparo_proteina(proteina["nome"])
+        # =========================
+        # PREPARO CAFÉ (HUMANO)
+        # =========================
+
+        # proteína
+        if proteina["unidade"] == "ml":
+            modo_preparo += [
+                f"Sirva o {proteina['nome']} em um copo."
+            ]
+        elif proteina["unidade"] == "unidade":
+            modo_preparo += [
+                f"Prepare o {proteina['nome']} conforme sua preferência."
+            ]
+        else:
+            modo_preparo += [
+                f"Separe o {proteina['nome']} para o consumo."
+            ]
+
+        # carbo
+        if carbo["unidade"] == "fatia":
+            modo_preparo += [
+                f"Toste levemente o {carbo['nome']} se desejar."
+            ]
+        else:
+            modo_preparo += [
+                f"Prepare o {carbo['nome']} conforme sua preferência."
+            ]
 
         # carbo (leve)
         modo_preparo += [
