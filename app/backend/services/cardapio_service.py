@@ -40,15 +40,16 @@ def montar_cardapio(receitas):
     cardapio = {}
     total_dias = 31
 
-    cafes = receitas[0:31]
-    almocos = receitas[31:62]
-    jantas = receitas[62:93]
+    # 🔥 separa por categoria (ESSA É A CORREÇÃO PRINCIPAL)
+    cafes = [r for r in receitas if r.get("categoria") == "cafe"]
+    almocos = [r for r in receitas if r.get("categoria") == "almoco"]
+    jantas = [r for r in receitas if r.get("categoria") == "jantar"]
 
     for dia in range(1, total_dias + 1):
         cardapio[dia] = {
-            "cafe": cafes[dia - 1] if dia - 1 < len(cafes) else {},
-            "almoco": almocos[dia - 1] if dia - 1 < len(almocos) else {},
-            "jantar": jantas[dia - 1] if dia - 1 < len(jantas) else {},
+            "cafe": cafes[dia - 1] if dia - 1 < len(cafes) else None,
+            "almoco": almocos[dia - 1] if dia - 1 < len(almocos) else None,
+            "jantar": jantas[dia - 1] if dia - 1 < len(jantas) else None,
         }
 
     return cardapio
