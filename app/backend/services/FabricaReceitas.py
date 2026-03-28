@@ -15,6 +15,134 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 RECEITAS_PATH = os.path.join(BASE_DIR, "database", "BancoReceitas.json")
 SOBRAS_PATH = os.path.join(BASE_DIR, "database", "Sobras.json")
 
+ULTIMOS_USADOS = {
+    "proteina": [],
+    "carbo": []
+}
+
+MAX_REPETICAO = 2
+
+# =========================
+# PROTEÍNA
+# =========================
+def preparo_proteina(nome):
+    tecnica = tecnica_preparo()
+    nome_lower = nome.lower()
+
+    base_temp = random.choice([
+        f"Tempere o {nome} com sal, alho e pimenta.",
+        f"Tempere o {nome} com sal, limão e ervas.",
+    ])
+
+    if tecnica == "grelhado":
+        preparo = f"Grelhe o {nome} até dourar bem."
+    elif tecnica == "assado":
+        preparo = f"Leve o {nome} ao forno até ficar bem assado."
+    elif tecnica == "cozido":
+        preparo = f"Cozinhe o {nome} em água temperada até ficar macio."
+    elif tecnica == "selado":
+        preparo = f"Sele o {nome} em fogo alto até formar crosta."
+    else:
+        preparo = f"Refogue o {nome} até dourar levemente."
+
+    return [base_temp, preparo]
+
+
+# =========================
+# CARBO
+# =========================
+def preparo_carbo(nome):
+    return [
+        random.choice([
+            f"Cozinhe o {nome} em água fervente com uma pitada de sal.",
+            f"Leve o {nome} para cozinhar em água quente até ficar macio.",
+        ]),
+        random.choice([
+            f"Escorra e reserve o {nome}.",
+            f"Após o cozimento, deixe o {nome} descansar por alguns minutos.",
+        ])
+    ]
+
+
+# =========================
+# MASSA
+# =========================
+def preparo_massa(nome):
+    return [
+        random.choice([
+            f"Cozinhe o {nome} em água fervente com sal até ficar al dente.",
+            f"Leve o {nome} para cozinhar em bastante água até atingir o ponto ideal.",
+        ]),
+        random.choice([
+            f"Escorra a água e reserve o {nome}.",
+            f"Após o cozimento, escorra bem o {nome}.",
+        ])
+    ]
+
+
+# =========================
+# MOLHO
+# =========================
+def preparo_molho(nome):
+    return [
+        random.choice([
+            f"Aqueça o {nome} em fogo baixo.",
+            f"Leve o {nome} ao fogo até aquecer bem.",
+        ]),
+        random.choice([
+            f"Misture bem até ficar homogêneo.",
+            f"Ajuste o tempero do {nome} se necessário.",
+        ])
+    ]
+
+
+# =========================
+# LEGUME
+# =========================
+def preparo_legume(nome):
+    return [
+        random.choice([
+            f"Corte o {nome} em pedaços médios.",
+            f"Pique o {nome} em partes menores.",
+        ]),
+        random.choice([
+            f"Refogue o {nome} até ficar macio.",
+            f"Cozinhe o {nome} até atingir uma textura macia.",
+        ])
+    ]
+
+
+# =========================
+# FOLHA
+# =========================
+def preparo_folha(nome):
+    return [
+        random.choice([
+            f"Lave bem a {nome}.",
+            f"Higienize a {nome} em água corrente.",
+        ]),
+        random.choice([
+            f"Sirva a {nome} fresca como acompanhamento.",
+            f"Tempere a {nome} com azeite e sal a gosto.",
+        ])
+    ]
+
+
+# =========================
+# FINALIZAÇÃO
+# =========================
+def finalizar_prato():
+    return [
+        random.choice([
+            "Monte o prato organizando os ingredientes.",
+            "Disponha os ingredientes no prato de forma equilibrada.",
+        ]),
+        random.choice([
+            "Sirva ainda quente.",
+            "Finalize e sirva imediatamente.",
+        ])
+    ]
+
 # =========================
 # NORMALIZAÇÃO
 # =========================
@@ -132,15 +260,33 @@ def classificar_estoque(estoque):
 # CONSUMO
 # =========================
 def consumir(estoque, categoria, qtd):
-    candidatos = [i for i in estoque if i["categoria"] == categoria and i["quantidade"] > 0]
+    candidatos = [
+        i for i in estoque
+        if i["categoria"] == categoria and i["quantidade"] > 0
+    ]
 
     if not candidatos:
         return None
 
-    item = random.choice(candidatos)
+    # 🔥 evita repetição recente
+    filtrados = [
+        i for i in candidatos
+        if i["nome"] not in ULTIMOS_USADOS[categoria]
+    ]
+
+    if filtrados:
+        item = random.choice(filtrados)
+    else:
+        item = random.choice(candidatos)
 
     usar = min(item["quantidade"], qtd)
     item["quantidade"] -= usar
+
+    # 🔥 salva histórico
+    ULTIMOS_USADOS[categoria].append(item["nome"])
+
+    if len(ULTIMOS_USADOS[categoria]) > MAX_REPETICAO:
+        ULTIMOS_USADOS[categoria].pop(0)
 
     return {
         "nome": item["nome"],
@@ -154,6 +300,85 @@ def consumir(estoque, categoria, qtd):
 # =========================
 def receita_valida(*args):
     return all(arg is not None for arg in args)
+
+def tecnica_preparo():
+    return random.choice([
+        "grelhado",
+        "assado",
+        "cozido",
+        "selado",
+        "refogado"
+    ])
+
+# =========================
+# 🍽️ PF - NÍVEL PROFISSIONAL
+# =========================
+
+def nome_prato_pf(proteina, carbo, legume=None, folha=None):
+    tecnica = tecnica_preparo()
+
+    descricoes_carbo = [
+        f"{carbo} soltinho",
+        f"{carbo} bem cozido",
+        f"{carbo} leve e macio"
+    ]
+
+    descricoes_legume = [
+        "legumes salteados",
+        "legumes refogados",
+        "mix de legumes"
+    ]
+
+    nome = f"{proteina} {tecnica} com {random.choice(descricoes_carbo)}"
+
+    if legume:
+        nome += f" e {random.choice(descricoes_legume)}"
+
+    if folha:
+        nome += f" acompanhado de salada de {folha}"
+
+    return nome.capitalize()
+
+
+def gerar_preparo_pf(proteina, carbo, legume=None, folha=None):
+    preparo = []
+
+    # 🔥 proteína
+    preparo += preparo_proteina(proteina)
+
+    # 🍚 carbo
+    preparo += preparo_carbo(carbo)
+
+    # 🥕 legume
+    if legume:
+        preparo += preparo_legume(legume)
+
+    # 🥬 salada (mais realista)
+    if folha:
+        preparo += [
+            random.choice([
+                f"Lave bem a {folha} e deixe escorrer.",
+                f"Higienize a {folha} em água corrente e seque.",
+            ]),
+            random.choice([
+                f"Tempere a {folha} com azeite e sal a gosto.",
+                f"Finalize a {folha} com um fio de azeite.",
+            ])
+        ]
+
+    # 🍽️ finalização mais natural
+    preparo += [
+        random.choice([
+            "Monte o prato distribuindo os ingredientes de forma equilibrada.",
+            "Organize os ingredientes no prato para uma boa apresentação.",
+        ]),
+        random.choice([
+            "Sirva ainda quente.",
+            "Finalize e sirva imediatamente.",
+        ])
+    ]
+
+    return preparo
 
 
 # =========================
@@ -193,7 +418,7 @@ def gerar_cafe(estoque):
 def gerar_almoco(estoque):
     receitas = []
 
-    for _ in range(31):
+    while len(receitas) < 31:
         tipo = random.choice(["pf", "massa"])
 
         # =========================
@@ -208,7 +433,6 @@ def gerar_almoco(estoque):
 
             ingredientes = [proteina, carbo]
 
-            # 🔥 SE TIVER, USA (SEM RANDOM)
             legume = consumir(estoque, "legume", 80)
             if legume:
                 ingredientes.append(legume)
@@ -217,17 +441,28 @@ def gerar_almoco(estoque):
             if folha:
                 ingredientes.append(folha)
 
+            nome = nome_prato_pf(
+                proteina["nome"],
+                carbo["nome"],
+                legume["nome"] if legume else None,
+                folha["nome"] if folha else None
+            )
+
+            modo_preparo = gerar_preparo_pf(
+                proteina["nome"],
+                carbo["nome"],
+                legume["nome"] if legume else None,
+                folha["nome"] if folha else None
+            )
+
+            tempo = random.randint(20, 35)
+
             receita = {
-                "nome": f"{proteina['nome']} com {carbo['nome']}",
+                "nome": nome,
                 "categoria": "almoco",
                 "ingredientes": ingredientes,
-                "modo_preparo": [
-                    f"Grelhe {proteina['nome']}.",
-                    f"Cozinhe {carbo['nome']}.",
-                    "Monte o prato.",
-                    "Sirva."
-                ],
-                "tempo_preparo": "30 minutos",
+                "modo_preparo": modo_preparo,
+                "tempo_preparo": f"{tempo} minutos",
                 "Porcao": "1"
             }
 
@@ -246,7 +481,6 @@ def gerar_almoco(estoque):
 
             ingredientes = [massa, molho, proteina]
 
-            # opcionais
             legume = consumir(estoque_temp, "legume", 80)
             if legume:
                 ingredientes.append(legume)
@@ -255,23 +489,37 @@ def gerar_almoco(estoque):
             if folha:
                 ingredientes.append(folha)
 
-            # 🔥 aplica consumo real
+            # aplica consumo real
             for item_temp in estoque_temp:
                 for item_real in estoque:
                     if item_temp["nome"] == item_real["nome"]:
                         item_real["quantidade"] = item_temp["quantidade"]
 
+            modo_preparo = []
+            modo_preparo += preparo_massa(massa["nome"])
+            modo_preparo += preparo_molho(molho["nome"])
+            modo_preparo += preparo_proteina(proteina["nome"])
+
+            if legume:
+                modo_preparo += preparo_legume(legume["nome"])
+
+            if folha:
+                modo_preparo += preparo_folha(folha["nome"])
+
+            modo_preparo += finalizar_prato()
+
+            tempo = 25
+            if legume:
+                tempo += random.randint(3, 7)
+            if folha:
+                tempo += random.randint(1, 3)
+
             receita = {
                 "nome": f"{massa['nome']} com {molho['nome']} e {proteina['nome']}",
                 "categoria": "almoco",
                 "ingredientes": ingredientes,
-                "modo_preparo": [
-                    "Cozinhe a massa.",
-                    "Prepare o molho.",
-                    "Misture tudo.",
-                    "Sirva."
-                ],
-                "tempo_preparo": "25 minutos",
+                "modo_preparo": modo_preparo,
+                "tempo_preparo": f"{tempo} minutos",
                 "Porcao": "1"
             }
 
@@ -280,9 +528,6 @@ def gerar_almoco(estoque):
     return receitas
 
 
-# =========================
-# JANTAR (COM SOPA)
-# =========================
 def gerar_janta(estoque):
     receitas = []
     tentativas = 0
@@ -291,12 +536,113 @@ def gerar_janta(estoque):
         tentativas += 1
 
         tipo = random.choice(["pf", "massa", "sopa"])
-        ingredientes = []
 
         # =========================
-        # 🍲 SOPA
+        # 🍽️ PF (REUTILIZA ALMOÇO)
         # =========================
-        if tipo == "sopa":
+        if tipo == "pf":
+            proteina = consumir(estoque, "proteina", 120)
+            carbo = consumir(estoque, "carbo", 100)
+
+            if not receita_valida(proteina, carbo):
+                continue
+
+            ingredientes = [proteina, carbo]
+
+            legume = consumir(estoque, "legume", 80)
+            if legume:
+                ingredientes.append(legume)
+
+            folha = consumir(estoque, "folha", 50)
+            if folha:
+                ingredientes.append(folha)
+
+            nome = nome_prato_pf(
+                proteina["nome"],
+                carbo["nome"],
+                legume["nome"] if legume else None,
+                folha["nome"] if folha else None
+            )
+
+            modo_preparo = gerar_preparo_pf(
+                proteina["nome"],
+                carbo["nome"],
+                legume["nome"] if legume else None,
+                folha["nome"] if folha else None
+            )
+
+            tempo = random.randint(20, 35)
+
+            receita = {
+                "nome": nome,
+                "categoria": "jantar",
+                "ingredientes": ingredientes,
+                "modo_preparo": modo_preparo,
+                "tempo_preparo": f"{tempo} minutos",
+                "Porcao": "1"
+            }
+
+        # =========================
+        # 🍝 MASSA (REUTILIZA ALMOÇO)
+        # =========================
+        elif tipo == "massa":
+            estoque_temp = deepcopy(estoque)
+
+            massa = consumir(estoque_temp, "massa", 100)
+            molho = consumir(estoque_temp, "molho", 50)
+            proteina = consumir(estoque_temp, "proteina", 100)
+
+            if not receita_valida(massa, molho, proteina):
+                continue
+
+            ingredientes = [massa, molho, proteina]
+
+            legume = consumir(estoque_temp, "legume", 80)
+            if legume:
+                ingredientes.append(legume)
+
+            folha = consumir(estoque_temp, "folha", 50)
+            if folha:
+                ingredientes.append(folha)
+
+            # aplica consumo real
+            for item_temp in estoque_temp:
+                for item_real in estoque:
+                    if item_temp["nome"] == item_real["nome"]:
+                        item_real["quantidade"] = item_temp["quantidade"]
+
+            modo_preparo = []
+            modo_preparo += preparo_massa(massa["nome"])
+            modo_preparo += preparo_molho(molho["nome"])
+            modo_preparo += preparo_proteina(proteina["nome"])
+
+            if legume:
+                modo_preparo += preparo_legume(legume["nome"])
+
+            if folha:
+                modo_preparo += preparo_folha(folha["nome"])
+
+            modo_preparo += finalizar_prato()
+
+            tempo = 25
+            if legume:
+                tempo += random.randint(3, 7)
+            if folha:
+                tempo += random.randint(1, 3)
+
+            receita = {
+                "nome": f"{massa['nome']} com {molho['nome']} e {proteina['nome']}",
+                "categoria": "jantar",
+                "ingredientes": ingredientes,
+                "modo_preparo": modo_preparo,
+                "tempo_preparo": f"{tempo} minutos",
+                "Porcao": "1"
+            }
+
+        # =========================
+        # 🍲 SOPA (UPGRADE REAL)
+        # =========================
+        else:
             proteina = consumir(estoque, "proteina", 80)
             caldo = consumir(estoque, "caldo", 500)
             legume1 = consumir(estoque, "legume", 80)
@@ -308,93 +654,42 @@ def gerar_janta(estoque):
             if proteina["nome"] in proteinas_proibidas_sopa:
                 continue
 
-            ingredientes.extend([proteina, caldo, legume1])
+            ingredientes = [caldo, proteina, legume1]
             if legume2:
                 ingredientes.append(legume2)
 
-            receita = {
-                "nome": f"Sopa de {proteina['nome']} com legumes",
-                "categoria": "jantar",
-                "ingredientes": ingredientes,
-                "modo_preparo": [
-                    "Ferva o caldo.",
-                    "Adicione a proteína e cozinhe.",
-                    "Acrescente os legumes.",
-                    "Cozinhe até ficar macio.",
-                    "Sirva quente."
-                ],
-                "tempo_preparo": "30 minutos",
-                "Porcao": "1"
-            }
+            # 🧠 nome mais realista
+            nome = random.choice([
+                f"Sopa caseira de {proteina['nome']} com legumes",
+                f"Caldo nutritivo de {proteina['nome']} com vegetais",
+                f"Sopa leve de {proteina['nome']} com legumes frescos"
+            ])
 
-        # =========================
-        # 🍝 MASSA
-        # =========================
-        elif tipo == "massa":
-            massa = consumir(estoque, "massa", 100)
-            molho = consumir(estoque, "molho", 150)
+            # 🔥 preparo realista
+            modo_preparo = [
+                f"Aqueça o {caldo['nome']} em uma panela média.",
+                f"Adicione {proteina['nome']} e cozinhe até ficar macio.",
+                f"Acrescente {legume1['nome']} e cozinhe por alguns minutos."
+            ]
 
-            if not receita_valida(massa, molho):
-                continue
+            if legume2:
+                modo_preparo.append(
+                    f"Adicione também {legume2['nome']} e cozinhe até os legumes ficarem macios."
+                )
 
-            ingredientes.extend([massa, molho])
+            modo_preparo += [
+                "Ajuste o sal e os temperos a gosto.",
+                "Sirva bem quente."
+            ]
 
-            # opcionais
-            legume = consumir(estoque, "legume", 80)
-            if legume:
-                ingredientes.append(legume)
-
-            salada = consumir(estoque, "folha", 50)
-            if salada:
-                ingredientes.append(salada)
+            tempo = random.randint(25, 40)
 
             receita = {
-                "nome": f"{massa['nome']} com {molho['nome']}",
+                "nome": nome,
                 "categoria": "jantar",
                 "ingredientes": ingredientes,
-                "modo_preparo": [
-                    "Cozinhe a massa até ficar al dente.",
-                    "Aqueça o molho.",
-                    "Misture tudo.",
-                    "Sirva quente."
-                ],
-                "tempo_preparo": "25 minutos",
-                "Porcao": "1"
-            }
-
-        # =========================
-        # 🍽️ PF (PRATO NORMAL)
-        # =========================
-        else:
-            proteina = consumir(estoque, "proteina", 120)
-            carbo = consumir(estoque, "carbo", 100)
-
-            if not receita_valida(proteina, carbo):
-                continue
-
-            ingredientes.extend([proteina, carbo])
-
-           # opcionais
-            legume = consumir(estoque, "legume", 80)
-            if legume:
-                ingredientes.append(legume)
-
-            salada = consumir(estoque, "folha", 50)
-            if salada:
-                ingredientes.append(salada)
-
-            receita = {
-                "nome": f"{proteina['nome']} com {carbo['nome']}",
-                "categoria": "jantar",
-                "ingredientes": ingredientes,
-                "modo_preparo": [
-                    "Prepare a proteína.",
-                    "Cozinhe o carboidrato.",
-                    "Prepare os acompanhamentos.",
-                    "Monte o prato.",
-                    "Sirva quente."
-                ],
-                "tempo_preparo": "25 minutos",
+                "modo_preparo": modo_preparo,
+                "tempo_preparo": f"{tempo} minutos",
                 "Porcao": "1"
             }
 
@@ -407,6 +702,10 @@ def gerar_janta(estoque):
 # FUNÇÃO PRINCIPAL
 # =========================
 def gerar_tudo(estoque_usuario):
+
+    ULTIMOS_USADOS["proteina"] = []
+    ULTIMOS_USADOS["carbo"] = []
+
     estoque_copia = deepcopy(estoque_usuario)
 
     estoque_classificado = classificar_estoque(estoque_copia)
