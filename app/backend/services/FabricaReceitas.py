@@ -7,7 +7,7 @@ from copy import deepcopy
 from app.backend.services.bases import (
     proteinasUN, proteinasKG, legumes, carboidratos,
     folhas_saladas, massas, proteinas_proibidas_sopa,
-    molhos, caldos
+    molhos, caldos, frutas, proteinasCF, carboidratosCF
 )
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -386,28 +386,114 @@ def gerar_preparo_pf(proteina, carbo, legume=None, folha=None):
 # =========================
 def gerar_cafe(estoque):
     receitas = []
+    ultimo_proteina = None
+    ultimo_carbo = None
 
-    for _ in range(31):
+    while len(receitas) < 31:
+        # =========================
+        # ESCOLHA INTELIGENTE (evita repetição)
+        # =========================
         proteina = consumir(estoque, "proteina", 2)
         carbo = consumir(estoque, "carbo", 50)
 
         if not receita_valida(proteina, carbo):
             continue
 
+        if proteina["nome"] == ultimo_proteina and carbo["nome"] == ultimo_carbo:
+            continue
+
+        # =========================
+        # COMPLEMENTO (fruta OU bebida)
+        # =========================
+        usar_fruta = random.choice([True, False])
+
+        complemento = None
+
+        if usar_fruta:
+            fruta_nome = random.choice(frutas)
+            complemento = {
+                "nome": fruta_nome,
+                "quantidade": 1,
+                "unidade": "unidade"
+            }
+        else:
+            bebida_nome = random.choice([
+                "café", "café com leite", "leite", "suco natural"
+            ])
+            complemento = {
+                "nome": bebida_nome,
+                "quantidade": 200,
+                "unidade": "ml"
+            }
+
+        ingredientes = [proteina, carbo, complemento]
+
+        # =========================
+        # NOME DO PRATO (identidade)
+        # =========================
+        if usar_fruta:
+            nome = f"{carbo['nome']} com {proteina['nome']} e {complemento['nome']}"
+        else:
+            nome = f"{carbo['nome']} com {proteina['nome']} e {complemento['nome']}"
+
+        # =========================
+        # MODO DE PREPARO REALISTA
+        # =========================
+        modo_preparo = []
+
+        # proteína (leve)
+        modo_preparo += preparo_proteina(proteina["nome"])
+
+        # carbo (leve)
+        modo_preparo += [
+            random.choice([
+                f"Prepare o {carbo['nome']} conforme sua preferência.",
+                f"Aqueça ou monte o {carbo['nome']} conforme necessário."
+            ])
+        ]
+
+        # complemento
+        if usar_fruta:
+            modo_preparo += [
+                random.choice([
+                    f"Lave bem a {complemento['nome']}.",
+                    f"Higienize a {complemento['nome']} antes de servir."
+                ]),
+                random.choice([
+                    f"Corte a {complemento['nome']} se desejar.",
+                    f"Sirva a {complemento['nome']} inteira ou em pedaços."
+                ])
+            ]
+        else:
+            modo_preparo += [
+                random.choice([
+                    f"Prepare o {complemento['nome']}.",
+                    f"Sirva o {complemento['nome']} quente ou gelado."
+                ])
+            ]
+
+        # finalização
+        modo_preparo += finalizar_prato()
+
+        # =========================
+        # TEMPO REALISTA
+        # =========================
+        tempo = random.randint(5, 15)
+
         receita = {
-            "nome": f"Café com {proteina['nome']} e {carbo['nome']}",
+            "nome": nome,
             "categoria": "cafe",
-            "ingredientes": [proteina, carbo],
-            "modo_preparo": [
-                "Prepare os ingredientes.",
-                "Cozinhe ou aqueça conforme necessário.",
-                "Monte o prato e sirva."
-            ],
-            "tempo_preparo": "10 minutos",
+            "ingredientes": ingredientes,
+            "modo_preparo": modo_preparo,
+            "tempo_preparo": f"{tempo} minutos",
             "Porcao": "1"
         }
 
         receitas.append(receita)
+
+        # salva último (anti repetição)
+        ultimo_proteina = proteina["nome"]
+        ultimo_carbo = carbo["nome"]
 
     return receitas
 
