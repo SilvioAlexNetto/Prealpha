@@ -406,7 +406,11 @@ def gerar_cafe(estoque):
     ultimo_proteina = None
     ultimo_carbo = None
 
-    while len(receitas) < 31:
+    tentativas = 0
+
+    while len(receitas) < 31 and tentativas < 200:
+        tentativas += 1
+
         # =========================
         # ESCOLHA INTELIGENTE (evita repetição)
         # =========================
@@ -431,8 +435,15 @@ def gerar_cafe(estoque):
         if usar_fruta:
             complemento = consumir(estoque, "fruta", 1)
 
-            if not complemento:
-                continue
+        if not complemento:
+            usar_fruta = False
+
+        if not usar_fruta:
+            complemento = {
+                "nome": random.choice(["café", "café com leite", "leite", "suco natural"]),
+                "quantidade": 200,
+                "unidade": "ml"
+            }
         else:
             bebida_nome = random.choice([
                 "café", "café com leite", "leite", "suco natural"
@@ -522,7 +533,11 @@ def gerar_cafe(estoque):
 def gerar_almoco(estoque):
     receitas = []
 
-    while len(receitas) < 31:
+    tentativas = 0
+
+    while len(receitas) < 31 and tentativas < 200:
+        tentativas += 1
+
         tipo = random.choice(["pf", "massa"])
 
         # =========================
