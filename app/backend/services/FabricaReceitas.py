@@ -176,8 +176,17 @@ def classificar_estoque(estoque):
         # PRIORIDADE DE CLASSIFICAÇÃO
         # =========================
 
+        if any(normalizar(pcf) in nome for pcf in proteinasCF):
+            categoria = "proteinaCF"
+
+        elif any(normalizar(ccf) in nome for ccf in carboidratosCF):
+            categoria = "carboCF"
+
+        elif any(normalizar(fcf) in nome for fcf in frutas):
+            categoria = "fruta"
+
         # 🥩 PROTEÍNA (primeiro sempre)
-        if any(normalizar(p) in nome for p in proteinasKG + proteinasUN):
+        elif any(normalizar(p) in nome for p in proteinasKG + proteinasUN):
             categoria = "proteina"
 
         # 🍝 MASSA (antes de carbo)
@@ -204,14 +213,7 @@ def classificar_estoque(estoque):
         elif any(normalizar(caldo["nome"]) in nome for caldo in caldos):
             categoria = "caldo"
 
-        elif any(normalizar(pcf) in nome for pcf in proteinasCF):
-            categoria = "proteinaCF"
 
-        elif any(normalizar(ccf) in nome for ccf in carboidratosCF):
-            categoria = "carboCF"
-
-        elif any(normalizar(fcf) in nome for fcf in frutas):
-            categoria = "fruta"
         
         # =========================
         # FALLBACK INTELIGENTE
@@ -308,7 +310,8 @@ def consumir(estoque, categoria, qtd):
     return {
         "nome": item["nome"],
         "quantidade": usar,
-        "unidade": item["unidade"]
+        "unidade": item["unidade"],
+        "categoria": item["categoria"]
     }
 
 
@@ -398,6 +401,41 @@ def gerar_preparo_pf(proteina, carbo, legume=None, folha=None):
     return preparo
 
 
+def ajustar_porcionamento(item):
+    nome = item["nome"].lower()
+    unidade = item["unidade"]
+
+    # =========================
+    # PROTEÍNA CAFÉ
+    # =========================
+    if item["categoria"] == "proteinaCF":
+
+        if unidade == "unidade":
+            item["quantidade"] = 2  # ex: 2 ovos
+
+        elif unidade == "g":
+            item["quantidade"] = 80  # ex: 80g queijo
+
+        elif unidade == "ml":
+            item["quantidade"] = 200  # ex: leite
+
+    # =========================
+    # CARBO CAFÉ
+    # =========================
+    elif item["categoria"] == "carboCF":
+
+        if unidade == "fatia":
+            item["quantidade"] = 2  # ex: 2 fatias pão
+
+        elif unidade == "g":
+            item["quantidade"] = 50  # ex: aveia
+
+        elif unidade == "unidade":
+            item["quantidade"] = 1  # ex: 1 pão francês
+
+    return item
+
+
 # =========================
 # CAFÉ
 # =========================
@@ -414,11 +452,14 @@ def gerar_cafe(estoque):
         # =========================
         # ESCOLHA INTELIGENTE (evita repetição)
         # =========================
-        proteina = consumir(estoque, "proteinaCF", 2)
-        carbo = consumir(estoque, "carboCF", 50)
+        proteina = consumir(estoque, "proteinaCF", 999)
+        carbo = consumir(estoque, "carboCF", 999)
 
         if not receita_valida(proteina, carbo):
             continue
+
+        proteina = ajustar_porcionamento(proteina)
+        carbo = ajustar_porcionamento(carbo)
 
         if proteina["nome"] == ultimo_proteina and carbo["nome"] == ultimo_carbo:
             continue
@@ -426,14 +467,18 @@ def gerar_cafe(estoque):
         # =========================
         # COMPLEMENTO (fruta OU bebida)
         # =========================
-        usar_fruta = random.choice([True, False])
-
         complemento = None
 
         usar_fruta = random.choice([True, False])
 
         if usar_fruta:
-            complemento = consumir(estoque, "fruta", 1)
+            complemento = consumir(estoque, "fruta", 999)
+
+            if complemento:
+                if complemento["unidade"] == "unidade":
+                    complemento["quantidade"] = 1
+                elif complemento["unidade"] == "g":
+                 complemento["quantidade"] = 100
 
         if not complemento:
             usar_fruta = False
