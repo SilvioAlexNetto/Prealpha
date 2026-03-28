@@ -17,7 +17,15 @@ SOBRAS_PATH = os.path.join(BASE_DIR, "database", "Sobras.json")
 
 ULTIMOS_USADOS = {
     "proteina": [],
-    "carbo": []
+    "carbo": [],
+    "massa": [],
+    "molho": [],
+    "legume": [],
+    "folha": [],
+    "caldo": [],
+    "proteinaCF": [],
+    "carboCF": [],
+    "fruta": []
 }
 
 MAX_REPETICAO = 2
@@ -196,6 +204,15 @@ def classificar_estoque(estoque):
         elif any(normalizar(caldo["nome"]) in nome for caldo in caldos):
             categoria = "caldo"
 
+        elif any(normalizar(pcf) in nome for pcf in proteinasCF):
+            categoria = "proteinaCF"
+
+        elif any(normalizar(ccf) in nome for ccf in carboidratosCF):
+            categoria = "carboCF"
+
+        elif any(normalizar(fcf) in nome for fcf in frutas):
+            categoria = "fruta"
+        
         # =========================
         # FALLBACK INTELIGENTE
         # =========================
@@ -393,8 +410,8 @@ def gerar_cafe(estoque):
         # =========================
         # ESCOLHA INTELIGENTE (evita repetição)
         # =========================
-        proteina = consumir(estoque, "proteina", 2)
-        carbo = consumir(estoque, "carbo", 50)
+        proteina = consumir(estoque, "proteinaCF", 2)
+        carbo = consumir(estoque, "carboCF", 50)
 
         if not receita_valida(proteina, carbo):
             continue
@@ -409,17 +426,18 @@ def gerar_cafe(estoque):
 
         complemento = None
 
+        usar_fruta = random.choice([True, False])
+
         if usar_fruta:
-            fruta_nome = random.choice(frutas)
-            complemento = {
-                "nome": fruta_nome,
-                "quantidade": 1,
-                "unidade": "unidade"
-            }
+            complemento = consumir(estoque, "fruta", 1)
+
+            if not complemento:
+                continue
         else:
             bebida_nome = random.choice([
                 "café", "café com leite", "leite", "suco natural"
             ])
+
             complemento = {
                 "nome": bebida_nome,
                 "quantidade": 200,
