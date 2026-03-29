@@ -472,8 +472,9 @@ def gerar_cafe(estoque):
         # =========================
         # ESCOLHA INTELIGENTE (evita repetição)
         # =========================
-        proteina = consumir(estoque, "proteina", 1, subcategoria="cafe")
-        carbo = consumir(estoque, "carbo", 1, subcategoria="cafe")
+        proteina = consumir(estoque, "proteina", 200, subcategoria="cafe")
+        carbo = consumir(estoque, "carbo", 200, subcategoria="cafe")
+
 
         if not receita_valida(proteina, carbo):
             continue
@@ -481,8 +482,22 @@ def gerar_cafe(estoque):
         proteina = ajustar_porcionamento(proteina)
         carbo = ajustar_porcionamento(carbo)
 
-        if proteina["nome"] == ultimo_proteina and carbo["nome"] == ultimo_carbo:
-            continue
+        if (
+            proteina["nome"] == ultimo_proteina and 
+            carbo["nome"] == ultimo_carbo and 
+            len(receitas) > 0
+        ):
+            # só bloqueia se existir variedade possível
+            alternativas_proteina = [
+                i for i in estoque if i["categoria"] == "proteina" and i["quantidade"] > 0
+            ]
+
+            alternativas_carbo = [
+                i for i in estoque if i["categoria"] == "carbo" and i["quantidade"] > 0
+            ]
+
+            if len(alternativas_proteina) > 1 or len(alternativas_carbo) > 1:
+                continue
 
         # =========================
         # COMPLEMENTO (fruta OU bebida)
