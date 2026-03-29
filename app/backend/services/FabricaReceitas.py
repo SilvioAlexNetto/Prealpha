@@ -382,8 +382,12 @@ def ajustar_porcionamento(item):
         return None
 
     unidade = item["unidade"]
-    categoria = item["categoria"]
-    subcategoria = item.get("subcategoria")
+    categoria = item["categorias"][0] if item.get("categorias") else None
+    subcategoria = (
+        item["subcategorias"][0]
+        if item.get("subcategorias")
+        else None
+    )
 
     if subcategoria == "cafe":
 
