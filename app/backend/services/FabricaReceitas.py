@@ -238,6 +238,8 @@ def classificar_estoque(estoque):
 # =========================
 def consumir(estoque, categoria, qtd, subcategoria=None):
 
+    BLOQUEADOS = {"farinha", "cereal"}
+
     candidatos = [
         i for i in estoque
         if categoria in i["categorias"]
