@@ -488,7 +488,6 @@ def gerar_cafe(estoque):
         proteina = consumir(estoque, "proteina", 50, subcategoria="cafe")
         carbo = consumir(estoque, "carbo", 50, subcategoria="cafe")
 
-
         if not receita_valida(proteina, carbo):
             continue
 
@@ -521,6 +520,8 @@ def gerar_cafe(estoque):
         # =========================
         # COMPLEMENTO (fruta OU bebida)
         # =========================
+        complemento = None  # ✅ CORREÇÃO
+
         if complemento and complemento["nome"] in [proteina["nome"], carbo["nome"]]:
             complemento = None
         
@@ -535,7 +536,7 @@ def gerar_cafe(estoque):
                 elif complemento["unidade"] == "g":
                     complemento["quantidade"] = 100
 
-        # 🔥 CORREÇÃO AQUI
+        # 🔥 fallback bebida
         if not complemento:
             usar_fruta = False
             complemento = {
@@ -555,10 +556,6 @@ def gerar_cafe(estoque):
         # MODO DE PREPARO REALISTA
         # =========================
         modo_preparo = []
-
-        # =========================
-        # PREPARO CAFÉ (HUMANO)
-        # =========================
 
         # proteína
         if proteina["unidade"] == "ml":
