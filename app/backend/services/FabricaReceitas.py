@@ -472,7 +472,7 @@ def gerar_cafe(estoque):
 
     tentativas = 0
 
-    while len(receitas) < 31 and tentativas < 500:  # aumentei tentativas para garantir 31
+    while len(receitas) < 31 and tentativas < 500:
         tentativas += 1
 
         # tenta consumir proteína e carbo
@@ -498,28 +498,33 @@ def gerar_cafe(estoque):
         # tenta evitar repetição do dia anterior, mas se não der, permite
         evitar_repeticao = (len(receitas) > 0)
         if evitar_repeticao and proteina["nome"] == ultimo_proteina and carbo["nome"] == ultimo_carbo:
-            # 50% chance de pular para tentar variar
             if random.random() < 0.5:
                 continue
 
-        # complemento
-        usar_fruta = random.choice([True, False])
+        # complemento: tentar usar fruta se houver estoque
         complemento = None
-        if usar_fruta:
-            complemento = consumir(estoque, "fruta", 999)
-            if complemento:
-                if complemento["unidade"] == "unidade":
-                    complemento["quantidade"] = 1
-                elif complemento["unidade"] == "g":
-                    complemento["quantidade"] = 100
+        frutas_no_estoque = [
+            f for f in estoque.get("fruta", [])
+            if f["quantidade"] > 0
+        ]
 
-        if not complemento:
-            usar_fruta = False
+        if frutas_no_estoque:
+            # escolhe uma fruta disponível
+            fruta = random.choice(frutas_no_estoque)
+            complemento = fruta.copy()
+            if complemento["unidade"] == "unidade":
+                complemento["quantidade"] = 1
+            elif complemento["unidade"] == "g":
+                complemento["quantidade"] = 100
+            usar_fruta = True
+        else:
+            # fallback para líquido
             complemento = {
                 "nome": random.choice(["café", "café com leite", "leite", "suco natural"]),
                 "quantidade": 200,
                 "unidade": "ml"
             }
+            usar_fruta = False
 
         ingredientes = [proteina, carbo, complemento]
 
