@@ -34,7 +34,6 @@ proteinasKG = [
 
 proteinasUN = [
     "Ovo", "Ovo caipira", "Ovo vermelho", "Ovo de codorna",
-    "Gema de ovo",
 
     "Hambúrguer bovino", "Hambúrguer de frango", "Hambúrguer suíno",
     "Hambúrguer artesanal",
@@ -255,7 +254,7 @@ carboidratos = [
     "Feijão preto", "Feijão branco", "Ervilha",
 
     "Batata baroa", "Mandioquinha", "Inhame",
-    "Cará", "Tapioca", "Cuscuz nordestino", "Cuscuz"
+    "Cará", "Tapioca", "Cuscuz nordestino", "Cuscuz",
     "Arroz branco",
 "Arroz integral",
 "Arroz parboilizado",

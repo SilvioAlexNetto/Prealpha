@@ -475,27 +475,37 @@ def gerar_cafe(estoque):
     while len(receitas) < 31 and tentativas < 200:
         tentativas += 1
 
+        # Tenta consumir proteína e carbo normalmente
         proteina = consumir(estoque, "proteina", 50, subcategoria="cafe")
         carbo = consumir(estoque, "carbo", 50, subcategoria="cafe")
 
+        # Verifica se a combinação é válida
         if not receita_valida(proteina, carbo):
             continue
 
+        # Ajusta porcionamento
         proteina = ajustar_porcionamento(proteina)
         carbo = ajustar_porcionamento(carbo)
 
+        # Valida categorias
         if proteina["categoria"] not in ["proteina", "liquido"]:
             continue
 
         if carbo["categoria"] != "carbo":
             continue
 
+        # NOVO: Se não houver outra combinação possível, permite repetição
         if (
             proteina["nome"] == ultimo_proteina and 
             carbo["nome"] == ultimo_carbo and 
             len(receitas) > 0
         ):
-            continue
+            # Checa se ainda existe alguma outra proteína ou carbo disponível no estoque
+            outra_proteina = consumir(estoque, "proteina", 50, subcategoria="cafe", testar=True)
+            outro_carbo = consumir(estoque, "carbo", 50, subcategoria="cafe", testar=True)
+            if outra_proteina or outro_carbo:
+                continue  # ainda há variação possível, continua tentando
+            # Caso contrário, repete mesmo (fallback)
 
         complemento = None
 
@@ -581,7 +591,6 @@ def gerar_cafe(estoque):
         ultimo_carbo = carbo["nome"]
 
     return receitas
-
 
 # =========================
 # ALMOÇO 

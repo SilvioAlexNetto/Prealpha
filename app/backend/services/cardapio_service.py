@@ -1,6 +1,6 @@
 import os
 import json
-from app.backend.services.bases import ( proteinasKG, proteinasUN, folhas_saladas, carboidratos, massas, molhos, legumes, unidades, frutas, proteinasCF, carboidratosCF)
+from app.backend.services.bases import ( proteinasKG, proteinasUN, folhas_saladas, carboidratos, massas, molhos, legumes, unidades, frutas, proteinasCF, carboidratosCF, liquidos)
 
 # =========================
 # PATHS
@@ -69,7 +69,8 @@ def listar_ingredientes_e_unidades():
         frutas +
         proteinasCF +
         carboidratosCF+
-        legumes
+        legumes +
+        liquidos
     )
 
     ingredientes = set()
