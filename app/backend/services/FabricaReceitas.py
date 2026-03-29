@@ -606,7 +606,6 @@ def gerar_cafe(estoque):
             fruta=None if usa_recheio else (fruta["nome"] if fruta else None),
             recheio=fruta["nome"] if usa_recheio and fruta else None,
             )
-
             tempo = random.randint(10, 20)
 
         # =========================
@@ -661,8 +660,6 @@ def gerar_cafe(estoque):
 
     return receitas
 
-
-
 # =========================
 # ALMOÇO 
 # =========================
@@ -682,9 +679,6 @@ def gerar_almoco(estoque):
         if tipo == "pf":
             proteina = consumir(estoque, "proteina", 120)
             carbo = consumir(estoque, "carbo", 100)
-
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
-                continue
 
             if proteina and proteina.get("subcategoria") == "liquido":
                 continue
