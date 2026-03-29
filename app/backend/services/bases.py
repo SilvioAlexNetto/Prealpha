@@ -65,23 +65,12 @@ proteinasCF = [
     "queijo fresco", "queijo meia cura", "queijo minas padrão", "queijo light",
     "requeijão", "requeijão light",
     "cottage", "ricota", "creme de ricota", "creme de queijo",
-    "iogurte natural", "iogurte integral", "iogurte desnatado",
-    "iogurte grego", "iogurte proteico", "iogurte zero lactose",
-    "iogurte com frutas", "iogurte com aveia", "iogurte com granola proteica",
-    "leite", "leite integral", "leite desnatado", "leite sem lactose",
-    "leite em pó", "leite em pó desnatado",
-    "leite fermentado", "bebida láctea", "bebida láctea fermentada",
-    "leite com proteína",
-    "leite vegetal", "leite de soja", "leite de amêndoas",
-    "leite de aveia", "leite de coco",
-    "bebida proteica", "bebida vegetal proteica", "bebida de proteína",
-    "whey protein", "shake proteico", "smoothie proteico",
     "peito de peru", "presunto", "presunto magro", "blanquet de peru",
     "tofu",
     "pasta de amendoim", "pasta de amendoim integral",
     "pasta de castanha", "pasta de amêndoas", "pasta de castanha de caju",
     "coalhada", "coalhada seca",
-    "kefir", "kefir de leite",
+   
     ]
 
 carboidratosCF = [
@@ -108,8 +97,7 @@ carboidratosCF = [
     "bolo de chocolate", "bolo integral",
     "bolo de banana", "bolo de milho", "bolo de laranja",
     "croissant", "brioche", "rosca doce",
-    "wrap", "wrap integral",
-    "panqueca", "panqueca de aveia", "panqueca de banana",
+    "wrap", "wrap integral", "panqueca de banana",
     "crepioca"
 ]
 
@@ -147,7 +135,17 @@ frutas = [
 ]
 
 liquidos = [
- "leite"
+    "iogurte natural", "iogurte integral", "iogurte desnatado",
+    "iogurte grego", "iogurte proteico", "iogurte zero lactose",
+    "iogurte com frutas", "iogurte com aveia", "iogurte com granola proteica",
+    "leite", "leite integral", "leite desnatado", "leite sem lactose",
+    "leite fermentado", "bebida láctea", "bebida láctea fermentada",
+    "leite com proteína",
+    "leite vegetal", "leite de soja", "leite de amêndoas",
+    "leite de aveia", "leite de coco",
+    "bebida proteica", "bebida vegetal proteica", "bebida de proteína",
+    "shake proteico", "smoothie proteico",
+    "kefir", "kefir de leite",
 ]
 
 folhas_saladas = [

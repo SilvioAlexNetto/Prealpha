@@ -7,7 +7,7 @@ from copy import deepcopy
 from app.backend.services.bases import (
     proteinasUN, proteinasKG, legumes, carboidratos,
     folhas_saladas, massas, proteinas_proibidas_sopa,
-    molhos, caldos, frutas, proteinasCF, carboidratosCF
+    molhos, caldos, frutas, proteinasCF, carboidratosCF, liquidos
 )
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -186,6 +186,11 @@ def classificar_estoque(estoque):
             categoria = "carbo"
             subcategoria = "cafe"
 
+        # 🥤 LÍQUIDOS (ANTES DE PROTEÍNA)
+        elif any(normalizar(lq) in nome for lq in liquidos):
+            categoria = "liquido"
+            subcategoria = "cafe"
+
         # 🥩 PROTEÍNA
         elif any(normalizar(p) in nome for p in proteinasKG + proteinasUN):
             categoria = "proteina"
@@ -194,13 +199,14 @@ def classificar_estoque(estoque):
         elif any(normalizar(m) in nome for m in massas):
             categoria = "massa"
 
-        # 🍚 CARBO
-        elif any(normalizar(c) in nome for c in carboidratos):
-            categoria = "carbo"
-
         # 🥕 LEGUMES
         elif any(normalizar(l) in nome for l in legumes):
             categoria = "legume"
+
+
+        # 🍚 CARBO
+        elif any(normalizar(c) in nome for c in carboidratos):
+            categoria = "carbo"
 
         # 🥬 FOLHAS
         elif any(normalizar(f) in nome for f in folhas_saladas):
@@ -422,36 +428,42 @@ def gerar_preparo_pf(proteina, carbo, legume=None, folha=None):
 
 
 def ajustar_porcionamento(item):
-    nome = item["nome"].lower()
     unidade = item["unidade"]
+    categoria = item["categoria"]
+    subcategoria = item.get("subcategoria")
 
     # =========================
-    # PROTEÍNA CAFÉ
+    # CAFÉ DA MANHÃ
     # =========================
-    if item["categoria"] == "proteinaCF":
+    if subcategoria == "cafe":
 
-        if unidade == "unidade":
-            item["quantidade"] = 2  # ex: 2 ovos
+        # 🥩 proteína café
+        if categoria == "proteina":
+            if unidade == "unidade":
+                item["quantidade"] = 2
+            elif unidade == "g":
+                item["quantidade"] = 80
 
-        elif unidade == "g":
-            item["quantidade"] = 80  # ex: 80g queijo
+        # 🍞 carbo café
+        elif categoria == "carbo":
+            if unidade == "fatia":
+                item["quantidade"] = 2
+            elif unidade == "g":
+                item["quantidade"] = 50
+            elif unidade == "unidade":
+                item["quantidade"] = 1
 
-        elif unidade == "ml":
-            item["quantidade"] = 200  # ex: leite
+        # 🍎 fruta
+        elif categoria == "fruta":
+            if unidade == "unidade":
+                item["quantidade"] = 1
+            elif unidade == "g":
+                item["quantidade"] = 100
 
-    # =========================
-    # CARBO CAFÉ
-    # =========================
-    elif item["categoria"] == "carboCF":
-
-        if unidade == "fatia":
-            item["quantidade"] = 2  # ex: 2 fatias pão
-
-        elif unidade == "g":
-            item["quantidade"] = 50  # ex: aveia
-
-        elif unidade == "unidade":
-            item["quantidade"] = 1  # ex: 1 pão francês
+        # 🥤 líquido (se você já criou a lista)
+        elif categoria == "liquido":
+            if unidade == "ml":
+                item["quantidade"] = 200
 
     return item
 
@@ -472,8 +484,8 @@ def gerar_cafe(estoque):
         # =========================
         # ESCOLHA INTELIGENTE (evita repetição)
         # =========================
-        proteina = consumir(estoque, "proteina", 200, subcategoria="cafe")
-        carbo = consumir(estoque, "carbo", 200, subcategoria="cafe")
+        proteina = consumir(estoque, "proteina", 50, subcategoria="cafe")
+        carbo = consumir(estoque, "carbo", 50, subcategoria="cafe")
 
 
         if not receita_valida(proteina, carbo):
@@ -481,6 +493,12 @@ def gerar_cafe(estoque):
 
         proteina = ajustar_porcionamento(proteina)
         carbo = ajustar_porcionamento(carbo)
+
+        if proteina["categoria"] not in ["proteina", "liquido"]:
+            continue
+
+        if carbo["categoria"] != "carbo":
+            continue
 
         if (
             proteina["nome"] == ultimo_proteina and 
@@ -502,7 +520,9 @@ def gerar_cafe(estoque):
         # =========================
         # COMPLEMENTO (fruta OU bebida)
         # =========================
-        complemento = None
+        if complemento and complemento["nome"] in [proteina["nome"], carbo["nome"]]:
+            complemento = None
+        
         usar_fruta = random.choice([True, False])
 
         if usar_fruta:
@@ -636,6 +656,9 @@ def gerar_almoco(estoque):
         if tipo == "pf":
             proteina = consumir(estoque, "proteina", 120)
             carbo = consumir(estoque, "carbo", 100)
+
+            if proteina and proteina.get("subcategoria") == "liquido":
+                continue
 
             if not receita_valida(proteina, carbo):
                 continue
