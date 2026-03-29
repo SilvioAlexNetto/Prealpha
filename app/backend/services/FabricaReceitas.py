@@ -500,11 +500,11 @@ def gerar_cafe(estoque):
             prato = random.choice(["panqueca", "mingau", "crepioca"])
 
             if prato == "panqueca":
-                farinha = consumir(estoque, "farinha", 50, subcategoria="cafe")
-                liquido = consumir(estoque, "liquido", 100, subcategoria="cafe")
+                farinha = consumir(estoque, "farinha", 50)
+                liquido = consumir(estoque, "liquido", 100)
                 ovo = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
-                fermento = consumir(estoque, "fermento", 5, subcategoria="cafe")  # opcional
-                recheio = consumir(estoque, "fruta", 1, subcategoria="cafe")  # opcional
+                fermento = consumir(estoque, "fermento", 5)  # opcional
+                recheio = consumir(estoque, "fruta", 1)  # opcional
 
                 if not farinha or not liquido or not ovo:
                     continue
@@ -531,10 +531,10 @@ def gerar_cafe(estoque):
                 tempo = random.randint(12, 20)
 
             elif prato == "mingau":
-                farinha = consumir(estoque, "farinha", 50, subcategoria="cafe") or consumir(estoque, "cereal", 50, subcategoria="cafe")
-                liquido = consumir(estoque, "liquido", 200, subcategoria="cafe")
-                fruta = consumir(estoque, "fruta", 1, subcategoria="cafe")  # opcional
-                adoçante = consumir(estoque, "adoçante", 1, subcategoria="cafe")  # opcional
+                farinha = consumir(estoque, "farinha", 50) or consumir(estoque, "cereal", 50)
+                liquido = consumir(estoque, "liquido", 200)
+                fruta = consumir(estoque, "fruta", 1)  # opcional
+                adoçante = consumir(estoque, "adoçante", 1)  # opcional
 
                 if not farinha or not liquido:
                     continue
@@ -558,10 +558,10 @@ def gerar_cafe(estoque):
                 tempo = random.randint(10, 18)
 
             elif prato == "crepioca":
-                tapioca = consumir(estoque, "farinha", 50, subcategoria="cafe")
+                tapioca = consumir(estoque, "farinha", 50)
                 ovo = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
-                liquido = consumir(estoque, "liquido", 50, subcategoria="cafe")  # opcional
-                recheio = consumir(estoque, "fruta", 1, subcategoria="cafe")  # opcional
+                liquido = consumir(estoque, "liquido", 50)  # opcional
+                recheio = consumir(estoque, "fruta", 1)  # opcional
 
                 if not tapioca or not ovo:
                     continue
@@ -600,8 +600,8 @@ def gerar_cafe(estoque):
         else:
             carbo = consumir(estoque, "carboCF", 2, subcategoria="cafe")
             proteina = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
-            liquido = consumir(estoque, "liquido", 200, subcategoria="cafe")
-            fruta = consumir(estoque, "fruta", 1, subcategoria="cafe")
+            liquido = consumir(estoque, "liquido", 200)
+            fruta = consumir(estoque, "fruta", 1)
 
             if not carbo:
                 continue
