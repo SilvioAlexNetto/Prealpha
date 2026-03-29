@@ -25,7 +25,8 @@ ULTIMOS_USADOS = {
     "caldo": [],
     "proteinaCF": [],
     "carboCF": [],
-    "fruta": []
+    "fruta": [],
+    "liquidos": []
 }
 
 MAX_REPETICAO = 2
