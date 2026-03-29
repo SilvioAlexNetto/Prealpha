@@ -439,20 +439,49 @@ def ajustar_porcionamento(item):
 # =========================
 def nome_prato_cafe(base, proteina=None, fruta=None, recheio=None):
     """
-    Gera um nome profissional para o café da manhã, similar ao almoço.
+    Gera um nome profissional e variado para o café da manhã, similar ao almoço.
+    Inclui variações realistas de preparo e combinações de ingredientes.
     """
+
+    # 🔹 Base do prato
     nome = base
 
+    # 🔹 Descrições possíveis para a proteína
+    descricoes_proteina = [
+        f"com {proteina}" if proteina else "",
+        f"acompanhado de {proteina}" if proteina else "",
+        f"e {proteina}" if proteina else ""
+    ]
+
+    # 🔹 Descrições possíveis para a fruta
+    descricoes_fruta = [
+        f"com {fruta}" if fruta else "",
+        f"e {fruta}" if fruta else "",
+        f"acompanhado de {fruta}" if fruta else ""
+    ]
+
+    # 🔹 Descrições possíveis para recheio
+    descricoes_recheio = [
+        f"recheado com {recheio}" if recheio else "",
+        f"com recheio de {recheio}" if recheio else "",
+        f"contendo {recheio}" if recheio else ""
+    ]
+
+    # 🔹 Combina tudo de forma aleatória e natural
+    partes = [nome]
+
     if proteina:
-        nome += f" com {proteina}"
-
+        partes.append(random.choice(descricoes_proteina))
     if fruta:
-        nome += f" e {fruta}"
-
+        partes.append(random.choice(descricoes_fruta))
     if recheio:
-        nome += f" recheado com {recheio}"
+        partes.append(random.choice(descricoes_recheio))
 
-    return nome.capitalize()
+    # 🔹 Junta as partes, eliminando strings vazias
+    nome_final = " ".join([p for p in partes if p]).strip()
+
+    # 🔹 Capitaliza o nome do prato
+    return nome_final.capitalize()
 
 
 # =========================
@@ -461,29 +490,78 @@ def nome_prato_cafe(base, proteina=None, fruta=None, recheio=None):
 def gerar_preparo_cafe(base, proteina=None, liquido=None, fruta=None, recheio=None, fermento=None):
     """
     Gera uma lista de passos de preparo para o café da manhã, estilo profissional.
+    Trata cada base (panqueca, crepioca, mingau) de forma distinta.
     """
     preparo = []
 
-    # 🔹 Base (panqueca, mingau, crepioca)
-    preparo.append(f"Prepare a base: {base}.")
+    base_lower = base.lower()
 
-    if liquido:
-        preparo.append(f"Adicione {liquido} e misture bem até formar uma consistência homogênea.")
+    # =========================
+    # 🔹 PANQUECA
+    # =========================
+    if "panqueca" in base_lower:
+        preparo.append(f"Em uma tigela, peneire {base} e misture com {liquido} e {proteina}." if liquido and proteina else f"Prepare a massa de {base}.")
+        if fermento:
+            preparo.append(f"Adicione {fermento} para deixar a massa mais fofinha.")
+        preparo.append("Misture bem até formar uma massa homogênea.")
+        preparo.append("Aqueça uma frigideira antiaderente em fogo médio.")
+        preparo.append("Despeje porções da massa e cozinhe até surgirem bolhas na superfície.")
+        preparo.append("Vire cuidadosamente e cozinhe o outro lado até dourar.")
+        if recheio:
+            preparo.append(f"Recheie com {recheio} se desejar.")
+        if fruta:
+            preparo.append(f"Acompanhe com {fruta} fresca ou picada.")
+        preparo.append("Sirva quente.")
 
-    if proteina:
-        preparo.append(f"Incorpore {proteina} à mistura ou sirva ao lado, conforme apropriado.")
+    # =========================
+    # 🔹 CREPIOCA
+    # =========================
+    elif "crepioca" in base_lower:
+        preparo.append(f"Em uma tigela, misture {base} com {proteina}." if proteina else f"Prepare a massa de {base}.")
+        if liquido:
+            preparo.append(f"Adicione {liquido} se quiser a massa mais cremosa.")
+        preparo.append("Aqueça uma frigideira antiaderente em fogo médio.")
+        preparo.append("Despeje a massa formando uma camada fina.")
+        preparo.append("Cozinhe por 2-3 minutos até firmar, vire com cuidado e cozinhe o outro lado.")
+        if recheio:
+            preparo.append(f"Recheie com {recheio} se desejar.")
+        if fruta:
+            preparo.append(f"Acompanhe com {fruta} fresca ou picada.")
+        preparo.append("Sirva imediatamente.")
 
-    if fermento:
-        preparo.append(f"Adicione {fermento} para dar leveza à preparação.")
+    # =========================
+    # 🔹 MINGAU
+    # =========================
+    elif "mingau" in base_lower:
+        preparo.append(f"Aqueça {liquido} em uma panela média até começar a ferver." if liquido else "Aqueça o líquido base do mingau.")
+        preparo.append(f"Adicione {base} aos poucos, mexendo continuamente para não formar grumos." if base else "Misture a base gradualmente.")
+        preparo.append("Cozinhe em fogo baixo até atingir consistência cremosa.")
+        if fruta:
+            preparo.append(f"Finalize com {fruta} picada por cima." if fruta else "")
+        if proteina:
+            preparo.append(f"Acompanhe com {proteina} se desejar.")
+        preparo.append("Sirva quente em uma tigela.")
 
-    if recheio:
-        preparo.append(f"Recheie com {recheio} se desejar.")
+    # =========================
+    # 🔹 FALLBACK GENÉRICO
+    # =========================
+    else:
+        preparo.append(f"Prepare {base} conforme instruções básicas.")
+        if liquido:
+            preparo.append(f"Adicione {liquido} e misture bem.")
+        if proteina:
+            preparo.append(f"Incorpore {proteina} ou sirva ao lado.")
+        if fermento:
+            preparo.append(f"Adicione {fermento} se necessário.")
+        if recheio:
+            preparo.append(f"Recheie com {recheio}.")
+        if fruta:
+            preparo.append(f"Acompanhe com {fruta}.")
+        preparo.append("Cozinhe ou asse conforme necessário.")
+        preparo.append("Sirva imediatamente.")
 
-    if fruta:
-        preparo.append(f"Acompanhe com {fruta} fresca ou picada.")
-
-    preparo.append("Cozinhe ou asse conforme necessário até atingir o ponto ideal.")
-    preparo.append("Sirva imediatamente, ainda quente.")
+    # Remove strings vazias
+    preparo = [p for p in preparo if p]
 
     return preparo
 
@@ -501,11 +579,18 @@ def gerar_cafe(estoque):
         if tipo_prato == "robusto":
             prato = random.choice(["Panqueca", "Mingau", "Crepioca"])
 
-            farinha = consumir(estoque, "farinha", 50)
+            # Bases diferentes podem exigir ingredientes diferentes
+            farinha = None
+            cereal = None
+            if prato in ["Panqueca", "Crepioca"]:
+                farinha = consumir(estoque, "farinha", 50)
+            if prato == "Mingau":
+                farinha = consumir(estoque, "farinha", 50) or consumir(estoque, "cereal", 50)
+
             liquido = consumir(estoque, "liquido", 100)
             proteina = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
             fruta = consumir(estoque, "fruta", 1)  # opcional
-            fermento = consumir(estoque, "fermento", 5)  # opcional
+            fermento = consumir(estoque, "fermento", 5) if prato == "Panqueca" else None  # apenas panqueca
 
             if not farinha or not liquido or not proteina:
                 continue
@@ -516,20 +601,16 @@ def gerar_cafe(estoque):
             if fermento:
                 ingredientes.append(fermento)
 
-            nome = nome_prato_cafe(prato, proteina=proteina["nome"], fruta=fruta["nome"] if fruta else None, recheio=None)
-            modo_preparo = gerar_preparo_cafe(prato, proteina=proteina["nome"], liquido=liquido["nome"],
-                                              fruta=fruta["nome"] if fruta else None, fermento=fermento["nome"] if fermento else None)
+            # Passa fruta como recheio se quiser
+            nome = nome_prato_cafe(prato, proteina=proteina["nome"],
+                                fruta=None, recheio=fruta["nome"] if fruta else None)
 
-            tempo = random.randint(10, 20)
-
-            receita = {
-                "nome": nome,
-                "categoria": "cafe",
-                "ingredientes": ingredientes,
-                "modo_preparo": modo_preparo,
-                "tempo_preparo": f"{tempo} minutos",
-                "Porcao": "1"
-            }
+            modo_preparo = gerar_preparo_cafe(prato,
+                                            proteina=proteina["nome"],
+                                            liquido=liquido["nome"] if liquido else None,
+                                            fruta=fruta["nome"] if fruta else None,
+                                            recheio=fruta["nome"] if fruta else None,
+                                            fermento=fermento["nome"] if fermento else None)
 
         else:  # simples
             carbo = consumir(estoque, "carboCF", 2, subcategoria="cafe")
