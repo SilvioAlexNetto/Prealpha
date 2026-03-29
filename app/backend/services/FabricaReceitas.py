@@ -472,7 +472,7 @@ def gerar_cafe(estoque):
 
     tentativas = 0
 
-    while len(receitas) < 31 and tentativas < 500:
+    while len(receitas) < 31 and tentativas < 500:  # aumentei tentativas para garantir 31
         tentativas += 1
 
         # tenta consumir proteína e carbo
@@ -481,7 +481,13 @@ def gerar_cafe(estoque):
 
         # fallback se não encontrou nenhum
         if not proteina:
-            proteina = {"nome": "tofu", "categoria": "proteina", "unidade": "g", "quantidade": 50}
+        # fallback mais comum para café da manhã
+            proteina = {
+                "nome": random.choice(["ovo", "queijo", "iogurte", "presunto"]),
+                "categoria": "proteina",
+                "unidade": "g",
+                "quantidade": 50
+            }
         if not carbo:
             carbo = {"nome": "pão de forma", "categoria": "carbo", "unidade": "fatia", "quantidade": 1}
 
@@ -501,31 +507,24 @@ def gerar_cafe(estoque):
             if random.random() < 0.5:
                 continue
 
-        # complemento: tentar usar fruta se houver estoque
-        complemento = None
-        frutas_no_estoque = [
-            f for f in estoque.get("fruta", [])
-            if f["quantidade"] > 0
-        ]
-
-        if frutas_no_estoque:
-            # escolhe uma fruta disponível
-            fruta = random.choice(frutas_no_estoque)
-            complemento = fruta.copy()
+        # ======= complemento: fruta se houver =======
+        complemento = consumir(estoque, "fruta", 1)  # tentar usar 1 unidade ou 100g
+        usar_fruta = True
+        if complemento:
             if complemento["unidade"] == "unidade":
                 complemento["quantidade"] = 1
             elif complemento["unidade"] == "g":
                 complemento["quantidade"] = 100
-            usar_fruta = True
         else:
-            # fallback para líquido
+            # fallback se não houver fruta
+            usar_fruta = False
             complemento = {
                 "nome": random.choice(["café", "café com leite", "leite", "suco natural"]),
                 "quantidade": 200,
                 "unidade": "ml"
             }
-            usar_fruta = False
 
+        # ingredientes
         ingredientes = [proteina, carbo, complemento]
 
         nome = f"{carbo['nome']} com {proteina['nome']} e {complemento['nome']}"
