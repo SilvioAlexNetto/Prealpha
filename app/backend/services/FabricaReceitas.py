@@ -268,12 +268,16 @@ def consumir(estoque, categoria, qtd, subcategoria=None):
     if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
         ULTIMOS_USADOS[chave].pop(0)
 
+    # 🔥 CORREÇÃO AQUI
     return {
         "nome": item["nome"],
         "quantidade": usar,
-        "unidade": item["unidade"]
+        "unidade": item["unidade"],
+        "categorias": item.get("categorias", []),
+        "subcategorias": item.get("subcategorias", []),
+        "categoria": categoria,
+        "subcategoria": subcategoria
     }
-
 # =========================
 # VALIDAÇÃO
 # =========================
@@ -424,40 +428,29 @@ def ajustar_porcionamento(item):
 # =========================
 # 🍽️ CAFÉ - NOME PROFISSIONAL
 # =========================
+
 def nome_prato_cafe(base, proteina=None, fruta=None, recheio=None):
 
-    extras = []
+    base_lower = base.lower()
+    nome = base
 
-    if recheio:
-        extras.append(f"recheio de {recheio}")
+    # 🔥 só usa recheio quando faz sentido
+    usa_recheio = base_lower in ["panqueca", "crepioca"]
 
-    if proteina:
-        extras.append(proteina)
+    if usa_recheio and recheio:
+        nome += f" com recheio de {recheio}"
 
-    if fruta and not recheio:
-        extras.append(fruta)
+        if proteina:
+            nome += f" e {proteina}"
 
-    if not extras:
-        return base.capitalize()
+    else:
+        if proteina:
+            nome += f" com {proteina}"
 
-    conectores = ["com", "e", "acompanhado de"]
-    partes = [base]
+        if fruta:
+            nome += f" e {fruta}"
 
-    usados = set()
-
-    for extra in extras:
-        conector = random.choice(conectores)
-
-        tentativas = 0
-        while conector in usados and tentativas < 5:
-            conector = random.choice(conectores)
-            tentativas += 1
-
-        usados.add(conector)
-        partes.append(f"{conector} {extra}")
-
-    return " ".join(partes).capitalize()
-
+    return nome.capitalize()
 # =========================
 # 🍽️ CAFÉ - MODO DE PREPARO PROFISSIONAL
 # =========================
@@ -602,19 +595,20 @@ def gerar_cafe(estoque):
             # ✅ AQUI ESTÁ A CORREÇÃO CRÍTICA
             ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
 
+            usa_recheio = prato in ["Panqueca", "Crepioca"]
+
             nome = nome_prato_cafe(
                 prato,
                 proteina=proteina["nome"],
-                recheio=fruta["nome"] if fruta else None
+                fruta=None if usa_recheio else (fruta["nome"] if fruta else None),
+                recheio=fruta["nome"] if usa_recheio and fruta else None
             )
-
             modo_preparo = gerar_preparo_cafe(
-                prato,
-                proteina=proteina["nome"],
-                liquido=liquido["nome"],
-                fruta=fruta["nome"] if fruta else None,
-                recheio=fruta["nome"] if fruta else None,
-                fermento=fermento["nome"] if fermento else None
+            prato,
+            proteina=proteina["nome"],
+            liquido=liquido["nome"],
+            fruta=None if usa_recheio else (fruta["nome"] if fruta else None),
+            recheio=fruta["nome"] if usa_recheio and fruta else None,
             )
 
             tempo = random.randint(10, 20)
@@ -671,6 +665,37 @@ def gerar_cafe(estoque):
 
     return receitas
 
+
+def item_proibido_refeicao_principal(item):
+    """
+    Bloqueia farinha e cereais em almoço/jantar
+    considerando categoria, subcategoria e nome.
+    """
+    if not item:
+        return False
+
+    categorias = item.get("categorias", [])
+    subcategorias = item.get("subcategorias", [])
+    nome = item.get("nome", "").lower()
+
+    # 🚫 bloqueio forte
+    if "farinha" in categorias:
+        return True
+
+    if "cereal" in categorias:
+        return True
+
+    if "cafe" in subcategorias:
+        return True
+
+    # 🔒 fallback por nome (segurança extra)
+    palavras_proibidas = ["farinha", "cereal"]
+
+    if any(p in nome for p in palavras_proibidas):
+        return True
+
+    return False
+
 # =========================
 # ALMOÇO 
 # =========================
@@ -690,6 +715,9 @@ def gerar_almoco(estoque):
         if tipo == "pf":
             proteina = consumir(estoque, "proteina", 120)
             carbo = consumir(estoque, "carbo", 100)
+
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
+                continue
 
             if proteina and proteina.get("subcategoria") == "liquido":
                 continue
@@ -741,6 +769,9 @@ def gerar_almoco(estoque):
             massa = consumir(estoque_temp, "massa", 100)
             molho = consumir(estoque_temp, "molho", 50)
             proteina = consumir(estoque_temp, "proteina", 100)
+
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
+                continue
 
             if not receita_valida(massa, molho, proteina):
                 continue
@@ -810,6 +841,9 @@ def gerar_janta(estoque):
             proteina = consumir(estoque, "proteina", 120)
             carbo = consumir(estoque, "carbo", 100)
 
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
+                continue
+
             if not receita_valida(proteina, carbo):
                 continue
 
@@ -857,6 +891,9 @@ def gerar_janta(estoque):
             massa = consumir(estoque_temp, "massa", 100)
             molho = consumir(estoque_temp, "molho", 50)
             proteina = consumir(estoque_temp, "proteina", 100)
+
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
+                continue
 
             if not receita_valida(massa, molho, proteina):
                 continue
@@ -913,6 +950,9 @@ def gerar_janta(estoque):
             caldo = consumir(estoque, "caldo", 500)
             legume1 = consumir(estoque, "legume", 80)
             legume2 = consumir(estoque, "legume", 80)
+
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
+                continue
 
             if not receita_valida(proteina, caldo, legume1):
                 continue
