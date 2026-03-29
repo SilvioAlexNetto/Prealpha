@@ -7,7 +7,7 @@ from copy import deepcopy
 from app.backend.services.bases import (
     proteinasUN, proteinasKG, legumes, carboidratos,
     folhas_saladas, massas, proteinas_proibidas_sopa,
-    molhos, caldos, frutas, proteinasCF, carboidratosCF, liquidos
+    molhos, caldos, frutas, proteinasCF, carboidratosCF, liquidos, cereais, farinhas
 )
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -216,6 +216,14 @@ def classificar_estoque(estoque):
         # 🥫 MOLHOS
         elif any(normalizar(mol) in nome for mol in molhos):
             categoria = "molho"
+
+        # 🥫 Farinhas
+        elif any(normalizar(far) in nome for far in farinhas):
+            categoria = "farinha"
+
+        # 🥫 Cereais
+        elif any(normalizar(cer) in nome for cer in cereais):
+            categoria = "cereal"
 
         # 🍲 CALDOS
         elif any(normalizar(caldo["nome"]) in nome for caldo in caldos):
@@ -465,135 +473,184 @@ def ajustar_porcionamento(item):
 # =========================
 # CAFÉ
 # =========================
-def gerar_cafe(estoque):
-    receitas = []
-    ultimo_proteina = None
-    ultimo_carbo = None
+import random
+from copy import deepcopy
 
+ULTIMOS_USADOS = {}
+MAX_REPETICAO = 3
+
+def gerar_cafe(estoque):
+    """
+    Gera até 31 cafés da manhã variados.
+    Prioriza pratos robustos se houver estoque completo.
+    Ajusta quantidades/unidades e evita repetição.
+    """
+    estoque = classificar_estoque(estoque)
+    receitas = []
     tentativas = 0
 
-    while len(receitas) < 31 and tentativas < 500:
+    while len(receitas) < 31 and tentativas < 300:
         tentativas += 1
+        receita = None
 
-        # ======= primeiro tentar consumir fruta =======
-        complemento = consumir(estoque, "fruta", 1)  # 1 unidade ou 100g
-        usar_fruta = False
-        if complemento:
-            usar_fruta = True
-            if complemento["unidade"] == "unidade":
-                complemento["quantidade"] = 1
-            elif complemento["unidade"] == "g":
-                complemento["quantidade"] = 100
+        # Define disponibilidade de ingredientes
+        tem_farinha = any(i["categoria"] in ["farinha", "cereal"] and i["quantidade"] > 0 for i in estoque)
+        tem_liquido = any(i["categoria"] == "liquido" and i["quantidade"] > 0 for i in estoque)
+        tem_ovo = any(i["categoria"] == "proteina" and i["subcategoria"] == "cafe" and i["quantidade"] > 0 for i in estoque)
+        tem_proteina = any(i["categoria"] == "proteina" and i["quantidade"] > 0 for i in estoque)
+        tem_carbo = any(i["categoria"] == "carbo" and i["quantidade"] > 0 for i in estoque)
+        tem_fruta = any(i["categoria"] == "fruta" and i["quantidade"] > 0 for i in estoque)
 
-        # ======= consumir proteína e carbo =======
-        proteina = consumir(estoque, "proteina", 50, subcategoria="cafe")
-        carbo = consumir(estoque, "carbo", 50, subcategoria="cafe")
+        # =========================
+        # Escolha do tipo de prato
+        # =========================
+        if tem_farinha and tem_liquido and tem_ovo:
+            tipo_prato = random.choice(["panqueca", "crepioca", "mingau", "omelete"])
+        else:
+            tipo_prato = "simples"
 
-        # fallback proteína realista se não tiver nenhuma
-        if not proteina:
-            proteina = {
-                "nome": random.choice(["ovo", "queijo", "iogurte", "presunto"]),
-                "categoria": "proteina",
-                "unidade": "g",
-                "quantidade": 50
+        # =========================
+        # PRATOS ROBUSTOS
+        # =========================
+        if tipo_prato != "simples":
+            if tipo_prato == "panqueca":
+                farinha = consumir(estoque, "farinha", 50, subcategoria="cafe") or consumir(estoque, "cereal", 50, subcategoria="cafe")
+                liquido = consumir(estoque, "liquido", 100, subcategoria="cafe")
+                ovo = consumir(estoque, "proteina", 1, subcategoria="cafe")
+                fermento = consumir(estoque, "fermento", 5, subcategoria="cafe")  # opcional
+
+                if not farinha or not liquido or not ovo:
+                    continue
+
+                ingredientes = [farinha, liquido, ovo]
+                if fermento:
+                    ingredientes.append(fermento)
+
+                nome = f"Panqueca de {farinha['nome']}" if farinha else "Panqueca simples"
+                modo_preparo = [
+                    f"Misture {farinha['nome']} com {liquido['nome']} e {ovo['nome']}.",
+                    f"Adicione {fermento['nome']} se desejar." if fermento else "",
+                    "Cozinhe em frigideira antiaderente até dourar.",
+                    "Sirva quente."
+                ]
+                tempo = random.randint(10, 20)
+
+            elif tipo_prato == "crepioca":
+                tapioca = consumir(estoque, "farinha", 50, subcategoria="cafe")
+                ovo = consumir(estoque, "proteina", 1, subcategoria="cafe")
+                liquido = consumir(estoque, "liquido", 50, subcategoria="cafe")  # opcional
+                recheio = consumir(estoque, "fruta", 1, subcategoria="cafe") or consumir(estoque, "proteina", 1, subcategoria="cafe")  # opcional
+
+                if not tapioca or not ovo:
+                    continue
+
+                ingredientes = [tapioca, ovo]
+                if liquido:
+                    ingredientes.append(liquido)
+                if recheio:
+                    ingredientes.append(recheio)
+
+                nome = "Crepioca"
+                modo_preparo = [
+                    f"Misture {tapioca['nome']} com {ovo['nome']}.",
+                    f"Adicione {liquido['nome']} se quiser mais cremoso." if liquido else "",
+                    f"Recheie com {recheio['nome']} se houver." if recheio else "",
+                    "Cozinhe em frigideira antiaderente até dourar.",
+                    "Sirva quente."
+                ]
+                tempo = random.randint(8, 15)
+
+            elif tipo_prato == "mingau":
+                farinha = consumir(estoque, "farinha", 50, subcategoria="cafe") or consumir(estoque, "cereal", 50, subcategoria="cafe")
+                liquido = consumir(estoque, "liquido", 200, subcategoria="cafe")
+                fruta = consumir(estoque, "fruta", 1, subcategoria="cafe")
+
+                if not farinha or not liquido:
+                    continue
+
+                ingredientes = [farinha, liquido]
+                if fruta:
+                    ingredientes.append(fruta)
+
+                nome = f"Mingau de {farinha['nome']}"
+                modo_preparo = [
+                    f"Aqueça {liquido['nome']} em uma panela.",
+                    f"Adicione {farinha['nome']} aos poucos, mexendo sempre.",
+                    f"Finalize com {fruta['nome']} picada por cima." if fruta else "",
+                    "Sirva quente."
+                ]
+                tempo = random.randint(8, 15)
+
+            elif tipo_prato == "omelete":
+                ovo = consumir(estoque, "proteina", 2, subcategoria="cafe")
+                liquido = consumir(estoque, "liquido", 30, subcategoria="cafe")  # opcional
+                recheio = consumir(estoque, "fruta", 1, subcategoria="cafe") or consumir(estoque, "legume", 50)  # opcional
+
+                if not ovo:
+                    continue
+
+                ingredientes = [ovo]
+                if liquido:
+                    ingredientes.append(liquido)
+                if recheio:
+                    ingredientes.append(recheio)
+
+                nome = "Omelete Matinal"
+                modo_preparo = [
+                    f"Bata {ovo['nome']}" + (f" com {liquido['nome']}" if liquido else ""),
+                    f"Adicione {recheio['nome']} se desejar." if recheio else "",
+                    "Cozinhe em frigideira até dourar.",
+                    "Sirva quente."
+                ]
+                tempo = random.randint(8, 15)
+
+            receita = {
+                "nome": nome,
+                "categoria": "cafe_da_manha",
+                "ingredientes": ingredientes,
+                "modo_preparo": modo_preparo,
+                "tempo_preparo": f"{tempo} minutos",
+                "Porcao": "1"
             }
 
-        # fallback carbo
-        if not carbo:
-            carbo = {"nome": "pão de forma", "categoria": "carbo", "unidade": "fatia", "quantidade": 1}
+        # =========================
+        # PRATOS SIMPLES / Fallback
+        # =========================
+        else:
+            carbo = consumir(estoque, "carbo", 2, subcategoria="cafe") or consumir(estoque, "farinha", 50, subcategoria="cafe")
+            proteina = consumir(estoque, "proteina", 1, subcategoria="cafe")
+            liquido = consumir(estoque, "liquido", 200, subcategoria="cafe")
+            fruta = consumir(estoque, "fruta", 1, subcategoria="cafe")
 
-        # ajustar porcionamento
-        proteina = ajustar_porcionamento(proteina)
-        carbo = ajustar_porcionamento(carbo)
-
-        # categoria obrigatória
-        if proteina["categoria"] not in ["proteina", "liquido"]:
-            proteina["categoria"] = "proteina"
-        if carbo["categoria"] != "carbo":
-            carbo["categoria"] = "carbo"
-
-        # evita repetição do dia anterior
-        evitar_repeticao = (len(receitas) > 0)
-        if evitar_repeticao and proteina["nome"] == ultimo_proteina and carbo["nome"] == ultimo_carbo:
-            if random.random() < 0.5:
+            if not carbo:
                 continue
 
-        # fallback de bebida se não houver fruta
-        if not usar_fruta:
-            complemento = {
-                "nome": random.choice(["café", "café com leite", "leite", "suco natural"]),
-                "quantidade": 200,
-                "unidade": "ml"
+            ingredientes = [carbo]
+            if proteina:
+                ingredientes.append(proteina)
+            if liquido:
+                ingredientes.append(liquido)
+            if fruta:
+                ingredientes.append(fruta)
+
+            nome = f"{carbo['nome']}" + (f" com {proteina['nome']}" if proteina else "")
+            modo_preparo = [
+                f"Sirva {carbo['nome']}" + (f" com {proteina['nome']}" if proteina else ""),
+                f"Acompanhe com {fruta['nome']}" if fruta else "",
+                f"Sirva com {liquido['nome']}" if liquido else ""
+            ]
+            tempo = 5
+
+            receita = {
+                "nome": nome,
+                "categoria": "cafe_da_manha",
+                "ingredientes": ingredientes,
+                "modo_preparo": modo_preparo,
+                "tempo_preparo": f"{tempo} minutos",
+                "Porcao": "1"
             }
 
-        # ingredientes
-        ingredientes = [proteina, carbo, complemento]
-        nome = f"{carbo['nome']} com {proteina['nome']} e {complemento['nome']}"
-
-        modo_preparo = []
-
-        # preparo proteína
-        if proteina["unidade"] == "ml":
-            modo_preparo += [f"Sirva o {proteina['nome']} em um copo."]
-        elif proteina["unidade"] == "unidade":
-            modo_preparo += [f"Prepare o {proteina['nome']} conforme sua preferência."]
-        else:
-            modo_preparo += [f"Separe o {proteina['nome']} para o consumo."]
-
-        # preparo carbo
-        if carbo["unidade"] == "fatia":
-            modo_preparo += [f"Toste levemente o {carbo['nome']} se desejar."]
-        else:
-            modo_preparo += [f"Prepare o {carbo['nome']} conforme sua preferência."]
-
-        modo_preparo += [
-            random.choice([
-                f"Prepare o {carbo['nome']} conforme sua preferência.",
-                f"Aqueça ou monte o {carbo['nome']} conforme necessário."
-            ])
-        ]
-
-        # preparo complemento
-        if usar_fruta:
-            modo_preparo += [
-                random.choice([
-                    f"Lave bem a {complemento['nome']}.",
-                    f"Higienize a {complemento['nome']} antes de servir."
-                ]),
-                random.choice([
-                    f"Corte a {complemento['nome']} se desejar.",
-                    f"Sirva a {complemento['nome']} inteira ou em pedaços."
-                ])
-            ]
-        else:
-            modo_preparo += [
-                random.choice([
-                    f"Prepare o {complemento['nome']}.",
-                    f"Sirva o {complemento['nome']} quente ou gelado."
-                ])
-            ]
-
-        modo_preparo += finalizar_prato()
-
-        tempo = random.randint(5, 15)
-
-        receita = {
-            "nome": nome,
-            "categoria": "cafe",
-            "ingredientes": ingredientes,
-            "modo_preparo": modo_preparo,
-            "tempo_preparo": f"{tempo} minutos",
-            "Porcao": "1"
-        }
-
         receitas.append(receita)
-        ultimo_proteina = proteina["nome"]
-        ultimo_carbo = carbo["nome"]
-
-    # fallback final: se não conseguiu gerar 31, repete últimos
-    while len(receitas) < 31:
-        copia = deepcopy(receitas[-1])
-        receitas.append(copia)
 
     return receitas
 
