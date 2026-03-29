@@ -57,7 +57,7 @@ proteinasUN = [
 ]
 
 proteinasCF = [
-    "ovo",
+    "Ovo", "Ovo caipira", "Ovo vermelho", "Ovo de codorna",
     "queijo mussarela", "queijo prato", "queijo minas",
     "queijo minas frescal", "queijo coalho", "queijo branco",
     "queijo cheddar", "queijo provolone", "queijo gouda", "queijo parmesão",
