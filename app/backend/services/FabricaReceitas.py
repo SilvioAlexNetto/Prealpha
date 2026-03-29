@@ -485,8 +485,8 @@ def gerar_cafe(estoque):
         # =========================
         # ESCOLHA INTELIGENTE (evita repetição)
         # =========================
-        proteina = consumir(estoque, "proteina", 50, subcategoria="cafe")
-        carbo = consumir(estoque, "carbo", 50, subcategoria="cafe")
+        proteina = consumir(estoque, "proteinaCF", 50, subcategoria="cafe")
+        carbo = consumir(estoque, "carboCF", 50, subcategoria="cafe")
 
         if not receita_valida(proteina, carbo):
             continue
