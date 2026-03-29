@@ -240,55 +240,38 @@ def consumir(estoque, categoria, qtd, subcategoria=None):
 
     candidatos = [
         i for i in estoque
-        if categoria in i.get("categorias", [])
+        if categoria in i["categorias"]
         and i["quantidade"] > 0
-        and (
-            subcategoria is None
-            or subcategoria in i.get("subcategorias", [])
-        )
+        and (subcategoria is None or subcategoria in i.get("subcategorias", []))
     ]
 
-    # ❌ sem fallback (correto)
     if not candidatos:
         return None
 
-    # 🔑 chave do histórico
     chave = f"{categoria}_{subcategoria}" if subcategoria else categoria
 
     if chave not in ULTIMOS_USADOS:
         ULTIMOS_USADOS[chave] = []
 
-    # 🔥 evita repetição recente
     filtrados = [
         i for i in candidatos
         if i["nome"] not in ULTIMOS_USADOS[chave]
     ]
 
-    item = random.choice(filtrados if filtrados else candidatos)
+    item = random.choice(filtrados or candidatos)
 
-    # =========================
-    # 🔥 CONSUMO REAL
-    # =========================
     usar = min(item["quantidade"], qtd)
     item["quantidade"] -= usar
 
-    # =========================
-    # 🔥 HISTÓRICO
-    # =========================
     ULTIMOS_USADOS[chave].append(item["nome"])
 
     if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
         ULTIMOS_USADOS[chave].pop(0)
 
-    # =========================
-    # 🔥 RETORNO COMPLETO (CORREÇÃO IMPORTANTE)
-    # =========================
     return {
         "nome": item["nome"],
         "quantidade": usar,
-        "unidade": item["unidade"],
-        "categorias": item.get("categorias", []),
-        "subcategorias": item.get("subcategorias", [])
+        "unidade": item["unidade"]
     }
 
 # =========================
@@ -382,12 +365,8 @@ def ajustar_porcionamento(item):
         return None
 
     unidade = item["unidade"]
-    categoria = item["categorias"][0] if item.get("categorias") else None
-    subcategoria = (
-        item["subcategorias"][0]
-        if item.get("subcategorias")
-        else None
-    )
+    categoria = item["categoria"]
+    subcategoria = item.get("subcategoria")
 
     if subcategoria == "cafe":
 
@@ -595,9 +574,6 @@ def gerar_cafe(estoque):
                 continue
 
             ingredientes = [base_item, liquido, proteina]
-
-            ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
-
             if fruta:
                 ingredientes.append(fruta)
             if fermento:
@@ -639,8 +615,6 @@ def gerar_cafe(estoque):
                 ingredientes.append(liquido)
             if fruta:
                 ingredientes.append(fruta)
-
-            ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
 
             nome = nome_prato_cafe(
                 carbo["nome"],
