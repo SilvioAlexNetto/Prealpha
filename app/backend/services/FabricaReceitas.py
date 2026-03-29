@@ -718,13 +718,14 @@ def gerar_almoco(estoque):
             proteina = consumir(estoque, "proteina", 120)
             carbo = consumir(estoque, "carbo", 100)
 
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
-                continue
 
             if proteina and proteina.get("subcategoria") == "liquido":
                 continue
 
             if not receita_valida(proteina, carbo):
+                continue
+
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
                 continue
 
             ingredientes = [proteina, carbo]
@@ -772,10 +773,11 @@ def gerar_almoco(estoque):
             molho = consumir(estoque_temp, "molho", 50)
             proteina = consumir(estoque_temp, "proteina", 100)
 
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
-                continue
 
             if not receita_valida(massa, molho, proteina):
+                continue
+
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
                 continue
 
             ingredientes = [massa, molho, proteina]
@@ -843,10 +845,11 @@ def gerar_janta(estoque):
             proteina = consumir(estoque, "proteina", 120)
             carbo = consumir(estoque, "carbo", 100)
 
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
-                continue
 
             if not receita_valida(proteina, carbo):
+                continue
+
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
                 continue
 
             ingredientes = [proteina, carbo]
@@ -894,10 +897,11 @@ def gerar_janta(estoque):
             molho = consumir(estoque_temp, "molho", 50)
             proteina = consumir(estoque_temp, "proteina", 100)
 
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
-                continue
 
             if not receita_valida(massa, molho, proteina):
+                continue
+
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
                 continue
 
             ingredientes = [massa, molho, proteina]
@@ -953,10 +957,11 @@ def gerar_janta(estoque):
             legume1 = consumir(estoque, "legume", 80)
             legume2 = consumir(estoque, "legume", 80)
 
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
-                continue
 
             if not receita_valida(proteina, caldo, legume1):
+                continue
+
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
                 continue
 
             if proteina["nome"] in proteinas_proibidas_sopa:
