@@ -299,10 +299,7 @@ def consumir(estoque, categoria, qtd, subcategoria=None):
         i for i in estoque
         if i["categoria"] == categoria
         and i["quantidade"] > 0
-        and (
-            (subcategoria is None and i.get("subcategoria") != "cafe")
-            or i.get("subcategoria") == subcategoria
-        )
+        and (subcategoria is None or i.get("subcategoria") == subcategoria)
     ]
 
     # 🔒 NÃO faz fallback (corrige o bug)
