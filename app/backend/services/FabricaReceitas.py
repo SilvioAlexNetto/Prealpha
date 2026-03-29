@@ -484,7 +484,6 @@ def gerar_cafe(estoque):
     Caso contrário, gera pratos simples (pão + fruta + líquido).
     """
 
-    # cria uma cópia do estoque para manipulação
     estoque = classificar_estoque(estoque)
     receitas = []
     tentativas = 0
@@ -516,13 +515,17 @@ def gerar_cafe(estoque):
                 if recheio:
                     ingredientes.append(recheio)
 
+                # Nome realista
                 nome = f"Panqueca de {farinha['nome']}" + (f" com {recheio['nome']}" if recheio else "")
+
+                # Preparo detalhado
                 modo_preparo = [
                     f"Em uma tigela, peneire {farinha['nome']} e misture com {ovo['nome']} e {liquido['nome']}.",
-                    f"Adicione {fermento['nome']} se desejar mais fofinha." if fermento else "",
+                    f"Adicione {fermento['nome']} se quiser uma massa mais fofinha." if fermento else "",
                     "Misture bem até formar uma massa homogênea.",
-                    "Aqueça uma frigideira antiaderente em fogo médio e despeje porções da massa.",
-                    "Cozinhe até formar bolhas na superfície, vire com uma espátula e cozinhe o outro lado.",
+                    "Aqueça uma frigideira antiaderente em fogo médio.",
+                    "Despeje porções da massa e cozinhe até aparecerem bolhas na superfície.",
+                    "Vire cuidadosamente e cozinhe o outro lado até dourar.",
                     f"Sirva quente" + (f" com {recheio['nome']}" if recheio else "") + "."
                 ]
                 tempo = random.randint(12, 20)
@@ -543,11 +546,12 @@ def gerar_cafe(estoque):
                     ingredientes.append(adoçante)
 
                 nome = f"Mingau de {farinha['nome']}" + (f" com {fruta['nome']}" if fruta else "")
+
                 modo_preparo = [
                     f"Aqueça {liquido['nome']} em uma panela média até começar a ferver.",
-                    f"Adicione {farinha['nome']} aos poucos, mexendo continuamente para evitar grumos.",
-                    f"Cozinhe em fogo baixo até engrossar e formar uma consistência cremosa.",
-                    f"Acrescente {fruta['nome']} picada por cima se desejar.",
+                    f"Adicione {farinha['nome']} aos poucos, mexendo continuamente para não formar grumos.",
+                    "Cozinhe em fogo baixo até engrossar e atingir consistência cremosa.",
+                    f"Finalize com {fruta['nome']} picada por cima." if fruta else "",
                     f"Adicione {adoçante['nome']} a gosto." if adoçante else "",
                     "Sirva quente em uma tigela."
                 ]
@@ -569,12 +573,14 @@ def gerar_cafe(estoque):
                     ingredientes.append(recheio)
 
                 nome = f"Crepioca de {tapioca['nome']}" + (f" com {recheio['nome']}" if recheio else "")
+
                 modo_preparo = [
                     f"Em uma tigela, misture {tapioca['nome']} com {ovo['nome']}.",
-                    f"Adicione {liquido['nome']} para uma textura mais cremosa." if liquido else "",
-                    "Aqueça uma frigideira antiaderente e despeje a massa formando uma camada fina.",
-                    "Cozinhe por 2-3 minutos até firmar, vire cuidadosamente e cozinhe o outro lado.",
-                    f"Recheie com {recheio['nome']}" if recheio else "",
+                    f"Adicione {liquido['nome']} se desejar uma massa mais cremosa." if liquido else "",
+                    "Aqueça uma frigideira antiaderente em fogo médio.",
+                    "Despeje a massa formando uma camada fina.",
+                    "Cozinhe por 2-3 minutos até firmar, vire com cuidado e cozinhe o outro lado.",
+                    f"Recheie com {recheio['nome']} se desejar." if recheio else "",
                     "Sirva imediatamente."
                 ]
                 tempo = random.randint(10, 18)
