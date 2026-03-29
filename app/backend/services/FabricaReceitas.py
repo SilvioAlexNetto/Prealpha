@@ -292,19 +292,12 @@ def consumir(estoque, categoria, qtd, subcategoria=None):
         if i["categoria"] == categoria
         and i["quantidade"] > 0
         and (
-            subcategoria is None
+            (subcategoria is None and i.get("subcategoria") != "cafe")
             or i.get("subcategoria") == subcategoria
         )
     ]
 
-    # 🔥 FALLBACK INTELIGENTE (ESSENCIAL)
-    if not candidatos and subcategoria is not None:
-        candidatos = [
-            i for i in estoque
-            if i["categoria"] == categoria
-            and i["quantidade"] > 0
-        ]
-
+    # 🔒 NÃO faz fallback (corrige o bug)
     if not candidatos:
         return None
 
@@ -327,7 +320,7 @@ def consumir(estoque, categoria, qtd, subcategoria=None):
     usar = min(item["quantidade"], qtd)
     item["quantidade"] -= usar
 
-    # 🔥 salva histórico
+    # 🔥 histórico
     ULTIMOS_USADOS[chave].append(item["nome"])
 
     if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
@@ -482,11 +475,8 @@ def gerar_cafe(estoque):
     while len(receitas) < 31 and tentativas < 200:
         tentativas += 1
 
-        # =========================
-        # ESCOLHA INTELIGENTE (evita repetição)
-        # =========================
-        proteina = consumir(estoque, "proteinaCF", 50, subcategoria="cafe")
-        carbo = consumir(estoque, "carboCF", 50, subcategoria="cafe")
+        proteina = consumir(estoque, "proteina", 50, subcategoria="cafe")
+        carbo = consumir(estoque, "carbo", 50, subcategoria="cafe")
 
         if not receita_valida(proteina, carbo):
             continue
@@ -505,26 +495,10 @@ def gerar_cafe(estoque):
             carbo["nome"] == ultimo_carbo and 
             len(receitas) > 0
         ):
-            # só bloqueia se existir variedade possível
-            alternativas_proteina = [
-                i for i in estoque if i["categoria"] == "proteina" and i["quantidade"] > 0
-            ]
+            continue
 
-            alternativas_carbo = [
-                i for i in estoque if i["categoria"] == "carbo" and i["quantidade"] > 0
-            ]
+        complemento = None
 
-            if len(alternativas_proteina) > 1 or len(alternativas_carbo) > 1:
-                continue
-
-        # =========================
-        # COMPLEMENTO (fruta OU bebida)
-        # =========================
-        complemento = None  # ✅ CORREÇÃO
-
-        if complemento and complemento["nome"] in [proteina["nome"], carbo["nome"]]:
-            complemento = None
-        
         usar_fruta = random.choice([True, False])
 
         if usar_fruta:
@@ -536,7 +510,6 @@ def gerar_cafe(estoque):
                 elif complemento["unidade"] == "g":
                     complemento["quantidade"] = 100
 
-        # 🔥 fallback bebida
         if not complemento:
             usar_fruta = False
             complemento = {
@@ -547,41 +520,22 @@ def gerar_cafe(estoque):
 
         ingredientes = [proteina, carbo, complemento]
 
-        # =========================
-        # NOME DO PRATO (identidade)
-        # =========================
         nome = f"{carbo['nome']} com {proteina['nome']} e {complemento['nome']}"
 
-        # =========================
-        # MODO DE PREPARO REALISTA
-        # =========================
         modo_preparo = []
 
-        # proteína
         if proteina["unidade"] == "ml":
-            modo_preparo += [
-                f"Sirva o {proteina['nome']} em um copo."
-            ]
+            modo_preparo += [f"Sirva o {proteina['nome']} em um copo."]
         elif proteina["unidade"] == "unidade":
-            modo_preparo += [
-                f"Prepare o {proteina['nome']} conforme sua preferência."
-            ]
+            modo_preparo += [f"Prepare o {proteina['nome']} conforme sua preferência."]
         else:
-            modo_preparo += [
-                f"Separe o {proteina['nome']} para o consumo."
-            ]
+            modo_preparo += [f"Separe o {proteina['nome']} para o consumo."]
 
-        # carbo
         if carbo["unidade"] == "fatia":
-            modo_preparo += [
-                f"Toste levemente o {carbo['nome']} se desejar."
-            ]
+            modo_preparo += [f"Toste levemente o {carbo['nome']} se desejar."]
         else:
-            modo_preparo += [
-                f"Prepare o {carbo['nome']} conforme sua preferência."
-            ]
+            modo_preparo += [f"Prepare o {carbo['nome']} conforme sua preferência."]
 
-        # carbo (leve)
         modo_preparo += [
             random.choice([
                 f"Prepare o {carbo['nome']} conforme sua preferência.",
@@ -589,7 +543,6 @@ def gerar_cafe(estoque):
             ])
         ]
 
-        # complemento
         if usar_fruta:
             modo_preparo += [
                 random.choice([
@@ -609,12 +562,8 @@ def gerar_cafe(estoque):
                 ])
             ]
 
-        # finalização
         modo_preparo += finalizar_prato()
 
-        # =========================
-        # TEMPO REALISTA
-        # =========================
         tempo = random.randint(5, 15)
 
         receita = {
@@ -628,7 +577,6 @@ def gerar_cafe(estoque):
 
         receitas.append(receita)
 
-        # salva último (anti repetição)
         ultimo_proteina = proteina["nome"]
         ultimo_carbo = carbo["nome"]
 
