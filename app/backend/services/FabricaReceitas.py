@@ -170,9 +170,6 @@ def normalizar(texto):
 def classificar_estoque(estoque):
     estoque_classificado = []
 
-    # =========================
-    # DICIONÁRIOS DE CATEGORIAS (ordem = prioridade)
-    # =========================
     categorias = [
         ("proteinaCF", proteinasCF, "cafe"),
         ("carboCF", carboidratosCF, "cafe"),
@@ -190,54 +187,36 @@ def classificar_estoque(estoque):
         ("fruta", frutas, "cafe")
     ]
 
-    # =========================
-    # PROCESSA CADA ITEM
-    # =========================
     for item in estoque:
         nome_original = item["nome"]
         nome = normalizar(nome_original)
-        categoria = None
-        subcategoria = "ambos"
 
-        # =========================
-        # CHECA CATEGORIAS
-        # =========================
+        categorias_encontradas = []
+        subcategorias_encontradas = []
+
         for cat, lista, sub in categorias:
             if any(normalizar(x) in nome for x in lista):
-                categoria = cat
-                subcategoria = sub
-                break  # prioridade: primeira categoria que bater
-        # =========================
-        # FALLBACK
-        # =========================
-        if not categoria:
-            if any(x in nome for x in ["arroz", "feijao", "batata"]):
-                categoria = "carbo"
-            elif any(x in nome for x in ["frango", "carne", "ovo"]):
-                categoria = "proteina"
-            elif any(x in nome for x in ["alface", "rucula"]):
-                categoria = "folha"
-            elif "molho" in nome:
-                categoria = "molho"
-            elif "caldo" in nome:
-                categoria = "caldo"
+                categorias_encontradas.append(cat)
+                subcategorias_encontradas.append(sub)
 
-        # =========================
-        # NORMALIZA UNIDADES
-        # =========================
-        if categoria:
+        # fallback inteligente
+        if not categorias_encontradas:
+            if any(x in nome for x in ["arroz", "feijao", "batata"]):
+                categorias_encontradas.append("carbo")
+            elif any(x in nome for x in ["frango", "carne", "ovo"]):
+                categorias_encontradas.append("proteina")
+            elif "leite" in nome:
+                categorias_encontradas.append("liquido")
+
+        if categorias_encontradas:
             unidade = str(item.get("unidade", "")).strip().lower()
             quantidade = float(item.get("quantidade", 0))
 
             if unidade in ["kg", "quilo", "quilos"]:
                 quantidade *= 1000
                 unidade = "g"
-            elif unidade in ["g", "grama", "gramas"]:
-                unidade = "g"
             elif unidade in ["l", "litro", "litros"]:
                 quantidade *= 1000
-                unidade = "ml"
-            elif unidade in ["ml"]:
                 unidade = "ml"
             elif unidade in ["un", "unidade", "unidades"]:
                 unidade = "unidade"
@@ -248,30 +227,28 @@ def classificar_estoque(estoque):
                 "nome": nome_original,
                 "quantidade": quantidade,
                 "unidade": unidade,
-                "categoria": categoria,
-                "subcategoria": subcategoria
+                "categorias": categorias_encontradas,
+                "subcategorias": subcategorias_encontradas
             })
 
     return estoque_classificado
-
 
 # =========================
 # CONSUMO
 # =========================
 def consumir(estoque, categoria, qtd, subcategoria=None):
+
     candidatos = [
         i for i in estoque
-        if i["categoria"] == categoria
+        if categoria in i["categorias"]
         and i["quantidade"] > 0
-        and (subcategoria is None or i.get("subcategoria") == subcategoria)
+        and (subcategoria is None or subcategoria in i.get("subcategorias", []))
     ]
 
-    # 🔒 NÃO faz fallback (corrige o bug)
     if not candidatos:
         return None
 
-    # 🔥 evita repetição recente
-    chave = categoria if subcategoria is None else f"{categoria}_{subcategoria}"
+    chave = f"{categoria}_{subcategoria}" if subcategoria else categoria
 
     if chave not in ULTIMOS_USADOS:
         ULTIMOS_USADOS[chave] = []
@@ -281,15 +258,11 @@ def consumir(estoque, categoria, qtd, subcategoria=None):
         if i["nome"] not in ULTIMOS_USADOS[chave]
     ]
 
-    if filtrados:
-        item = random.choice(filtrados)
-    else:
-        item = random.choice(candidatos)
+    item = random.choice(filtrados or candidatos)
 
     usar = min(item["quantidade"], qtd)
     item["quantidade"] -= usar
 
-    # 🔥 histórico
     ULTIMOS_USADOS[chave].append(item["nome"])
 
     if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
@@ -298,11 +271,8 @@ def consumir(estoque, categoria, qtd, subcategoria=None):
     return {
         "nome": item["nome"],
         "quantidade": usar,
-        "unidade": item["unidade"],
-        "categoria": item["categoria"],
-        "subcategoria": item.get("subcategoria")
+        "unidade": item["unidade"]
     }
-
 
 # =========================
 # VALIDAÇÃO
@@ -566,7 +536,7 @@ def combinar_partes_nome(base, extras):
 
 
 def gerar_cafe(estoque):
-    estoque = classificar_estoque(estoque)
+    
     receitas = []
     tentativas = 0
 
