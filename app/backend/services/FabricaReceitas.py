@@ -601,7 +601,7 @@ def gerar_cafe(estoque):
 
             receita = {
                 "nome": nome,
-                "categoria": "cafe_da_manha",
+                "categoria": "cafe",
                 "ingredientes": ingredientes,
                 "modo_preparo": modo_preparo,
                 "tempo_preparo": f"{tempo} minutos",
@@ -638,7 +638,7 @@ def gerar_cafe(estoque):
 
             receita = {
                 "nome": nome,
-                "categoria": "cafe_da_manha",
+                "categoria": "cafe",
                 "ingredientes": ingredientes,
                 "modo_preparo": modo_preparo,
                 "tempo_preparo": f"{tempo} minutos",
