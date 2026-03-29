@@ -7,7 +7,7 @@ from copy import deepcopy
 from app.backend.services.bases import (
     proteinasUN, proteinasKG, legumes, carboidratos,
     folhas_saladas, massas, proteinas_proibidas_sopa,
-    molhos, caldos, frutas, proteinasCF, carboidratosCF, liquidos, cereais, farinhas
+    molhos, caldos, frutas, proteinasCF, carboidratosCF, liquidos, cereais, farinhas, fermentos
 )
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -26,7 +26,10 @@ ULTIMOS_USADOS = {
     "proteinaCF": [],
     "carboCF": [],
     "fruta": [],
-    "liquidos": []
+    "liquidos": [],
+    "cereais": [],
+    "farinhas": [],
+    "fermentos": []
 }
 
 MAX_REPETICAO = 2
@@ -218,6 +221,10 @@ def classificar_estoque(estoque):
             categoria = "molho"
 
         # 🥫 Farinhas
+        elif any(normalizar(fer) in nome for fer in fermentos):
+            categoria = "fermento"
+
+        # 🥫 fermento
         elif any(normalizar(far) in nome for far in farinhas):
             categoria = "farinha"
 
@@ -495,7 +502,7 @@ def gerar_cafe(estoque):
             if prato == "panqueca":
                 farinha = consumir(estoque, "farinha", 50, subcategoria="cafe")
                 liquido = consumir(estoque, "liquido", 100, subcategoria="cafe")
-                ovo = consumir(estoque, "proteina", 1, subcategoria="cafe")
+                ovo = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
                 fermento = consumir(estoque, "fermento", 5, subcategoria="cafe")  # opcional
 
                 if not farinha or not liquido or not ovo:
@@ -537,7 +544,7 @@ def gerar_cafe(estoque):
 
             elif prato == "crepioca":
                 tapioca = consumir(estoque, "farinha", 50, subcategoria="cafe")
-                ovo = consumir(estoque, "proteina", 1, subcategoria="cafe")
+                ovo = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
                 liquido = consumir(estoque, "liquido", 50, subcategoria="cafe")  # opcional
 
                 if not tapioca or not ovo:
@@ -569,8 +576,8 @@ def gerar_cafe(estoque):
         # PRATO SIMPLES
         # =========================
         else:
-            carbo = consumir(estoque, "carbo", 2, subcategoria="cafe")
-            proteina = consumir(estoque, "proteina", 1, subcategoria="cafe")
+            carbo = consumir(estoque, "carboCF", 2, subcategoria="cafe")
+            proteina = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
             liquido = consumir(estoque, "liquido", 200, subcategoria="cafe")
             fruta = consumir(estoque, "fruta", 1, subcategoria="cafe")
 

@@ -191,8 +191,12 @@ cereais = [
     "cereal kids integral", "cereal kids com frutas"
 ]
 
+fermentos = [
+    "Fermento em pó"
+]
+
 farinhas = [
-    "farinha de trigo", "Fermento em pó", "farinha de trigo integral",
+    "farinha de trigo", "farinha de trigo integral",
     "farinha de aveia", "farinha de arroz", "farinha de centeio",
     "farinha de milho", "fubá de milho", "fubá mimoso",
     "farinha de quinoa", "farinha de amaranto", "farinha de espelta",
