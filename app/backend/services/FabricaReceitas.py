@@ -473,11 +473,6 @@ def ajustar_porcionamento(item):
 # =========================
 # CAFÉ
 # =========================
-import random
-from copy import deepcopy
-
-ULTIMOS_USADOS = {}
-MAX_REPETICAO = 3
 
 def gerar_cafe(estoque):
     """
