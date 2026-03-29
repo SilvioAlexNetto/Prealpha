@@ -238,8 +238,6 @@ def classificar_estoque(estoque):
 # =========================
 def consumir(estoque, categoria, qtd, subcategoria=None):
 
-    BLOQUEADOS = {"farinha", "cereal"}
-
     candidatos = [
         i for i in estoque
         if categoria in i["categorias"]
@@ -270,16 +268,12 @@ def consumir(estoque, categoria, qtd, subcategoria=None):
     if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
         ULTIMOS_USADOS[chave].pop(0)
 
-    # 🔥 CORREÇÃO AQUI
     return {
         "nome": item["nome"],
         "quantidade": usar,
-        "unidade": item["unidade"],
-        "categorias": item.get("categorias", []),
-        "subcategorias": item.get("subcategorias", []),
-        "categoria": categoria,
-        "subcategoria": subcategoria
+        "unidade": item["unidade"]
     }
+
 # =========================
 # VALIDAÇÃO
 # =========================
@@ -668,35 +662,6 @@ def gerar_cafe(estoque):
     return receitas
 
 
-def item_proibido_refeicao_principal(item):
-    """
-    Bloqueia farinha e cereais em almoço/jantar
-    considerando categoria, subcategoria e nome.
-    """
-    if not item:
-        return False
-
-    categorias = item.get("categorias", [])
-    subcategorias = item.get("subcategorias", [])
-    nome = item.get("nome", "").lower()
-
-    # 🚫 bloqueio forte
-    if "farinha" in categorias:
-        return True
-
-    if "cereal" in categorias:
-        return True
-
-    if "cafe" in subcategorias:
-        return True
-
-    # 🔒 fallback por nome (segurança extra)
-    palavras_proibidas = ["farinha", "cereal"]
-
-    if any(p in nome for p in palavras_proibidas):
-        return True
-
-    return False
 
 # =========================
 # ALMOÇO 
@@ -718,14 +683,13 @@ def gerar_almoco(estoque):
             proteina = consumir(estoque, "proteina", 120)
             carbo = consumir(estoque, "carbo", 100)
 
+            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
+                continue
 
             if proteina and proteina.get("subcategoria") == "liquido":
                 continue
 
             if not receita_valida(proteina, carbo):
-                continue
-
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
                 continue
 
             ingredientes = [proteina, carbo]
@@ -773,11 +737,7 @@ def gerar_almoco(estoque):
             molho = consumir(estoque_temp, "molho", 50)
             proteina = consumir(estoque_temp, "proteina", 100)
 
-
             if not receita_valida(massa, molho, proteina):
-                continue
-
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
                 continue
 
             ingredientes = [massa, molho, proteina]
@@ -845,11 +805,7 @@ def gerar_janta(estoque):
             proteina = consumir(estoque, "proteina", 120)
             carbo = consumir(estoque, "carbo", 100)
 
-
             if not receita_valida(proteina, carbo):
-                continue
-
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
                 continue
 
             ingredientes = [proteina, carbo]
@@ -897,11 +853,7 @@ def gerar_janta(estoque):
             molho = consumir(estoque_temp, "molho", 50)
             proteina = consumir(estoque_temp, "proteina", 100)
 
-
             if not receita_valida(massa, molho, proteina):
-                continue
-
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
                 continue
 
             ingredientes = [massa, molho, proteina]
@@ -957,11 +909,7 @@ def gerar_janta(estoque):
             legume1 = consumir(estoque, "legume", 80)
             legume2 = consumir(estoque, "legume", 80)
 
-
             if not receita_valida(proteina, caldo, legume1):
-                continue
-
-            if item_proibido_refeicao_principal(proteina) or item_proibido_refeicao_principal(carbo):
                 continue
 
             if proteina["nome"] in proteinas_proibidas_sopa:
