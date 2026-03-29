@@ -472,22 +472,33 @@ def gerar_cafe(estoque):
 
     tentativas = 0
 
-    while len(receitas) < 31 and tentativas < 500:  # aumentei tentativas para garantir 31
+    while len(receitas) < 31 and tentativas < 500:
         tentativas += 1
 
-        # tenta consumir proteína e carbo
+        # ======= primeiro tentar consumir fruta =======
+        complemento = consumir(estoque, "fruta", 1)  # 1 unidade ou 100g
+        usar_fruta = False
+        if complemento:
+            usar_fruta = True
+            if complemento["unidade"] == "unidade":
+                complemento["quantidade"] = 1
+            elif complemento["unidade"] == "g":
+                complemento["quantidade"] = 100
+
+        # ======= consumir proteína e carbo =======
         proteina = consumir(estoque, "proteina", 50, subcategoria="cafe")
         carbo = consumir(estoque, "carbo", 50, subcategoria="cafe")
 
-        # fallback se não encontrou nenhum
+        # fallback proteína realista se não tiver nenhuma
         if not proteina:
-        # fallback mais comum para café da manhã
             proteina = {
                 "nome": random.choice(["ovo", "queijo", "iogurte", "presunto"]),
                 "categoria": "proteina",
                 "unidade": "g",
                 "quantidade": 50
             }
+
+        # fallback carbo
         if not carbo:
             carbo = {"nome": "pão de forma", "categoria": "carbo", "unidade": "fatia", "quantidade": 1}
 
@@ -501,23 +512,14 @@ def gerar_cafe(estoque):
         if carbo["categoria"] != "carbo":
             carbo["categoria"] = "carbo"
 
-        # tenta evitar repetição do dia anterior, mas se não der, permite
+        # evita repetição do dia anterior
         evitar_repeticao = (len(receitas) > 0)
         if evitar_repeticao and proteina["nome"] == ultimo_proteina and carbo["nome"] == ultimo_carbo:
             if random.random() < 0.5:
                 continue
 
-        # ======= complemento: fruta se houver =======
-        complemento = consumir(estoque, "fruta", 1)  # tentar usar 1 unidade ou 100g
-        usar_fruta = True
-        if complemento:
-            if complemento["unidade"] == "unidade":
-                complemento["quantidade"] = 1
-            elif complemento["unidade"] == "g":
-                complemento["quantidade"] = 100
-        else:
-            # fallback se não houver fruta
-            usar_fruta = False
+        # fallback de bebida se não houver fruta
+        if not usar_fruta:
             complemento = {
                 "nome": random.choice(["café", "café com leite", "leite", "suco natural"]),
                 "quantidade": 200,
@@ -526,7 +528,6 @@ def gerar_cafe(estoque):
 
         # ingredientes
         ingredientes = [proteina, carbo, complemento]
-
         nome = f"{carbo['nome']} com {proteina['nome']} e {complemento['nome']}"
 
         modo_preparo = []
@@ -586,8 +587,6 @@ def gerar_cafe(estoque):
         }
 
         receitas.append(receita)
-
-        # salvar últimos para tentar variar
         ultimo_proteina = proteina["nome"]
         ultimo_carbo = carbo["nome"]
 
