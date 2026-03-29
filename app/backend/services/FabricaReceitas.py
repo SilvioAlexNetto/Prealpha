@@ -580,7 +580,13 @@ def gerar_cafe(estoque):
             tipo_prato = "simples"
 
         if not ingredientes:
-            continue
+            for chave in ["farinha", "liquido", "ovo", "fruta", "proteina"]:
+                item = consumir(estoque, chave, 10, subcategoria="cafe")
+                if item:
+                    ingredientes[chave] = item
+
+            if not ingredientes:
+                continue  
 
         nome = nome_prato_cafe(tipo_prato, ingredientes)
         modo_preparo = gerar_preparo_cafe(tipo_prato, ingredientes)
@@ -896,28 +902,49 @@ def gerar_janta(estoque):
 # FUNÇÃO PRINCIPAL
 # =========================
 def gerar_tudo(estoque_usuario):
+    """
+    Gera cardápio completo (café, almoço, jantar) a partir do estoque do usuário,
+    grava as receitas e retorna as sobras.
+    """
 
-    ULTIMOS_USADOS["proteina"] = []
-    ULTIMOS_USADOS["carbo"] = []
+    # 🔄 Reinicia histórico de usos recentes
+    for chave in ULTIMOS_USADOS:
+        ULTIMOS_USADOS[chave] = []
 
+    # 📝 Cópia do estoque para manipulação sem alterar o original
     estoque_copia = deepcopy(estoque_usuario)
 
+    # 🗂️ Classifica o estoque por categoria e subcategoria
     estoque_classificado = classificar_estoque(estoque_copia)
 
+    # 🍽️ Gera receitas por refeição
     cafe = gerar_cafe(estoque_classificado)
     almoco = gerar_almoco(estoque_classificado)
     janta = gerar_janta(estoque_classificado)
 
+    # 📦 Todas as receitas juntas
     todas_receitas = cafe + almoco + janta
 
-    with open(RECEITAS_PATH, "w", encoding="utf-8") as f:
-        json.dump(todas_receitas, f, ensure_ascii=False, indent=4)
+    # 💾 Salva receitas em arquivo JSON
+    try:
+        os.makedirs(os.path.dirname(RECEITAS_PATH), exist_ok=True)
+        with open(RECEITAS_PATH, "w", encoding="utf-8") as f:
+            json.dump(todas_receitas, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f"Erro ao salvar receitas: {e}")
 
+    # 🥫 Calcula sobras (itens que ainda têm quantidade > 0)
     sobras = [i for i in estoque_classificado if i["quantidade"] > 0]
 
-    with open(SOBRAS_PATH, "w", encoding="utf-8") as f:
-        json.dump(sobras, f, ensure_ascii=False, indent=4)
+    # 💾 Salva sobras em arquivo JSON
+    try:
+        os.makedirs(os.path.dirname(SOBRAS_PATH), exist_ok=True)
+        with open(SOBRAS_PATH, "w", encoding="utf-8") as f:
+            json.dump(sobras, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f"Erro ao salvar sobras: {e}")
 
+    # 🔙 Retorna resumo
     return {
         "total_receitas": len(todas_receitas),
         "sobras": sobras
