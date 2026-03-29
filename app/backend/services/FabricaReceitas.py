@@ -170,120 +170,77 @@ def normalizar(texto):
 def classificar_estoque(estoque):
     estoque_classificado = []
 
+    # =========================
+    # DICIONÁRIOS DE CATEGORIAS (ordem = prioridade)
+    # =========================
+    categorias = [
+        ("proteinaCF", proteinasCF, "cafe"),
+        ("carboCF", carboidratosCF, "cafe"),
+        ("liquido", liquidos, "cafe"),
+        ("proteina", proteinasKG + proteinasUN, "ambos"),
+        ("massa", massas, "ambos"),
+        ("legume", legumes, "ambos"),
+        ("carbo", carboidratos, "ambos"),
+        ("folha", folhas_saladas, "ambos"),
+        ("molho", molhos, "ambos"),
+        ("fermento", fermentos, "ambos"),
+        ("farinha", farinhas, "ambos"),
+        ("cereal", cereais, "ambos"),
+        ("caldo", [c["nome"] for c in caldos], "ambos"),
+        ("fruta", frutas, "cafe")
+    ]
+
+    # =========================
+    # PROCESSA CADA ITEM
+    # =========================
     for item in estoque:
         nome_original = item["nome"]
         nome = normalizar(nome_original)
-
         categoria = None
-        subcategoria = "ambos"  # 🔥 NOVO (default)
+        subcategoria = "ambos"
 
         # =========================
-        # PRIORIDADE DE CLASSIFICAÇÃO
+        # CHECA CATEGORIAS
         # =========================
-
-        # 🔥 PROTEÍNA (CAFÉ OU GERAL)
-        if any(normalizar(pcf) in nome for pcf in proteinasCF):
-            categoria = "proteinaCF"
-            subcategoria = "cafe"
-
-        elif any(normalizar(ccf) in nome for ccf in carboidratosCF):
-            categoria = "carboCF"
-            subcategoria = "cafe"
-
-        # 🥤 LÍQUIDOS (ANTES DE PROTEÍNA)
-        elif any(normalizar(lq) in nome for lq in liquidos):
-            categoria = "liquido"
-            subcategoria = "cafe"
-
-        # 🥩 PROTEÍNA
-        elif any(normalizar(p) in nome for p in proteinasKG + proteinasUN):
-            categoria = "proteina"
-
-        # 🍝 MASSA (antes de fruta e carbo)
-        elif any(normalizar(m) in nome for m in massas):
-            categoria = "massa"
-
-        # 🥕 LEGUMES
-        elif any(normalizar(l) in nome for l in legumes):
-            categoria = "legume"
-
-
-        # 🍚 CARBO
-        elif any(normalizar(c) in nome for c in carboidratos):
-            categoria = "carbo"
-
-        # 🥬 FOLHAS
-        elif any(normalizar(f) in nome for f in folhas_saladas):
-            categoria = "folha"
-
-        # 🥫 MOLHOS
-        elif any(normalizar(mol) in nome for mol in molhos):
-            categoria = "molho"
-
-        # 🥫 Farinhas
-        elif any(normalizar(fer) in nome for fer in fermentos):
-            categoria = "fermento"
-
-        # 🥫 fermento
-        elif any(normalizar(far) in nome for far in farinhas):
-            categoria = "farinha"
-
-        # 🥫 Cereais
-        elif any(normalizar(cer) in nome for cer in cereais):
-            categoria = "cereal"
-
-        # 🍲 CALDOS
-        elif any(normalizar(caldo["nome"]) in nome for caldo in caldos):
-            categoria = "caldo"
-
-        # 🍎 FRUTA (AGORA POR ÚLTIMO E MAIS SEGURO)
-        elif any(normalizar(fcf) in nome.split() for fcf in frutas):
-            categoria = "fruta"
-            subcategoria = "cafe"
-
+        for cat, lista, sub in categorias:
+            if any(normalizar(x) in nome for x in lista):
+                categoria = cat
+                subcategoria = sub
+                break  # prioridade: primeira categoria que bater
         # =========================
-        # FALLBACK INTELIGENTE
+        # FALLBACK
         # =========================
-        else:
-            if "arroz" in nome or "feijao" in nome or "batata" in nome:
+        if not categoria:
+            if any(x in nome for x in ["arroz", "feijao", "batata"]):
                 categoria = "carbo"
-
-            elif "frango" in nome or "carne" in nome or "ovo" in nome:
+            elif any(x in nome for x in ["frango", "carne", "ovo"]):
                 categoria = "proteina"
-
-            elif "alface" in nome or "rucula" in nome:
+            elif any(x in nome for x in ["alface", "rucula"]):
                 categoria = "folha"
-
             elif "molho" in nome:
                 categoria = "molho"
-
             elif "caldo" in nome:
                 categoria = "caldo"
 
         # =========================
-        # SALVA
+        # NORMALIZA UNIDADES
         # =========================
         if categoria:
-            unidade = str(item.get("unidade", "")).lower()
+            unidade = str(item.get("unidade", "")).strip().lower()
             quantidade = float(item.get("quantidade", 0))
 
             if unidade in ["kg", "quilo", "quilos"]:
                 quantidade *= 1000
                 unidade = "g"
-
             elif unidade in ["g", "grama", "gramas"]:
                 unidade = "g"
-
             elif unidade in ["l", "litro", "litros"]:
                 quantidade *= 1000
                 unidade = "ml"
-
             elif unidade in ["ml"]:
                 unidade = "ml"
-
             elif unidade in ["un", "unidade", "unidades"]:
                 unidade = "unidade"
-
             elif unidade in ["fatia", "fatias"]:
                 unidade = "fatia"
 
@@ -292,7 +249,7 @@ def classificar_estoque(estoque):
                 "quantidade": quantidade,
                 "unidade": unidade,
                 "categoria": categoria,
-                "subcategoria": subcategoria  # 🔥 NOVO
+                "subcategoria": subcategoria
             })
 
     return estoque_classificado
