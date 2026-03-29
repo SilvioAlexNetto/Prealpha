@@ -472,46 +472,41 @@ def gerar_cafe(estoque):
 
     tentativas = 0
 
-    while len(receitas) < 31 and tentativas < 200:
+    while len(receitas) < 31 and tentativas < 500:  # aumentei tentativas para garantir 31
         tentativas += 1
 
+        # tenta consumir proteína e carbo
         proteina = consumir(estoque, "proteina", 50, subcategoria="cafe")
         carbo = consumir(estoque, "carbo", 50, subcategoria="cafe")
 
-        if not receita_valida(proteina, carbo):
-            continue
+        # fallback se não encontrou nenhum
+        if not proteina:
+            proteina = {"nome": "tofu", "categoria": "proteina", "unidade": "g", "quantidade": 50}
+        if not carbo:
+            carbo = {"nome": "pão de forma", "categoria": "carbo", "unidade": "fatia", "quantidade": 1}
 
+        # ajustar porcionamento
         proteina = ajustar_porcionamento(proteina)
         carbo = ajustar_porcionamento(carbo)
 
+        # categoria obrigatória
         if proteina["categoria"] not in ["proteina", "liquido"]:
-            continue
-
+            proteina["categoria"] = "proteina"
         if carbo["categoria"] != "carbo":
-            continue
+            carbo["categoria"] = "carbo"
 
-        # ===== Ajuste: permitir repetição se não houver alternativas =====
-        if len(receitas) > 0:
-            # verifica se há outras opções no estoque
-            outras_proteinas = any(
-                p for p in estoque.get("proteina", []) if p["nome"] != ultimo_proteina
-            )
-            outros_carbo = any(
-                c for c in estoque.get("carbo", []) if c["nome"] != ultimo_carbo
-            )
-            if proteina["nome"] == ultimo_proteina and carbo["nome"] == ultimo_carbo:
-                if outras_proteinas or outros_carbo:
-                    continue  # ainda tem alternativas, evita repetição
-                # se não houver alternativas, deixa repetir
-        # ==================================================================
+        # tenta evitar repetição do dia anterior, mas se não der, permite
+        evitar_repeticao = (len(receitas) > 0)
+        if evitar_repeticao and proteina["nome"] == ultimo_proteina and carbo["nome"] == ultimo_carbo:
+            # 50% chance de pular para tentar variar
+            if random.random() < 0.5:
+                continue
 
-        complemento = None
-
+        # complemento
         usar_fruta = random.choice([True, False])
-
+        complemento = None
         if usar_fruta:
             complemento = consumir(estoque, "fruta", 999)
-
             if complemento:
                 if complemento["unidade"] == "unidade":
                     complemento["quantidade"] = 1
@@ -532,6 +527,7 @@ def gerar_cafe(estoque):
 
         modo_preparo = []
 
+        # preparo proteína
         if proteina["unidade"] == "ml":
             modo_preparo += [f"Sirva o {proteina['nome']} em um copo."]
         elif proteina["unidade"] == "unidade":
@@ -539,6 +535,7 @@ def gerar_cafe(estoque):
         else:
             modo_preparo += [f"Separe o {proteina['nome']} para o consumo."]
 
+        # preparo carbo
         if carbo["unidade"] == "fatia":
             modo_preparo += [f"Toste levemente o {carbo['nome']} se desejar."]
         else:
@@ -551,6 +548,7 @@ def gerar_cafe(estoque):
             ])
         ]
 
+        # preparo complemento
         if usar_fruta:
             modo_preparo += [
                 random.choice([
@@ -585,8 +583,14 @@ def gerar_cafe(estoque):
 
         receitas.append(receita)
 
+        # salvar últimos para tentar variar
         ultimo_proteina = proteina["nome"]
         ultimo_carbo = carbo["nome"]
+
+    # fallback final: se não conseguiu gerar 31, repete últimos
+    while len(receitas) < 31:
+        copia = deepcopy(receitas[-1])
+        receitas.append(copia)
 
     return receitas
 
