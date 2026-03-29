@@ -525,7 +525,7 @@ legumes = [
     "Brócolis", "Cenoura", "Abobrinha", "Couve-flor",
     "Beterraba", "Vagem", "Espinafre", "Couve",
     "Repolho", "Tomate", "Pimentão", "Berinjela",
-    "Abóbora", "Ervilha", "Chuchu", "Alface",
+    "Abóbora", "Ervilha", "Chuchu",
     "Rúcula", "Agrião", "Alho-poró", "Salsão",
 
     "Cebola", "Alho", "Cebolinha", "Salsa",
