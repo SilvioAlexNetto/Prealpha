@@ -527,6 +527,7 @@ def gerar_preparo_cafe(tipo, ingredientes):
 def gerar_cafe(estoque):
     """
     Gera até 31 cafés da manhã variados.
+    Tenta variar os pratos, mas se não houver como, usa o que tiver.
     Usa defs nome_prato_cafe e gerar_preparo_cafe para modo de preparo realista.
     """
     estoque = classificar_estoque(estoque)
@@ -535,7 +536,6 @@ def gerar_cafe(estoque):
 
     while len(receitas) < 31 and tentativas < 300:
         tentativas += 1
-        receita = None
 
         tem_farinha = any(i["categoria"] in ["farinha", "cereal"] and i["quantidade"] > 0 for i in estoque)
         tem_liquido = any(i["categoria"] == "liquido" and i["quantidade"] > 0 for i in estoque)
@@ -543,7 +543,6 @@ def gerar_cafe(estoque):
         tem_fruta = any(i["categoria"] == "fruta" and i["quantidade"] > 0 for i in estoque)
 
         tipo_prato = random.choice(["panqueca", "crepioca", "mingau", "omelete"]) if tem_farinha and tem_liquido and tem_ovo else "simples"
-
         ingredientes = {}
 
         if tipo_prato == "panqueca":
@@ -570,23 +569,26 @@ def gerar_cafe(estoque):
             ingredientes['recheio'] = consumir(estoque, "fruta", 1, subcategoria="cafe") or consumir(estoque, "legume", 50)  # opcional
 
         else:
-            # simples fallback
+            # fallback simples
             carbo = consumir(estoque, "carboCF", 20, subcategoria="cafe") or consumir(estoque, "farinha", 30, subcategoria="cafe")
             proteina = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
             liquido = consumir(estoque, "liquido", 150, subcategoria="cafe")
             fruta = consumir(estoque, "fruta", 1, subcategoria="cafe")
-            for k,v in zip(["carbo","proteina","liquido","fruta"], [carbo,proteina,liquido,fruta]):
-                if v: ingredientes[k] = v
+            for k, v in zip(["carbo", "proteina", "liquido", "fruta"], [carbo, proteina, liquido, fruta]):
+                if v:
+                    ingredientes[k] = v
             tipo_prato = "simples"
 
+        # fallback final caso nada tenha sido consumido
         if not ingredientes:
             for chave in ["farinha", "liquido", "ovo", "fruta", "proteina"]:
                 item = consumir(estoque, chave, 10, subcategoria="cafe")
                 if item:
                     ingredientes[chave] = item
 
-            if not ingredientes:
-                continue  
+        # Se mesmo assim não tiver ingredientes, pula
+        if not ingredientes:
+            continue  
 
         nome = nome_prato_cafe(tipo_prato, ingredientes)
         modo_preparo = gerar_preparo_cafe(tipo_prato, ingredientes)
@@ -902,49 +904,28 @@ def gerar_janta(estoque):
 # FUNÇÃO PRINCIPAL
 # =========================
 def gerar_tudo(estoque_usuario):
-    """
-    Gera cardápio completo (café, almoço, jantar) a partir do estoque do usuário,
-    grava as receitas e retorna as sobras.
-    """
 
-    # 🔄 Reinicia histórico de usos recentes
-    for chave in ULTIMOS_USADOS:
-        ULTIMOS_USADOS[chave] = []
+    ULTIMOS_USADOS["proteina"] = []
+    ULTIMOS_USADOS["carbo"] = []
 
-    # 📝 Cópia do estoque para manipulação sem alterar o original
     estoque_copia = deepcopy(estoque_usuario)
 
-    # 🗂️ Classifica o estoque por categoria e subcategoria
     estoque_classificado = classificar_estoque(estoque_copia)
 
-    # 🍽️ Gera receitas por refeição
     cafe = gerar_cafe(estoque_classificado)
     almoco = gerar_almoco(estoque_classificado)
     janta = gerar_janta(estoque_classificado)
 
-    # 📦 Todas as receitas juntas
     todas_receitas = cafe + almoco + janta
 
-    # 💾 Salva receitas em arquivo JSON
-    try:
-        os.makedirs(os.path.dirname(RECEITAS_PATH), exist_ok=True)
-        with open(RECEITAS_PATH, "w", encoding="utf-8") as f:
-            json.dump(todas_receitas, f, ensure_ascii=False, indent=4)
-    except Exception as e:
-        print(f"Erro ao salvar receitas: {e}")
+    with open(RECEITAS_PATH, "w", encoding="utf-8") as f:
+        json.dump(todas_receitas, f, ensure_ascii=False, indent=4)
 
-    # 🥫 Calcula sobras (itens que ainda têm quantidade > 0)
     sobras = [i for i in estoque_classificado if i["quantidade"] > 0]
 
-    # 💾 Salva sobras em arquivo JSON
-    try:
-        os.makedirs(os.path.dirname(SOBRAS_PATH), exist_ok=True)
-        with open(SOBRAS_PATH, "w", encoding="utf-8") as f:
-            json.dump(sobras, f, ensure_ascii=False, indent=4)
-    except Exception as e:
-        print(f"Erro ao salvar sobras: {e}")
+    with open(SOBRAS_PATH, "w", encoding="utf-8") as f:
+        json.dump(sobras, f, ensure_ascii=False, indent=4)
 
-    # 🔙 Retorna resumo
     return {
         "total_receitas": len(todas_receitas),
         "sobras": sobras
