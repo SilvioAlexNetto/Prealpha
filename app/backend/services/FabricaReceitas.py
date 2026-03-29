@@ -181,8 +181,8 @@ def classificar_estoque(estoque):
         ("folha", folhas_saladas, "ambos"),
         ("molho", molhos, "ambos"),
         ("fermento", fermentos, "ambos"),
-        ("farinha", farinhas, "ambos"),
-        ("cereal", cereais, "ambos"),
+        ("farinha", farinhas, "cafe"),
+        ("cereal", cereais, "cafe"),
         ("caldo", [c["nome"] for c in caldos], "ambos"),
         ("fruta", frutas, "cafe")
     ]
@@ -240,38 +240,55 @@ def consumir(estoque, categoria, qtd, subcategoria=None):
 
     candidatos = [
         i for i in estoque
-        if categoria in i["categorias"]
+        if categoria in i.get("categorias", [])
         and i["quantidade"] > 0
-        and (subcategoria is None or subcategoria in i.get("subcategorias", []))
+        and (
+            subcategoria is None
+            or subcategoria in i.get("subcategorias", [])
+        )
     ]
 
+    # ❌ sem fallback (correto)
     if not candidatos:
         return None
 
+    # 🔑 chave do histórico
     chave = f"{categoria}_{subcategoria}" if subcategoria else categoria
 
     if chave not in ULTIMOS_USADOS:
         ULTIMOS_USADOS[chave] = []
 
+    # 🔥 evita repetição recente
     filtrados = [
         i for i in candidatos
         if i["nome"] not in ULTIMOS_USADOS[chave]
     ]
 
-    item = random.choice(filtrados or candidatos)
+    item = random.choice(filtrados if filtrados else candidatos)
 
+    # =========================
+    # 🔥 CONSUMO REAL
+    # =========================
     usar = min(item["quantidade"], qtd)
     item["quantidade"] -= usar
 
+    # =========================
+    # 🔥 HISTÓRICO
+    # =========================
     ULTIMOS_USADOS[chave].append(item["nome"])
 
     if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
         ULTIMOS_USADOS[chave].pop(0)
 
+    # =========================
+    # 🔥 RETORNO COMPLETO (CORREÇÃO IMPORTANTE)
+    # =========================
     return {
         "nome": item["nome"],
         "quantidade": usar,
-        "unidade": item["unidade"]
+        "unidade": item["unidade"],
+        "categorias": item.get("categorias", []),
+        "subcategorias": item.get("subcategorias", [])
     }
 
 # =========================
@@ -361,30 +378,40 @@ def gerar_preparo_pf(proteina, carbo, legume=None, folha=None):
 
 
 def ajustar_porcionamento(item):
+    if not item:
+        return None
+
     unidade = item["unidade"]
     categoria = item["categoria"]
     subcategoria = item.get("subcategoria")
 
-    # =========================
-    # CAFÉ DA MANHÃ
-    # =========================
     if subcategoria == "cafe":
 
-        # 🥩 proteína café
-        if categoria == "proteina":
+        # 🥩 proteína café (CORRIGIDO)
+        if categoria in ["proteina", "proteinaCF"]:
             if unidade == "unidade":
                 item["quantidade"] = 2
             elif unidade == "g":
                 item["quantidade"] = 80
 
-        # 🍞 carbo café
-        elif categoria == "carbo":
+        # 🍞 carbo café (CORRIGIDO)
+        elif categoria in ["carbo", "carboCF"]:
             if unidade == "fatia":
                 item["quantidade"] = 2
             elif unidade == "g":
                 item["quantidade"] = 50
             elif unidade == "unidade":
                 item["quantidade"] = 1
+
+        # 🌾 farinha (NOVO)
+        elif categoria == "farinha":
+            if unidade == "g":
+                item["quantidade"] = 50
+
+        # 🥣 cereal (NOVO)
+        elif categoria == "cereal":
+            if unidade == "g":
+                item["quantidade"] = 40
 
         # 🍎 fruta
         elif categoria == "fruta":
@@ -393,10 +420,15 @@ def ajustar_porcionamento(item):
             elif unidade == "g":
                 item["quantidade"] = 100
 
-        # 🥤 líquido (se você já criou a lista)
+        # 🥤 líquido
         elif categoria == "liquido":
             if unidade == "ml":
                 item["quantidade"] = 200
+
+        # 🧪 fermento (NOVO)
+        elif categoria == "fermento":
+            if unidade == "g":
+                item["quantidade"] = 5
 
     return item
 
@@ -408,23 +440,17 @@ def ajustar_porcionamento(item):
 # 🍽️ CAFÉ - NOME PROFISSIONAL
 # =========================
 def nome_prato_cafe(base, proteina=None, fruta=None, recheio=None):
-    """
-    Nome profissional, sem repetição e mais natural.
-    """
 
-    extras = []
+    nome = base
 
-    # prioridade: recheio > proteina > fruta
     if recheio:
-        extras.append(f"recheio de {recheio}")
+        nome += f" com recheio de {recheio}"
 
     if proteina:
-        extras.append(proteina)
+        nome += f" e {proteina}"
 
-    if fruta:
-        extras.append(fruta)
-
-    nome = combinar_partes_nome(base, extras)
+    if fruta and not recheio:
+        nome += f" com {fruta}"
 
     return nome.capitalize()
 
@@ -565,6 +591,9 @@ def gerar_cafe(estoque):
                 continue
 
             ingredientes = [base_item, liquido, proteina]
+
+            ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
+
             if fruta:
                 ingredientes.append(fruta)
             if fermento:
@@ -606,6 +635,8 @@ def gerar_cafe(estoque):
                 ingredientes.append(liquido)
             if fruta:
                 ingredientes.append(fruta)
+
+            ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
 
             nome = nome_prato_cafe(
                 carbo["nome"],
