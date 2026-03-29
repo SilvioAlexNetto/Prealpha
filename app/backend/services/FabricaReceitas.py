@@ -499,11 +499,13 @@ def gerar_cafe(estoque):
         # =========================
         if tipo_prato == "robusto":
             prato = random.choice(["panqueca", "mingau", "crepioca"])
+
             if prato == "panqueca":
                 farinha = consumir(estoque, "farinha", 50, subcategoria="cafe")
                 liquido = consumir(estoque, "liquido", 100, subcategoria="cafe")
                 ovo = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
                 fermento = consumir(estoque, "fermento", 5, subcategoria="cafe")  # opcional
+                recheio = consumir(estoque, "fruta", 1, subcategoria="cafe")  # opcional
 
                 if not farinha or not liquido or not ovo:
                     continue
@@ -511,20 +513,25 @@ def gerar_cafe(estoque):
                 ingredientes = [farinha, liquido, ovo]
                 if fermento:
                     ingredientes.append(fermento)
+                if recheio:
+                    ingredientes.append(recheio)
 
-                nome = f"Panqueca de {farinha['nome']}" if farinha else "Panqueca simples"
+                nome = f"Panqueca de {farinha['nome']}" + (f" com {recheio['nome']}" if recheio else "")
                 modo_preparo = [
-                    f"Em uma tigela, misture {farinha['nome']} com {liquido['nome']} e {ovo['nome']}.",
-                    f"Adicione {fermento['nome']} se desejar." if fermento else "",
-                    "Cozinhe em frigideira antiaderente até dourar dos dois lados.",
-                    "Sirva quente."
+                    f"Em uma tigela, peneire {farinha['nome']} e misture com {ovo['nome']} e {liquido['nome']}.",
+                    f"Adicione {fermento['nome']} se desejar mais fofinha." if fermento else "",
+                    "Misture bem até formar uma massa homogênea.",
+                    "Aqueça uma frigideira antiaderente em fogo médio e despeje porções da massa.",
+                    "Cozinhe até formar bolhas na superfície, vire com uma espátula e cozinhe o outro lado.",
+                    f"Sirva quente" + (f" com {recheio['nome']}" if recheio else "") + "."
                 ]
-                tempo = random.randint(10, 20)
+                tempo = random.randint(12, 20)
 
             elif prato == "mingau":
                 farinha = consumir(estoque, "farinha", 50, subcategoria="cafe") or consumir(estoque, "cereal", 50, subcategoria="cafe")
                 liquido = consumir(estoque, "liquido", 200, subcategoria="cafe")
-                fruta = consumir(estoque, "fruta", 1, subcategoria="cafe")
+                fruta = consumir(estoque, "fruta", 1, subcategoria="cafe")  # opcional
+                adoçante = consumir(estoque, "adoçante", 1, subcategoria="cafe")  # opcional
 
                 if not farinha or not liquido:
                     continue
@@ -532,20 +539,25 @@ def gerar_cafe(estoque):
                 ingredientes = [farinha, liquido]
                 if fruta:
                     ingredientes.append(fruta)
+                if adoçante:
+                    ingredientes.append(adoçante)
 
-                nome = f"Mingau de {farinha['nome']}"
+                nome = f"Mingau de {farinha['nome']}" + (f" com {fruta['nome']}" if fruta else "")
                 modo_preparo = [
-                    f"Aqueça {liquido['nome']} em uma panela.",
-                    f"Adicione {farinha['nome']} aos poucos, mexendo sempre.",
-                    f"Finalize com {fruta['nome']} picada por cima." if fruta else "",
-                    "Sirva quente."
+                    f"Aqueça {liquido['nome']} em uma panela média até começar a ferver.",
+                    f"Adicione {farinha['nome']} aos poucos, mexendo continuamente para evitar grumos.",
+                    f"Cozinhe em fogo baixo até engrossar e formar uma consistência cremosa.",
+                    f"Acrescente {fruta['nome']} picada por cima se desejar.",
+                    f"Adicione {adoçante['nome']} a gosto." if adoçante else "",
+                    "Sirva quente em uma tigela."
                 ]
-                tempo = random.randint(8, 15)
+                tempo = random.randint(10, 18)
 
             elif prato == "crepioca":
                 tapioca = consumir(estoque, "farinha", 50, subcategoria="cafe")
                 ovo = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
                 liquido = consumir(estoque, "liquido", 50, subcategoria="cafe")  # opcional
+                recheio = consumir(estoque, "fruta", 1, subcategoria="cafe")  # opcional
 
                 if not tapioca or not ovo:
                     continue
@@ -553,15 +565,19 @@ def gerar_cafe(estoque):
                 ingredientes = [tapioca, ovo]
                 if liquido:
                     ingredientes.append(liquido)
+                if recheio:
+                    ingredientes.append(recheio)
 
-                nome = "Crepioca"
+                nome = f"Crepioca de {tapioca['nome']}" + (f" com {recheio['nome']}" if recheio else "")
                 modo_preparo = [
                     f"Em uma tigela, misture {tapioca['nome']} com {ovo['nome']}.",
-                    f"Adicione {liquido['nome']} se quiser mais cremoso." if liquido else "",
-                    "Cozinhe em frigideira antiaderente até dourar.",
-                    "Sirva quente."
+                    f"Adicione {liquido['nome']} para uma textura mais cremosa." if liquido else "",
+                    "Aqueça uma frigideira antiaderente e despeje a massa formando uma camada fina.",
+                    "Cozinhe por 2-3 minutos até firmar, vire cuidadosamente e cozinhe o outro lado.",
+                    f"Recheie com {recheio['nome']}" if recheio else "",
+                    "Sirva imediatamente."
                 ]
-                tempo = random.randint(8, 15)
+                tempo = random.randint(10, 18)
 
             receita = {
                 "nome": nome,
