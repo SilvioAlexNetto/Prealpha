@@ -405,8 +405,11 @@ def preparar_item_bruto(item):
     nome = normalizar(item["nome"])
     categorias = item.get("categorias", [])
 
-    if "inteiro" or "inteira" in nome and "proteina" in categorias:
+    if "inteiro" in nome and "proteina" in categorias:
         nome_base = item["nome"].replace("inteiro", "").strip()
+
+    elif "inteira" in nome and "proteina" in categorias:
+        nome_base = item["nome"].replace("inteira", "").strip()
 
         return {
             "nome": f"{nome_base} em pedaços",
