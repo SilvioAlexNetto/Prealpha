@@ -576,6 +576,47 @@ def combinar_partes_nome(base, extras):
 def eh_farinha(item):
     return item and "farinha" in normalizar(item["nome"])
 
+def consumir_leite(estoque, qtd=200):
+    candidatos = [
+        i for i in estoque
+        if "liquido" in i["categorias"]
+        and "leite" in normalizar(i["nome"])
+        and i["quantidade"] > 0
+    ]
+
+    if not candidatos:
+        return None, None
+
+    item = random.choice(candidatos)
+
+    usar = min(item["quantidade"], qtd)
+    item["quantidade"] -= usar
+
+    nome = item["nome"]
+    nome_norm = normalizar(nome)
+
+    # 🔍 detecta tipo de leite
+    if "amendoa" in nome_norm:
+        tipo = "leite de amêndoas"
+    elif "soja" in nome_norm:
+        tipo = "leite de soja"
+    elif "aveia" in nome_norm:
+        tipo = "leite de aveia"
+    elif "coco" in nome_norm:
+        tipo = "leite de coco"
+    elif "desnatado" in nome_norm:
+        tipo = "leite desnatado"
+    elif "integral" in nome_norm:
+        tipo = "leite integral"
+    else:
+        tipo = "leite"
+
+    return {
+        "nome": nome,
+        "quantidade": usar,
+        "unidade": item["unidade"]
+    }, tipo
+
 def gerar_cafe(estoque):
 
     receitas = []
@@ -590,50 +631,118 @@ def gerar_cafe(estoque):
         # 🔹 ROBUSTO
         # =========================
         if tipo_prato == "robusto":
-            prato = random.choice(["Panqueca", "Mingau", "Crepioca"])
+            prato = random.choice(["Panqueca", "Mingau", "Crepioca", "Vitamina"])
 
-            if prato in ["Panqueca", "Crepioca"]:
-                base_item = consumir(estoque, "farinha", 50)
+            # =========================
+            # 🥤 VITAMINA (NOVO)
+            # =========================
+            if prato == "Vitamina":
+
+                liquido, tipo_leite = consumir_leite(estoque, 200)
+
+                # 🚨 sem leite = pula
+                if not liquido:
+                    continue
+
+                fruta1 = consumir(estoque, "fruta", 1)
+                fruta2 = consumir(estoque, "fruta", 1)
+                fruta3 = consumir(estoque, "fruta", 1)
+                cereal = consumir(estoque, "cereal", 30)
+
+                if not fruta1:
+                    continue
+
+                ingredientes = [liquido, fruta1]
+
+                tipo_vitamina = random.choice(["basica", "nutritiva", "fortificada"])
+
+                # 🥤 Básica
+                if tipo_vitamina == "basica":
+                    frutas_usadas = [fruta1]
+
+                # 💪 Nutritiva
+                elif tipo_vitamina == "nutritiva":
+                    if fruta2:
+                        ingredientes.append(fruta2)
+                    if fruta3:
+                        ingredientes.append(fruta3)
+                    if cereal:
+                        ingredientes.append(cereal)
+
+                    frutas_usadas = [f for f in [fruta1, fruta2, fruta3] if f]
+
+                # ⚡ Fortificada
+                else:
+                    if fruta2:
+                        ingredientes.append(fruta2)
+                    if fruta3 and random.random() < 0.5:
+                        ingredientes.append(fruta3)
+
+                    frutas_usadas = [f for f in [fruta1, fruta2, fruta3] if f]
+
+                ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
+
+                nomes_ingredientes = [i["nome"] for i in ingredientes]
+                nomes_frutas = [f["nome"] for f in frutas_usadas if f and f["nome"] in nomes_ingredientes]
+
+                nome = f"Vitamina de {' e '.join(nomes_frutas)} com {tipo_leite}"
+
+                modo_preparo = [
+                    f"Adicione {', '.join(nomes_frutas)} no liquidificador.",
+                    f"Acrescente {tipo_leite}.",
+                    "Bata até obter uma mistura homogênea.",
+                    "Sirva gelado."
+                ]
+
+                tempo = 5
+
+            # =========================
+            # 🍽️ OUTROS ROBUSTOS (INALTERADO)
+            # =========================
             else:
-                base_item = consumir(estoque, "cereal", 50) or consumir(estoque, "farinha", 50)
+                if prato in ["Panqueca", "Crepioca"]:
+                    base_item = consumir(estoque, "farinha", 50)
+                else:
+                    base_item = consumir(estoque, "cereal", 50) or consumir(estoque, "farinha", 50)
 
-            liquido = consumir(estoque, "liquido", 100)
-            proteina = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
-            fruta = consumir(estoque, "fruta", 1)
-            fermento = consumir(estoque, "fermento", 5) if prato == "Panqueca" else None
+                liquido = consumir(estoque, "liquido", 100)
+                proteina = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
+                fruta = consumir(estoque, "fruta", 1)
+                fermento = consumir(estoque, "fermento", 5) if prato == "Panqueca" else None
 
-            if not base_item or not liquido or not proteina:
-                continue
+                if not base_item or not liquido or not proteina:
+                    continue
 
-            ingredientes = [base_item, liquido, proteina]
+                ingredientes = [base_item, liquido, proteina]
 
-            if fruta:
-                ingredientes.append(fruta)
-            if fermento:
-                ingredientes.append(fermento)
+                if fruta:
+                    ingredientes.append(fruta)
+                if fermento:
+                    ingredientes.append(fermento)
 
-            ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
+                ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
 
-            usa_recheio = prato in ["Panqueca", "Crepioca"]
+                usa_recheio = prato in ["Panqueca", "Crepioca"]
 
-            tem_fruta = fruta if fruta and fruta in ingredientes else None
+                nomes_ingredientes = [i["nome"] for i in ingredientes]
+                tem_fruta = fruta if fruta and fruta["nome"] in nomes_ingredientes else None
 
-            nome = nome_prato_cafe(
-                prato,
-                proteina=proteina["nome"],
-                fruta=None if usa_recheio else (tem_fruta["nome"] if tem_fruta else None),
-                recheio=tem_fruta["nome"] if usa_recheio and tem_fruta else None
-            )
+                nome = nome_prato_cafe(
+                    prato,
+                    proteina=proteina["nome"],
+                    fruta=None if usa_recheio else (tem_fruta["nome"] if tem_fruta else None),
+                    recheio=tem_fruta["nome"] if usa_recheio and tem_fruta else None
+                )
 
-            modo_preparo = gerar_preparo_cafe(
-                prato,
-                proteina=proteina["nome"],
-                liquido=liquido["nome"],
-                fruta=None if usa_recheio else (tem_fruta["nome"] if tem_fruta else None),
-                recheio=tem_fruta["nome"] if usa_recheio and tem_fruta else None,
-            )
+                modo_preparo = gerar_preparo_cafe(
+                    prato,
+                    proteina=proteina["nome"],
+                    liquido=liquido["nome"],
+                    fruta=None if usa_recheio else (tem_fruta["nome"] if tem_fruta else None),
+                    recheio=tem_fruta["nome"] if usa_recheio and tem_fruta else None,
+                )
 
-            tempo = random.randint(10, 20)
+                tempo = random.randint(10, 20)
 
         # =========================
         # 🔹 SIMPLES
@@ -683,7 +792,6 @@ def gerar_cafe(estoque):
 
             ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
 
-            # 🔥 VALIDAÇÃO REAL
             nomes_ingredientes = [i["nome"] for i in ingredientes]
 
             tem_proteina = proteina["nome"] if proteina and proteina["nome"] in nomes_ingredientes else None
@@ -716,6 +824,7 @@ def gerar_cafe(estoque):
         receitas.append(receita)
 
     return receitas
+
 
 # =========================
 # ALMOÇO 
