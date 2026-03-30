@@ -571,6 +571,9 @@ def combinar_partes_nome(base, extras):
 
     return " ".join(partes)
 
+def eh_farinha(item):
+    return item and "farinha" in normalizar(item["nome"])
+
 def gerar_cafe(estoque):
 
     receitas = []
@@ -589,8 +592,9 @@ def gerar_cafe(estoque):
 
             if prato in ["Panqueca", "Crepioca"]:
                 base_item = consumir(estoque, "farinha", 50)
-            else:
-                base_item = consumir(estoque, "farinha", 50) or consumir(estoque, "cereal", 50)
+
+            elif prato == "Mingau":
+                base_item = consumir(estoque, "cereal", 50) or consumir(estoque, "farinha", 50)
 
             liquido = consumir(estoque, "liquido", 100)
             proteina = consumir(estoque, "proteinaCF", 1, subcategoria="cafe")
@@ -607,7 +611,6 @@ def gerar_cafe(estoque):
             if fermento:
                 ingredientes.append(fermento)
 
-            # ✅ AQUI ESTÁ A CORREÇÃO CRÍTICA
             ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
 
             usa_recheio = prato in ["Panqueca", "Crepioca"]
@@ -618,13 +621,15 @@ def gerar_cafe(estoque):
                 fruta=None if usa_recheio else (fruta["nome"] if fruta else None),
                 recheio=fruta["nome"] if usa_recheio and fruta else None
             )
+
             modo_preparo = gerar_preparo_cafe(
-            prato,
-            proteina=proteina["nome"],
-            liquido=liquido["nome"],
-            fruta=None if usa_recheio else (fruta["nome"] if fruta else None),
-            recheio=fruta["nome"] if usa_recheio and fruta else None,
+                prato,
+                proteina=proteina["nome"],
+                liquido=liquido["nome"],
+                fruta=None if usa_recheio else (fruta["nome"] if fruta else None),
+                recheio=fruta["nome"] if usa_recheio and fruta else None,
             )
+
             tempo = random.randint(10, 20)
 
         # =========================
@@ -636,19 +641,45 @@ def gerar_cafe(estoque):
             liquido = consumir(estoque, "liquido", 200)
             fruta = consumir(estoque, "fruta", 1)
 
-            if not carbo:
+            if not carbo or eh_farinha(carbo):
                 continue
 
             ingredientes = [carbo]
+            adicionou_algo = False
 
-            if proteina:
-                ingredientes.append(proteina)
-            if liquido:
-                ingredientes.append(liquido)
-            if fruta:
-                ingredientes.append(fruta)
+            # 🥣 CASO: CEREAL (pode ser base do café)
+            if "cereal" in normalizar(carbo["nome"]):
 
-            # ✅ AQUI TAMBÉM
+                # proteína opcional (leve)
+                if proteina and random.random() < 0.5:
+                    ingredientes.append(proteina)
+
+                if fruta and random.random() < 0.7:
+                    ingredientes.append(fruta)
+                    adicionou_algo = True
+
+                if liquido and random.random() < 0.7:
+                    ingredientes.append(liquido)
+                    adicionou_algo = True
+
+                # fallback
+                if not adicionou_algo:
+                    if fruta:
+                        ingredientes.append(fruta)
+                    elif liquido:
+                        ingredientes.append(liquido)
+
+            # 🍞 CASO: NÃO CEREAL (pão, etc → precisa proteína)
+            else:
+                if proteina:
+                    ingredientes.append(proteina)
+
+                if fruta and random.random() < 0.6:
+                    ingredientes.append(fruta)
+
+                if liquido and random.random() < 0.4:
+                    ingredientes.append(liquido)
+
             ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
 
             nome = nome_prato_cafe(
