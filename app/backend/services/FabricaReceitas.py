@@ -900,6 +900,19 @@ def consolidar_ingredientes(ingredientes):
 
     return list(mapa.values())
 
+def gerar_cafe_com_copia(estoque):
+    estoque_temp = deepcopy(estoque)
+
+    receitas = gerar_cafe(estoque_temp)
+
+    # 🔥 aplica consumo real igual almoço/jantar
+    for item_temp in estoque_temp:
+        for item_real in estoque:
+            if item_temp["nome"] == item_real["nome"]:
+                item_real["quantidade"] = item_temp["quantidade"]
+
+    return receitas
+
 def gerar_cafe(estoque):
 
     receitas = []
@@ -1524,7 +1537,7 @@ def gerar_tudo(estoque_usuario):
 
     estoque_classificado = classificar_estoque(estoque_copia)
 
-    cafe = gerar_cafe(estoque_classificado)
+    cafe = gerar_cafe_com_copia(estoque_classificado)
     almoco = gerar_almoco(estoque_classificado)
     janta = gerar_janta(estoque_classificado)
 
