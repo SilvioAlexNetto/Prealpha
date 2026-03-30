@@ -1089,7 +1089,7 @@ def gerar_cafe(estoque):
                     tempo = 2
 
                 else:
-                    if not carbo or "cafe" not in carbo.get("subcategorias", []):
+                    if not carbo or "cafe" not in carbo.get("subcategorias", []) or "massa" in carbo.get("categorias", []):
                         continue
 
                     ingredientes = [carbo]
