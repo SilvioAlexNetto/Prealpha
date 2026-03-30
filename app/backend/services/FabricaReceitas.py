@@ -548,18 +548,24 @@ def gerar_preparo_cafe(base, proteina=None, liquido=None, fruta=None, recheio=No
 
 def combinar_partes_nome(base, extras):
     """
-    Combina partes do nome evitando repetição de conectores.
+    Combina partes do nome evitando repetição de conectores
+    e repetição de ingredientes no nome.
     """
     partes = [base]
 
     conectores = ["com", "e", "acompanhado de"]
 
     usados = set()
+    extras_unicos = []
 
+    # 🔥 remove duplicados mantendo ordem
+    vistos = set()
     for extra in extras:
-        if not extra:
-            continue
+        if extra and extra not in vistos:
+            extras_unicos.append(extra)
+            vistos.add(extra)
 
+    for extra in extras_unicos:
         conector = random.choice(conectores)
 
         # evita repetir conector
@@ -616,6 +622,40 @@ def consumir_leite(estoque, qtd=200):
         "quantidade": usar,
         "unidade": item["unidade"]
     }, tipo
+
+def agrupar_ingredientes(lista):
+    agrupado = {}
+
+    for item in lista:
+        chave = (item["nome"], item["unidade"])
+
+        if chave not in agrupado:
+            agrupado[chave] = item.copy()
+        else:
+            agrupado[chave]["quantidade"] += item["quantidade"]
+
+    return list(agrupado.values())
+
+def consolidar_ingredientes(ingredientes):
+    """
+    Agrupa ingredientes iguais (mesmo nome + unidade)
+    somando suas quantidades.
+    """
+
+    mapa = {}
+
+    for item in ingredientes:
+        if not item:
+            continue
+
+        chave = (item["nome"], item["unidade"])
+
+        if chave not in mapa:
+            mapa[chave] = item.copy()
+        else:
+            mapa[chave]["quantidade"] += item["quantidade"]
+
+    return list(mapa.values())
 
 def gerar_cafe(estoque):
 
@@ -681,6 +721,7 @@ def gerar_cafe(estoque):
                     frutas_usadas = [f for f in [fruta1, fruta2, fruta3] if f]
 
                 ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
+                ingredientes = consolidar_ingredientes(ingredientes)
 
                 nomes_ingredientes = [i["nome"] for i in ingredientes]
                 nomes_frutas = [f["nome"] for f in frutas_usadas if f and f["nome"] in nomes_ingredientes]
