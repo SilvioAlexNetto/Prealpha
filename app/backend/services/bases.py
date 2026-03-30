@@ -3,8 +3,21 @@
 # =========================
 
 proteinasKG = [
-    "Peito de frango", "Coxa de frango", "Sobrecoxa de frango", "Frango inteiro",
+    "Peito de frango", "Coxa de frango", "Sobrecoxa de frango", "Frango inteiro", "Galinha inteiro"
     "Filé de frango", "Asa de frango", "Frango desfiado",
+
+    "Tilápia inteira", "Corvina inteira", "Merluza", "Pescada branca", "Pescada amarela", 
+    "Pescada inteira", "Salmão", "Salmão inteiro", "Atum", "Atum inteiro", "Cação", "Cação em posta", "Dourado inteiro", 
+    "Pintado inteiro", "Surubim inteiro", "Tambaqui inteiro", "Tambacu inteiro", "Pacu inteiro", "Traíra inteira", "Lambari inteiro",
+    "Curimbatá inteiro", "Matrinxã inteira", "Piraputanga inteira", "Pirapitinga inteira", "Robalo inteiro", "Robalo em filé", "Anchova inteira", 
+    "Cavalinha inteira", "Manjuba inteira", "Bagre inteiro", "Bagre africano inteiro", "Jundiá inteiro", "Badejo", "Badejo inteiro", "Garoupa", 
+    "Garoupa inteira", "Cherne", "Cherne inteiro", "Namorado", "Namorado inteiro", "Olho de boi", "Olho de boi inteiro", "Xaréu inteiro", "Pampo inteiro", 
+    "Pampo em posta", "Pargo inteiro", "Aruanã inteiro", "Tucunaré inteiro", "Pirarucu", "Pirarucu inteiro", "Pirarucu em manta", "Mapará inteiro", "Pescada gó", 
+    "Pescada gó inteira", "Pescada cambucu", "Pescada cambucu inteira", "Corvina em posta", "Corvina inteira", "Sardinha em lata", "Atum em lata", "Salmão em posta", 
+    "Tilápia em filé", "Tilápia inteira", "Merluza em filé", "Polaca do Alasca", "Polaca do Alasca em filé", "Hake", "Hake em filé", "Bacalhau", "Bacalhau em posta", 
+    "Bacalhau desfiado", "Abadejo", "Abadejo em filé", "Linguado", "Linguado inteiro", "Linguado em filé", "Roncador inteiro", "Roncador em posta", "Espada", "Peixe-espada inteiro", 
+    "Peixe-espada em filé", "Carapau inteiro", "Carapau em filé", "Anchoveta inteira", "Anchoveta em filé", "Tainha inteira", "Tainha em posta", "Savelha inteira", "Savelha em posta",
+    "Piau inteiro", "Piau em posta", "Traíra inteira", "Traíra em filé", "Lula inteira", "Polvo inteiro"
 
     "Patinho", "Acém", "Alcatra", "Músculo bovino", "Coxão mole",
     "Coxão duro", "Lagarto", "Fraldinha", "Picanha", "Contrafilé",
@@ -18,7 +31,7 @@ proteinasKG = [
     "Atum", "Truta", "Pescada", "Dourado", "Corvina",
     "Cação", "Anchova", "Linguado",
 
-    "Frango caipira", "Fígado bovino", "Fígado de frango",
+    "Frango caipira inteiro", "Fígado bovino", "Fígado de frango",
     "Moela de frango", "Coração de frango",
 
     "Carne suína moída", "Carne bovina moída magra",

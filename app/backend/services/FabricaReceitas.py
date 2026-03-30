@@ -238,7 +238,6 @@ def classificar_estoque(estoque):
 # =========================
 def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
 
-    # 🔴 filtro principal (com bloqueio opcional)
     candidatos = [
         i for i in estoque
         if categoria in i["categorias"]
@@ -253,7 +252,6 @@ def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
         )
     ]
 
-    # 🔁 fallback: se bloqueio zerou opções, ignora bloqueio
     if not candidatos and bloquear:
         print(f"[FALLBACK] Liberando bloqueio para categoria: {categoria}")
         candidatos = [
@@ -263,7 +261,6 @@ def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
             and (subcategoria is None or subcategoria in i.get("subcategorias", []))
         ]
 
-    # 🚫 se ainda não tem nada → falha mesmo
     if not candidatos:
         return None
 
@@ -277,22 +274,30 @@ def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
         if i["nome"] not in ULTIMOS_USADOS[chave]
     ]
 
-    item = random.choice(filtrados or candidatos)
+    item_escolhido = random.choice(filtrados or candidatos)
 
-    usar = min(item["quantidade"], qtd)
-    item["quantidade"] -= usar
+    # 🔥 transformação (sem afetar estoque)
+    item_final = (
+        preparar_item_bruto(item_escolhido)
+        if item_precisa_preparo(item_escolhido)
+        else item_escolhido
+    ) or item_escolhido
 
-    ULTIMOS_USADOS[chave].append(item["nome"])
+    usar = min(item_escolhido["quantidade"], qtd)
+    item_escolhido["quantidade"] -= usar
+
+    # 🔥 controle de repetição CORRETO
+    ULTIMOS_USADOS[chave].append(item_escolhido["nome"])
 
     if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
         ULTIMOS_USADOS[chave].pop(0)
 
     return {
-        "nome": item["nome"],
+        "nome": item_final["nome"],
         "quantidade": usar,
-        "unidade": item["unidade"],
-        "categorias": item.get("categorias", []),
-        "subcategorias": item.get("subcategorias", [])
+        "unidade": item_final.get("unidade", item_escolhido["unidade"]),
+        "categorias": item_final.get("categorias", []),
+        "subcategorias": item_final.get("subcategorias", [])
     }
 
 # =========================
@@ -379,6 +384,54 @@ def gerar_preparo_pf(proteina, carbo, legume=None, folha=None):
     ]
 
     return preparo
+
+def item_precisa_preparo(item):
+    nome = normalizar(item["nome"])
+
+    return any(x in nome for x in [
+        "inteiro", "frango inteiro", "peixe inteiro"
+    ])
+
+def preparar_item_bruto(item):
+    nome = normalizar(item["nome"])
+    categorias = item.get("categorias", [])
+
+    # =========================
+    # 🥩 PROTEÍNAS GRANDES (KG)
+    # =========================
+    if "inteiro" in nome and "proteina" in categorias:
+        nome_base = item["nome"].replace("inteiro", "").strip()
+
+        return {
+            "nome": f"{nome_base} em pedaços",
+            "quantidade": item["quantidade"] * 0.65,  # perda realista
+            "unidade": "g",
+            "categorias": categorias,
+            "subcategorias": item.get("subcategorias", [])
+        }
+
+    return item
+
+def eh_cafe_po(item):
+    nome = normalizar(item["nome"])
+    return "cafe" in nome and item["unidade"] == "g"
+
+def preparar_cafe(item, ml_desejado=200):
+    # proporção média: 10g → 100ml
+    proporcao = 0.1
+
+    g_necessario = ml_desejado * proporcao
+
+    if item["quantidade"] < g_necessario:
+        return None
+
+    item["quantidade"] -= g_necessario
+
+    return {
+        "nome": "café preparado",
+        "quantidade": ml_desejado,
+        "unidade": "ml"
+    }
 
 def ajustar_porcionamento(item):
     if not item:
