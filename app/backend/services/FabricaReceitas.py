@@ -399,7 +399,7 @@ def preparar_item_bruto(item):
     nome = normalizar(item["nome"])
     categorias = item.get("categorias", [])
 
-    if "inteiro" in nome and "proteinaKG" in categorias:
+    if "inteiro" in nome and "proteina" in categorias:
         nome_base = item["nome"].replace("inteiro", "").strip()
 
         return {
