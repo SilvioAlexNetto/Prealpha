@@ -32,7 +32,7 @@ ULTIMOS_USADOS = {
     "fermentos": []
 }
 
-MAX_REPETICAO = 2
+MAX_REPETICAO = 4
 
 # =========================
 # PROTEÍNA
@@ -236,15 +236,34 @@ def classificar_estoque(estoque):
 # =========================
 # CONSUMO
 # =========================
-def consumir(estoque, categoria, qtd, subcategoria=None):
+def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
 
+    # 🔴 filtro principal (com bloqueio opcional)
     candidatos = [
         i for i in estoque
         if categoria in i["categorias"]
         and i["quantidade"] > 0
         and (subcategoria is None or subcategoria in i.get("subcategorias", []))
+        and (
+            not bloquear or
+            (
+                "cereal" not in i["categorias"] and
+                "farinha" not in i["categorias"]
+            )
+        )
     ]
 
+    # 🔁 fallback: se bloqueio zerou opções, ignora bloqueio
+    if not candidatos and bloquear:
+        print(f"[FALLBACK] Liberando bloqueio para categoria: {categoria}")
+        candidatos = [
+            i for i in estoque
+            if categoria in i["categorias"]
+            and i["quantidade"] > 0
+            and (subcategoria is None or subcategoria in i.get("subcategorias", []))
+        ]
+
+    # 🚫 se ainda não tem nada → falha mesmo
     if not candidatos:
         return None
 
@@ -677,8 +696,8 @@ def gerar_almoco(estoque):
         # 🍽️ PF
         # =========================
         if tipo == "pf":
-            proteina = consumir(estoque, "proteina", 120)
-            carbo = consumir(estoque, "carbo", 100)
+            proteina = consumir(estoque, "proteina", 120, bloquear=True)
+            carbo = consumir(estoque, "carbo", 100, bloquear=True)
 
             if proteina and proteina.get("subcategoria") == "liquido":
                 continue
@@ -729,7 +748,7 @@ def gerar_almoco(estoque):
 
             massa = consumir(estoque_temp, "massa", 100)
             molho = consumir(estoque_temp, "molho", 50)
-            proteina = consumir(estoque_temp, "proteina", 100)
+            proteina = consumir(estoque_temp, "proteina", 100, bloquear=True)
 
             if not receita_valida(massa, molho, proteina):
                 continue
@@ -796,8 +815,8 @@ def gerar_janta(estoque):
         # 🍽️ PF (REUTILIZA ALMOÇO)
         # =========================
         if tipo == "pf":
-            proteina = consumir(estoque, "proteina", 120)
-            carbo = consumir(estoque, "carbo", 100)
+            proteina = consumir(estoque, "proteina", 120, bloquear=True)
+            carbo = consumir(estoque, "carbo", 100, bloquear=True)
 
             if not receita_valida(proteina, carbo):
                 continue
@@ -845,7 +864,7 @@ def gerar_janta(estoque):
 
             massa = consumir(estoque_temp, "massa", 100)
             molho = consumir(estoque_temp, "molho", 50)
-            proteina = consumir(estoque_temp, "proteina", 100)
+            proteina = consumir(estoque_temp, "proteina", 100, bloquear=True)
 
             if not receita_valida(massa, molho, proteina):
                 continue
@@ -898,7 +917,7 @@ def gerar_janta(estoque):
         # 🍲 SOPA (UPGRADE REAL)
         # =========================
         else:
-            proteina = consumir(estoque, "proteina", 80)
+            proteina = consumir(estoque, "proteina", 80, bloquear=True)
             caldo = consumir(estoque, "caldo", 500)
             legume1 = consumir(estoque, "legume", 80)
             legume2 = consumir(estoque, "legume", 80)
