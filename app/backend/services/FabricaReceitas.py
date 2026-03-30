@@ -238,17 +238,7 @@ def classificar_estoque(estoque):
 # =========================
 def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
 
-    MIN_PORCAO = {
-        "proteinaCF": 50,
-        "proteina": 120,
-        "carboCF": 30,
-        "carbo": 100,
-        "liquido": 100,
-        "fruta": 1,
-        "farinha": 30,
-        "cereal": 30
-    }
-
+    # 🔴 filtro principal (com bloqueio opcional)
     candidatos = [
         i for i in estoque
         if categoria in i["categorias"]
@@ -263,7 +253,9 @@ def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
         )
     ]
 
+    # 🔁 fallback: se bloqueio zerou opções, ignora bloqueio
     if not candidatos and bloquear:
+        print(f"[FALLBACK] Liberando bloqueio para categoria: {categoria}")
         candidatos = [
             i for i in estoque
             if categoria in i["categorias"]
@@ -271,6 +263,7 @@ def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
             and (subcategoria is None or subcategoria in i.get("subcategorias", []))
         ]
 
+    # 🚫 se ainda não tem nada → falha mesmo
     if not candidatos:
         return None
 
@@ -287,15 +280,6 @@ def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
     item = random.choice(filtrados or candidatos)
 
     usar = min(item["quantidade"], qtd)
-
-    # 🔥 valida mínimo
-    minimo = MIN_PORCAO.get(categoria)
-    if minimo:
-        if item["unidade"] in ["g", "ml"] and usar < minimo:
-            return None
-        if item["unidade"] == "unidade" and usar < 1:
-            return None
-
     item["quantidade"] -= usar
 
     ULTIMOS_USADOS[chave].append(item["nome"])
@@ -408,14 +392,14 @@ def ajustar_porcionamento(item):
 
     if subcategoria == "cafe":
 
-        # 🥩 proteína
+        # 🥩 proteína café
         if categoria in ["proteina", "proteinaCF"]:
             if unidade == "unidade":
                 item["quantidade"] = 2
             elif unidade == "g":
                 item["quantidade"] = 80
 
-        # 🍞 carbo
+        # 🍞 carbo café
         elif categoria in ["carbo", "carboCF"]:
             if unidade == "fatia":
                 item["quantidade"] = 2
@@ -446,10 +430,10 @@ def ajustar_porcionamento(item):
             if unidade == "ml":
                 item["quantidade"] = 200
 
-        # 🧪 fermento (corrigido)
+        # 🧪 fermento
         elif categoria == "fermento":
             if unidade == "g":
-                item["quantidade"] = 3
+                item["quantidade"] = 5
 
     return item
 
@@ -608,7 +592,8 @@ def gerar_cafe(estoque):
 
             if prato in ["Panqueca", "Crepioca"]:
                 base_item = consumir(estoque, "farinha", 50)
-            else:
+
+            elif prato == "Mingau":
                 base_item = consumir(estoque, "cereal", 50) or consumir(estoque, "farinha", 50)
 
             liquido = consumir(estoque, "liquido", 100)
@@ -626,30 +611,21 @@ def gerar_cafe(estoque):
             if fermento:
                 ingredientes.append(fermento)
 
+            # ✅ AQUI ESTÁ A CORREÇÃO CRÍTICA
             ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
-
-            nomes = [i["nome"] for i in ingredientes]
 
             usa_recheio = prato in ["Panqueca", "Crepioca"]
 
-            proteina_nome = proteina["nome"] if proteina and proteina["nome"] in nomes else None
-            fruta_nome = fruta["nome"] if fruta and fruta["nome"] in nomes else None
-
-            nome = nome_prato_cafe(
-                prato,
-                proteina=proteina_nome,
-                fruta=None if usa_recheio else fruta_nome,
-                recheio=fruta_nome if usa_recheio else None
-            )
-
+            tem_proteina = any(i["nome"] == proteina["nome"] for i in ingredientes) if proteina else False
+            tem_fruta = any(i["nome"] == fruta["nome"] for i in ingredientes) if fruta else False
             modo_preparo = gerar_preparo_cafe(
-                prato,
-                proteina=proteina_nome,
-                liquido=liquido["nome"],
-                fruta=None if usa_recheio else fruta_nome,
-                recheio=fruta_nome if usa_recheio else None,
-            )
+            prato,
 
+            proteina=proteina["nome"],
+            liquido=liquido["nome"],
+            fruta=None if usa_recheio else (fruta["nome"] if fruta else None),
+            recheio=fruta["nome"] if usa_recheio and fruta else None,
+            )
             tempo = random.randint(10, 20)
 
         # =========================
@@ -661,15 +637,19 @@ def gerar_cafe(estoque):
             liquido = consumir(estoque, "liquido", 200)
             fruta = consumir(estoque, "fruta", 1)
 
-            if not carbo or eh_farinha(carbo):
+            if eh_farinha(carbo):
+                continue
+
+            if not carbo:
                 continue
 
             ingredientes = [carbo]
+
             adicionou_algo = False
 
-            if "cereal" in normalizar(carbo["nome"]):
+            if carbo and "cereal" in normalizar(carbo["nome"]):
 
-                if proteina and random.random() < 0.5:
+                if proteina and random.random() < 0.7:
                     ingredientes.append(proteina)
 
                 if fruta and random.random() < 0.7:
@@ -686,34 +666,20 @@ def gerar_cafe(estoque):
                     elif liquido:
                         ingredientes.append(liquido)
 
-            else:
-                if proteina:
-                    ingredientes.append(proteina)
-
-                if fruta and random.random() < 0.6:
-                    ingredientes.append(fruta)
-
-                if liquido and random.random() < 0.4:
-                    ingredientes.append(liquido)
-
+            # ✅ AQUI TAMBÉM
             ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
-
-            nomes = [i["nome"] for i in ingredientes]
-
-            proteina_nome = proteina["nome"] if proteina and proteina["nome"] in nomes else None
-            fruta_nome = fruta["nome"] if fruta and fruta["nome"] in nomes else None
 
             nome = nome_prato_cafe(
                 carbo["nome"],
-                proteina=proteina_nome,
-                fruta=fruta_nome
+                proteina=proteina["nome"] if proteina else None,
+                fruta=fruta["nome"] if fruta else None
             )
 
             modo_preparo = gerar_preparo_cafe(
                 "simples",
-                proteina=proteina_nome,
+                proteina=proteina["nome"] if proteina else None,
                 liquido=liquido["nome"] if liquido else None,
-                fruta=fruta_nome
+                fruta=fruta["nome"] if fruta else None
             )
 
             tempo = 5
