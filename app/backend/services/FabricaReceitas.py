@@ -680,7 +680,6 @@ def gerar_cafe(estoque):
 
                 liquido, tipo_leite = consumir_leite(estoque, 200)
 
-                # 🚨 sem leite = pula
                 if not liquido:
                     continue
 
@@ -696,11 +695,9 @@ def gerar_cafe(estoque):
 
                 tipo_vitamina = random.choice(["basica", "nutritiva", "fortificada"])
 
-                # 🥤 Básica
                 if tipo_vitamina == "basica":
                     frutas_usadas = [fruta1]
 
-                # 💪 Nutritiva
                 elif tipo_vitamina == "nutritiva":
                     if fruta2:
                         ingredientes.append(fruta2)
@@ -711,7 +708,6 @@ def gerar_cafe(estoque):
 
                     frutas_usadas = [f for f in [fruta1, fruta2, fruta3] if f]
 
-                # ⚡ Fortificada
                 else:
                     if fruta2:
                         ingredientes.append(fruta2)
@@ -720,16 +716,26 @@ def gerar_cafe(estoque):
 
                     frutas_usadas = [f for f in [fruta1, fruta2, fruta3] if f]
 
+                # 🔥 porcionamento
                 ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
+
+                # 🔥 consolidação
                 ingredientes = consolidar_ingredientes(ingredientes)
 
-                nomes_ingredientes = [i["nome"] for i in ingredientes]
-                nomes_frutas = [f["nome"] for f in frutas_usadas if f and f["nome"] in nomes_ingredientes]
+                # 🔥 nomes REAIS (baseado no resultado final)
+                nomes_frutas = [
+                    i["nome"] for i in ingredientes
+                    if "fruta" in i.get("categorias", []) or "fruta" in i.get("subcategorias", [])
+                ]
 
-                nome = f"Vitamina de {' e '.join(nomes_frutas)} com {tipo_leite}"
+                # 🔥 remove duplicados mantendo ordem
+                nomes_frutas_unicos = list(dict.fromkeys(nomes_frutas))
+
+                # 🔥 nome final LIMPO
+                nome = f"Vitamina de {' e '.join(nomes_frutas_unicos)} com {tipo_leite}"
 
                 modo_preparo = [
-                    f"Adicione {', '.join(nomes_frutas)} no liquidificador.",
+                    f"Adicione {' e '.join(nomes_frutas_unicos)} no liquidificador.",
                     f"Acrescente {tipo_leite}.",
                     "Bata até obter uma mistura homogênea.",
                     "Sirva gelado."
