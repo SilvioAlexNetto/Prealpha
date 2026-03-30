@@ -275,33 +275,39 @@ def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
 
     item = random.choice(filtrados or candidatos)
 
-    # 🔥 AQUI MUDA TUDO
-    item_convertido = (
-        preparar_item_bruto(item)
-        if item_precisa_preparo(item)
-        else item
-    )
+    # 🔥 CONVERSÃO (ANTES do consumo lógico)
+    convertido = item_precisa_preparo(item)
 
+    if convertido:
+        item_convertido = preparar_item_bruto(item)
+    else:
+        item_convertido = item
+
+    # 🔥 CONSUMO REAL (sempre do item original)
     usar = min(item["quantidade"], qtd)
     item["quantidade"] -= usar
 
-    quantidade_final = usar
-
-    if item_convertido != item:
+    # 🔥 QUANTIDADE FINAL (ajustada se houve conversão)
+    if convertido:
         quantidade_final = usar * 0.65
+    else:
+        quantidade_final = usar
 
-    ULTIMOS_USADOS[chave].append(item_convertido["nome"])
+    # 🔥 MONTA RESULTADO (IMPORTANTE: NOVO OBJETO)
+    resultado = {
+        "nome": item_convertido["nome"],
+        "quantidade": quantidade_final,
+        "unidade": item_convertido.get("unidade", item["unidade"]),
+        "categorias": item_convertido.get("categorias", item.get("categorias", [])),
+        "subcategorias": item_convertido.get("subcategorias", item.get("subcategorias", []))
+    }
+
+    ULTIMOS_USADOS[chave].append(resultado["nome"])
 
     if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
         ULTIMOS_USADOS[chave].pop(0)
 
-    return {
-        "nome": item_convertido["nome"],
-        "quantidade": quantidade_final,
-        "unidade": item_convertido["unidade"],
-        "categorias": item_convertido.get("categorias", []),
-        "subcategorias": item_convertido.get("subcategorias", [])
-    }
+    return resultado
 
 # =========================
 # VALIDAÇÃO
