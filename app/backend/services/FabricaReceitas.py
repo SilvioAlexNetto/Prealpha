@@ -168,6 +168,7 @@ def normalizar(texto):
 # =========================
 # CLASSIFICAÇÃO DO ESTOQUE
 # =========================
+
 def classificar_estoque(estoque):
     estoque_classificado = []
 
@@ -189,6 +190,13 @@ def classificar_estoque(estoque):
         ("bruto", produtoBruto, "ambos")
     ]
 
+    # 🔥 MATCH SEGURO (PALAVRA)
+    def match_seguro(nome_item, termo):
+        nome = normalizar(nome_item)
+        termo = normalizar(termo)
+        palavras = nome.split()
+        return termo in palavras
+
     for item in estoque:
         nome_original = item["nome"]
         nome = normalizar(nome_original)
@@ -196,20 +204,44 @@ def classificar_estoque(estoque):
         categorias_encontradas = []
         subcategorias_encontradas = []
 
+        # =========================
+        # 🔍 CLASSIFICAÇÃO SEGURA
+        # =========================
         for cat, lista, sub in categorias:
-            if any(normalizar(x) in nome for x in lista):
+            if any(match_seguro(nome_original, x) for x in lista):
                 categorias_encontradas.append(cat)
                 subcategorias_encontradas.append(sub)
 
-        # fallback inteligente
+        # =========================
+        # 🔥 FALLBACK INTELIGENTE
+        # =========================
         if not categorias_encontradas:
             if any(x in nome for x in ["arroz", "feijao", "batata"]):
                 categorias_encontradas.append("carbo")
+                subcategorias_encontradas.append("ambos")
             elif any(x in nome for x in ["frango", "carne", "ovo"]):
                 categorias_encontradas.append("proteina")
+                subcategorias_encontradas.append("ambos")
             elif "leite" in nome:
                 categorias_encontradas.append("liquido")
+                subcategorias_encontradas.append("cafe")
 
+        # =========================
+        # 🛡️ ANTI-CONFLITO (CRÍTICO)
+        # =========================
+        if "massa" in categorias_encontradas and "fruta" in categorias_encontradas:
+            idx = categorias_encontradas.index("fruta")
+            categorias_encontradas.pop(idx)
+            subcategorias_encontradas.pop(idx)
+
+        if "massa" in categorias_encontradas and "carboCF" in categorias_encontradas:
+            idx = categorias_encontradas.index("carboCF")
+            categorias_encontradas.pop(idx)
+            subcategorias_encontradas.pop(idx)
+
+        # =========================
+        # 📏 NORMALIZA UNIDADE
+        # =========================
         if categorias_encontradas:
             unidade = str(item.get("unidade", "")).strip().lower()
             quantidade = float(item.get("quantidade", 0))
