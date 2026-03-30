@@ -398,14 +398,14 @@ def item_precisa_preparo(item):
     nome = normalizar(item["nome"])
 
     return any(x in nome for x in [
-        "inteiro", "frango inteiro", "peixe inteiro"
+        "inteiro", "inteira", "frango inteiro", "peixe inteiro"
     ])
 
 def preparar_item_bruto(item):
     nome = normalizar(item["nome"])
     categorias = item.get("categorias", [])
 
-    if "inteiro" in nome and "proteina" in categorias:
+    if "inteiro" or "inteira" in nome and "proteina" in categorias:
         nome_base = item["nome"].replace("inteiro", "").strip()
 
         return {
