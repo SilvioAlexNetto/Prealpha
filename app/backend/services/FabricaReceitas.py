@@ -7,7 +7,7 @@ from copy import deepcopy
 from app.backend.services.bases import (
     proteinasUN, proteinasKG, legumes, carboidratos,
     folhas_saladas, massas, proteinas_proibidas_sopa,
-    molhos, caldos, frutas, proteinasCF, carboidratosCF, liquidos, cereais, farinhas, fermentos
+    molhos, caldos, frutas, proteinasCF, carboidratosCF, liquidos, cereais, farinhas, fermentos, produtoBruto
 )
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -29,7 +29,8 @@ ULTIMOS_USADOS = {
     "liquidos": [],
     "cereais": [],
     "farinhas": [],
-    "fermentos": []
+    "fermentos": [],
+    "produtoBruto": []
 }
 
 MAX_REPETICAO = 4
@@ -184,7 +185,8 @@ def classificar_estoque(estoque):
         ("farinha", farinhas, "cafe"),
         ("cereal", cereais, "cafe"),
         ("caldo", [c["nome"] for c in caldos], "ambos"),
-        ("fruta", frutas, "cafe")
+        ("fruta", frutas, "cafe"),
+        ("bruto", produtoBruto, "ambos")
     ]
 
     for item in estoque:
@@ -402,14 +404,18 @@ def item_precisa_preparo(item):
     ])
 
 def preparar_item_bruto(item):
-    nome = normalizar(item["nome"])
+    nome_original = item["nome"]
+    nome = normalizar(nome_original)
     categorias = item.get("categorias", [])
 
-    if "inteiro" in nome and "proteina" in categorias:
-        nome_base = item["nome"].replace("inteiro", "").strip()
+    if "proteina" in categorias and ("inteiro" in nome or "inteira" in nome):
 
-    elif "inteira" in nome and "proteina" in categorias:
-        nome_base = item["nome"].replace("inteira", "").strip()
+        # 🔥 remove ambos de forma segura
+        nome_base = nome_original.lower()
+        nome_base = nome_base.replace("inteiro", "").replace("inteira", "").strip()
+
+        # 🔥 restaura capitalização básica
+        nome_base = nome_base.capitalize()
 
         return {
             "nome": f"{nome_base} em pedaços",
@@ -439,6 +445,44 @@ def preparar_cafe(item, ml_desejado=200):
         "nome": "café preparado",
         "quantidade": ml_desejado,
         "unidade": "ml"
+    }
+
+def consumir_cafe_completo(estoque):
+    # 🔍 acha café em pó
+    cafes = [
+        i for i in estoque
+        if eh_cafe_po(i) and i["quantidade"] > 0
+    ]
+
+    if not cafes:
+        return None
+
+    cafe_item = random.choice(cafes)
+
+    # tenta preparar café
+    cafe_preto = preparar_cafe(cafe_item, 200)
+
+    if not cafe_preto:
+        return None
+
+    # 🔥 tenta pegar leite (opcional)
+    leite, tipo_leite = consumir_leite(estoque, 100)
+
+    if leite and random.random() < 0.6:
+        return {
+            "nome": "café com leite",
+            "quantidade": 200,
+            "unidade": "ml",
+            "categorias": ["bebida"],
+            "subcategorias": ["cafe"]
+        }
+
+    return {
+        "nome": "café preto",
+        "quantidade": 200,
+        "unidade": "ml",
+        "categorias": ["bebida"],
+        "subcategorias": ["cafe"]
     }
 
 def ajustar_porcionamento(item):
@@ -500,9 +544,6 @@ def ajustar_porcionamento(item):
 
     return item
 
-# =========================
-# CAFÉ
-# =========================
 # =========================
 # 🍽️ CAFÉ - NOME PROFISSIONAL
 # =========================
@@ -875,7 +916,7 @@ def gerar_cafe(estoque):
             prato = random.choice(["Panqueca", "Mingau", "Crepioca", "Vitamina"])
 
             # =========================
-            # 🥤 VITAMINA (NOVO)
+            # 🥤 VITAMINA
             # =========================
             if prato == "Vitamina":
 
@@ -896,10 +937,7 @@ def gerar_cafe(estoque):
 
                 tipo_vitamina = random.choice(["basica", "nutritiva", "fortificada"])
 
-                if tipo_vitamina == "basica":
-                    frutas_usadas = [fruta1]
-
-                elif tipo_vitamina == "nutritiva":
+                if tipo_vitamina == "nutritiva":
                     if fruta2:
                         ingredientes.append(fruta2)
                     if fruta3:
@@ -907,32 +945,22 @@ def gerar_cafe(estoque):
                     if cereal:
                         ingredientes.append(cereal)
 
-                    frutas_usadas = [f for f in [fruta1, fruta2, fruta3] if f]
-
-                else:
+                elif tipo_vitamina == "fortificada":
                     if fruta2:
                         ingredientes.append(fruta2)
                     if fruta3 and random.random() < 0.5:
                         ingredientes.append(fruta3)
 
-                    frutas_usadas = [f for f in [fruta1, fruta2, fruta3] if f]
-
-                # 🔥 porcionamento
                 ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
-
-                # 🔥 consolidação
                 ingredientes = consolidar_ingredientes(ingredientes)
 
-                # 🔥 nomes REAIS (baseado no resultado final)
                 nomes_frutas = [
                     i["nome"] for i in ingredientes
                     if "fruta" in i.get("categorias", []) or "fruta" in i.get("subcategorias", [])
                 ]
 
-                # 🔥 remove duplicados mantendo ordem
                 nomes_frutas_unicos = list(dict.fromkeys(nomes_frutas))
 
-                # 🔥 nome final LIMPO
                 nome = f"Vitamina de {' e '.join(nomes_frutas_unicos)} com {tipo_leite}"
 
                 modo_preparo = [
@@ -945,7 +973,7 @@ def gerar_cafe(estoque):
                 tempo = 5
 
             # =========================
-            # 🍽️ OUTROS ROBUSTOS (INALTERADO)
+            # 🍽️ OUTROS ROBUSTOS
             # =========================
             else:
                 if prato in ["Panqueca", "Crepioca"]:
@@ -1001,64 +1029,76 @@ def gerar_cafe(estoque):
             liquido = consumir(estoque, "liquido", 200)
             fruta = consumir(estoque, "fruta", 1)
 
-            if not carbo or eh_farinha(carbo):
-                continue
+            cafe = consumir_cafe_completo(estoque)
 
-            ingredientes = [carbo]
-            adicionou_algo = False
-
-            # 🥣 CEREAL
-            if "cereal" in normalizar(carbo["nome"]):
-
-                if proteina and random.random() < 0.5:
-                    ingredientes.append(proteina)
-
-                if fruta and random.random() < 0.7:
-                    ingredientes.append(fruta)
-                    adicionou_algo = True
-
-                if liquido and random.random() < 0.7:
-                    ingredientes.append(liquido)
-                    adicionou_algo = True
-
-                if not adicionou_algo:
-                    if fruta:
-                        ingredientes.append(fruta)
-                    elif liquido:
-                        ingredientes.append(liquido)
-
-            # 🍞 NÃO CEREAL
+            # 🔥 fallback inteligente (estoque fraco)
+            if not carbo:
+                if fruta:
+                    ingredientes = [ajustar_porcionamento(fruta)]
+                    nome = f"{fruta['nome']}"
+                    modo_preparo = [
+                        f"Lave e prepare {fruta['nome']}.",
+                        "Sirva pronto para consumo."
+                    ]
+                    tempo = 2
+                elif proteina:
+                    ingredientes = [ajustar_porcionamento(proteina)]
+                    nome = f"{proteina['nome']}"
+                    modo_preparo = [
+                        f"Separe {proteina['nome']} para consumo.",
+                        "Pronto para consumo."
+                    ]
+                    tempo = 2
+                else:
+                    continue
             else:
+                ingredientes = [carbo]
+
+                if cafe and random.random() < 0.8:
+                    ingredientes.append(cafe)
+
                 if proteina:
                     ingredientes.append(proteina)
 
                 if fruta and random.random() < 0.6:
                     ingredientes.append(fruta)
 
-                if liquido and random.random() < 0.4:
+                if liquido and random.random() < 0.3:
                     ingredientes.append(liquido)
 
-            ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
+                ingredientes = [ajustar_porcionamento(i) for i in ingredientes if i]
 
-            nomes_ingredientes = [i["nome"] for i in ingredientes]
+                nomes_ingredientes = [i["nome"] for i in ingredientes]
 
-            tem_proteina = proteina["nome"] if proteina and proteina["nome"] in nomes_ingredientes else None
-            tem_fruta = fruta["nome"] if fruta and fruta["nome"] in nomes_ingredientes else None
+                tem_proteina = proteina["nome"] if proteina and proteina["nome"] in nomes_ingredientes else None
+                tem_fruta = fruta["nome"] if fruta and fruta["nome"] in nomes_ingredientes else None
 
-            nome = nome_prato_cafe(
-                carbo["nome"],
-                proteina=tem_proteina,
-                fruta=tem_fruta
-            )
+                nome_base = nome_prato_cafe(
+                    carbo["nome"],
+                    proteina=tem_proteina,
+                    fruta=tem_fruta
+                )
 
-            modo_preparo = gerar_preparo_cafe(
-                "simples",
-                proteina=tem_proteina,
-                liquido=liquido["nome"] if liquido else None,
-                fruta=tem_fruta
-            )
+                if cafe:
+                    nome = f"{nome_base} com {cafe['nome']}"
+                else:
+                    nome = nome_base
 
-            tempo = 5
+                modo_preparo = gerar_preparo_cafe(
+                    "simples",
+                    proteina=tem_proteina,
+                    liquido=liquido["nome"] if liquido else None,
+                    fruta=tem_fruta
+                )
+
+                if cafe:
+                    modo_preparo.append(random.choice([
+                        "Sirva com café fresco como acompanhamento.",
+                        "Acompanhe com uma xícara de café.",
+                        "Finalize com café preparado na hora."
+                    ]))
+
+                tempo = 5
 
         receita = {
             "nome": nome,

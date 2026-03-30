@@ -208,6 +208,10 @@ fermentos = [
     "Fermento em pó"
 ]
 
+produtoBruto = [
+    "cafe"
+]
+
 farinhas = [
     "farinha de trigo", "farinha de trigo integral",
     "farinha de aveia", "farinha de arroz", "farinha de centeio",
