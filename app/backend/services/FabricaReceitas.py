@@ -253,7 +253,6 @@ def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
     ]
 
     if not candidatos and bloquear:
-        print(f"[FALLBACK] Liberando bloqueio para categoria: {categoria}")
         candidatos = [
             i for i in estoque
             if categoria in i["categorias"]
@@ -274,30 +273,34 @@ def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
         if i["nome"] not in ULTIMOS_USADOS[chave]
     ]
 
-    item_escolhido = random.choice(filtrados or candidatos)
+    item = random.choice(filtrados or candidatos)
 
-    # 🔥 transformação (sem afetar estoque)
-    item_final = (
-        preparar_item_bruto(item_escolhido)
-        if item_precisa_preparo(item_escolhido)
-        else item_escolhido
-    ) or item_escolhido
+    # 🔥 AQUI MUDA TUDO
+    item_convertido = (
+        preparar_item_bruto(item)
+        if item_precisa_preparo(item)
+        else item
+    )
 
-    usar = min(item_escolhido["quantidade"], qtd)
-    item_escolhido["quantidade"] -= usar
+    usar = min(item["quantidade"], qtd)
+    item["quantidade"] -= usar
 
-    # 🔥 controle de repetição CORRETO
-    ULTIMOS_USADOS[chave].append(item_escolhido["nome"])
+    quantidade_final = usar
+
+    if item_convertido != item:
+        quantidade_final = usar * 0.65
+
+    ULTIMOS_USADOS[chave].append(item_convertido["nome"])
 
     if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
         ULTIMOS_USADOS[chave].pop(0)
 
     return {
-        "nome": item_final["nome"],
-        "quantidade": usar,
-        "unidade": item_final.get("unidade", item_escolhido["unidade"]),
-        "categorias": item_final.get("categorias", []),
-        "subcategorias": item_final.get("subcategorias", [])
+        "nome": item_convertido["nome"],
+        "quantidade": quantidade_final,
+        "unidade": item_convertido["unidade"],
+        "categorias": item_convertido.get("categorias", []),
+        "subcategorias": item_convertido.get("subcategorias", [])
     }
 
 # =========================
@@ -396,15 +399,11 @@ def preparar_item_bruto(item):
     nome = normalizar(item["nome"])
     categorias = item.get("categorias", [])
 
-    # =========================
-    # 🥩 PROTEÍNAS GRANDES (KG)
-    # =========================
-    if "inteiro" in nome and "proteina" in categorias:
+    if "inteiro" in nome and "proteinaKG" in categorias:
         nome_base = item["nome"].replace("inteiro", "").strip()
 
         return {
             "nome": f"{nome_base} em pedaços",
-            "quantidade": item["quantidade"] * 0.65,  # perda realista
             "unidade": "g",
             "categorias": categorias,
             "subcategorias": item.get("subcategorias", [])
