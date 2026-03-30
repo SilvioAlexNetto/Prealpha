@@ -1016,6 +1016,7 @@ def gerar_cafe(estoque):
 # =========================
 # ALMOÇO 
 # =========================
+
 def gerar_almoco(estoque):
     receitas = []
 
@@ -1041,12 +1042,22 @@ def gerar_almoco(estoque):
 
             ingredientes = [proteina, carbo]
 
+            # 🥕 LEGUME (CORRIGIDO)
             legume = consumir(estoque, "legume", 80)
             if legume:
+                if legume["unidade"] == "g":
+                    legume["quantidade"] = 80
+                elif legume["unidade"] == "unidade":
+                    legume["quantidade"] = 1
                 ingredientes.append(legume)
 
+            # 🥬 FOLHA (CORRIGIDO)
             folha = consumir(estoque, "folha", 50)
             if folha:
+                if folha["unidade"] == "g":
+                    folha["quantidade"] = 50
+                elif folha["unidade"] == "unidade":
+                    folha["quantidade"] = 1
                 ingredientes.append(folha)
 
             nome = nome_prato_pf(
@@ -1089,12 +1100,22 @@ def gerar_almoco(estoque):
 
             ingredientes = [massa, molho, proteina]
 
+            # 🥕 LEGUME (CORRIGIDO)
             legume = consumir(estoque_temp, "legume", 80)
             if legume:
+                if legume["unidade"] == "g":
+                    legume["quantidade"] = 80
+                elif legume["unidade"] == "unidade":
+                    legume["quantidade"] = 1
                 ingredientes.append(legume)
 
+            # 🥬 FOLHA (CORRIGIDO)
             folha = consumir(estoque_temp, "folha", 50)
             if folha:
+                if folha["unidade"] == "g":
+                    folha["quantidade"] = 50
+                elif folha["unidade"] == "unidade":
+                    folha["quantidade"] = 1
                 ingredientes.append(folha)
 
             # aplica consumo real
@@ -1146,7 +1167,7 @@ def gerar_janta(estoque):
         tipo = random.choice(["pf", "massa", "sopa"])
 
         # =========================
-        # 🍽️ PF (REUTILIZA ALMOÇO)
+        # 🍽️ PF
         # =========================
         if tipo == "pf":
             proteina = consumir(estoque, "proteina", 120, bloquear=True)
@@ -1157,12 +1178,22 @@ def gerar_janta(estoque):
 
             ingredientes = [proteina, carbo]
 
+            # 🥕 LEGUME (CORRIGIDO)
             legume = consumir(estoque, "legume", 80)
             if legume:
+                if legume["unidade"] == "g":
+                    legume["quantidade"] = 80
+                elif legume["unidade"] == "unidade":
+                    legume["quantidade"] = random.choice([1, 2])
                 ingredientes.append(legume)
 
+            # 🥬 FOLHA (CORRIGIDO)
             folha = consumir(estoque, "folha", 50)
             if folha:
+                if folha["unidade"] == "g":
+                    folha["quantidade"] = 50
+                elif folha["unidade"] == "unidade":
+                    folha["quantidade"] = 1
                 ingredientes.append(folha)
 
             nome = nome_prato_pf(
@@ -1191,7 +1222,7 @@ def gerar_janta(estoque):
             }
 
         # =========================
-        # 🍝 MASSA (REUTILIZA ALMOÇO)
+        # 🍝 MASSA
         # =========================
         elif tipo == "massa":
             estoque_temp = deepcopy(estoque)
@@ -1205,12 +1236,22 @@ def gerar_janta(estoque):
 
             ingredientes = [massa, molho, proteina]
 
+            # 🥕 LEGUME (CORRIGIDO)
             legume = consumir(estoque_temp, "legume", 80)
             if legume:
+                if legume["unidade"] == "g":
+                    legume["quantidade"] = 80
+                elif legume["unidade"] == "unidade":
+                    legume["quantidade"] = random.choice([1, 2])
                 ingredientes.append(legume)
 
+            # 🥬 FOLHA (CORRIGIDO)
             folha = consumir(estoque_temp, "folha", 50)
             if folha:
+                if folha["unidade"] == "g":
+                    folha["quantidade"] = 50
+                elif folha["unidade"] == "unidade":
+                    folha["quantidade"] = 1
                 ingredientes.append(folha)
 
             # aplica consumo real
@@ -1248,7 +1289,7 @@ def gerar_janta(estoque):
             }
 
         # =========================
-        # 🍲 SOPA (UPGRADE REAL)
+        # 🍲 SOPA (CORRIGIDO)
         # =========================
         else:
             proteina = consumir(estoque, "proteina", 80, bloquear=True)
@@ -1262,18 +1303,32 @@ def gerar_janta(estoque):
             if proteina["nome"] in proteinas_proibidas_sopa:
                 continue
 
+            # 🥕 AJUSTE LEGUME 1
+            if legume1:
+                if legume1["unidade"] == "g":
+                    legume1["quantidade"] = 80
+                elif legume1["unidade"] == "unidade":
+                    legume1["quantidade"] = random.choice([1, 2])
+
+            # 🥕 AJUSTE LEGUME 2 (evita duplicação ruim)
+            if legume2 and legume2["nome"] != legume1["nome"]:
+                if legume2["unidade"] == "g":
+                    legume2["quantidade"] = 80
+                elif legume2["unidade"] == "unidade":
+                    legume2["quantidade"] = random.choice([1, 2])
+            else:
+                legume2 = None  # evita "2x cenoura separada"
+
             ingredientes = [caldo, proteina, legume1]
             if legume2:
                 ingredientes.append(legume2)
 
-            # 🧠 nome mais realista
             nome = random.choice([
                 f"Sopa caseira de {proteina['nome']} com legumes",
                 f"Caldo nutritivo de {proteina['nome']} com vegetais",
                 f"Sopa leve de {proteina['nome']} com legumes frescos"
             ])
 
-            # 🔥 preparo realista
             modo_preparo = [
                 f"Aqueça o {caldo['nome']} em uma panela média.",
                 f"Adicione {proteina['nome']} e cozinhe até ficar macio.",
