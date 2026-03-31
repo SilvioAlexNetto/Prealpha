@@ -1,14 +1,14 @@
 import os
 import json
 from app.backend.services.bases import ( proteinasKG, proteinasUN, folhas_saladas, carboidratos, massas, molhos, legumes, unidades, frutas, proteinasCF, carboidratosCF, liquidos, cereais, farinhas, fermentos, produtoBruto)
+from config.paths import RECEITAS_PATH, SOBRAS_PATH
 
-# =========================
-# PATHS
-# =========================
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+def salvar_resultado(resultado):
+    with open(RECEITAS_PATH, "w", encoding="utf-8") as f:
+        json.dump(resultado["receitas"], f, ensure_ascii=False, indent=4)
 
-RECEITAS_PATH = os.path.join(BASE_DIR, "database", "BancoReceitas.json")
-SOBRAS_PATH = os.path.join(BASE_DIR, "database", "Sobras.json")
+    with open(SOBRAS_PATH, "w", encoding="utf-8") as f:
+        json.dump(resultado["sobras"], f, ensure_ascii=False, indent=4)
 
 
 # =========================
