@@ -1,7 +1,7 @@
 import os
 import json
 from app.backend.services.bases import ( proteinasKG, proteinasUN, folhas_saladas, carboidratos, massas, molhos, legumes, unidades, frutas, proteinasCF, carboidratosCF, liquidos, cereais, farinhas, fermentos, produtoBruto)
-from config.paths import RECEITAS_PATH, SOBRAS_PATH
+from app.backend.services.config.paths import RECEITAS_PATH, SOBRAS_PATH
 
 def salvar_resultado(resultado):
     with open(RECEITAS_PATH, "w", encoding="utf-8") as f:
