@@ -1,4 +1,5 @@
 import random
+from app.backend.services.preparos.proteina import tecnica_preparo
 
 def nome_prato_pf(proteina, carbo, legume=None, folha=None):
     tecnica = tecnica_preparo()

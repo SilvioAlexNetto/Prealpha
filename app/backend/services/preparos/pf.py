@@ -1,4 +1,7 @@
 import random
+from app.backend.services.preparos.carbo import preparo_carbo 
+from app.backend.services.preparos.legume import preparo_legume
+from app.backend.services.preparos.proteina import preparo_proteina
 
 def gerar_preparo_pf(proteina, carbo, legume=None, folha=None):
     preparo = []

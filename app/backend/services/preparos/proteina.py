@@ -1,5 +1,14 @@
 import random
 
+def tecnica_preparo():
+    return random.choice([
+        "grelhado",
+        "assado",
+        "cozido",
+        "selado",
+        "refogado"
+    ])
+
 def preparo_proteina(nome):
     tecnica = tecnica_preparo()
     nome_lower = nome.lower()
@@ -22,11 +31,4 @@ def preparo_proteina(nome):
 
     return [base_temp, preparo]
 
-def tecnica_preparo():
-    return random.choice([
-        "grelhado",
-        "assado",
-        "cozido",
-        "selado",
-        "refogado"
-    ])
+
