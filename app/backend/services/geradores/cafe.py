@@ -28,6 +28,8 @@ def gerar_cafe_com_copia(estoque):
 
 def gerar_cafe(estoque):
 
+    print("☕ Gerando café...")
+
     receitas = []
     tentativas = 0
 
@@ -153,6 +155,12 @@ def gerar_cafe(estoque):
             proteina = simular_consumo(estoque, "proteinaCF", 1, subcategoria="cafe")
             liquido = simular_consumo(estoque, "liquido", 200)
             fruta = simular_consumo(estoque, "fruta", 1)
+
+            simulados = [carbo, fruta]
+
+            for item in simulados:
+                if item and "ref" not in item:
+                    print("💥 ITEM INVÁLIDO (sem ref):", item)
 
             bebida, cafe_base, leite = simular_cafe_completo(estoque)
 

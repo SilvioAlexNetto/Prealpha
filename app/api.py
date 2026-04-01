@@ -92,33 +92,66 @@ async def salvar_estoque(request: Request):
     return {"status": "ok"}
 
 # =========================
-# CARDÁPIO
+# CARDÁPIO (DEBUG MODE)
 # =========================
 @app.post("/cardapio")
 def gerar_cardapio_api():
-    estoque = listar_estoque_atual()
+    try:
+        print("\n🔥 ===== INICIO CARDAPIO =====")
 
-    if not estoque:
+        estoque = listar_estoque_atual()
+        print(f"📦 Estoque carregado: {len(estoque)} itens")
+
+        if not estoque:
+            print("⚠️ Estoque vazio")
+            return {
+                "cardapio": {},
+                "estoque": []
+            }
+
+        # =========================
+        # 🔥 PASSO 1: GERAR
+        # =========================
+        print("⚙️ Gerando receitas...")
+        gerar_tudo(estoque)
+        print("✅ gerar_tudo OK")
+
+        # =========================
+        # 🔥 PASSO 2: CARREGAR
+        # =========================
+        print("📥 Carregando receitas...")
+        receitas = carregar_receitas()
+        sobras = carregar_sobras()
+
+        print(f"🍽️ Receitas: {len(receitas)}")
+        print(f"📦 Sobras: {len(sobras)}")
+
+        # =========================
+        # 🔥 PASSO 3: MONTAR
+        # =========================
+        print("📅 Montando cardápio...")
+        cardapio = montar_cardapio(receitas)
+
+        print("✅ Cardápio montado")
+        print("🔥 ===== FIM CARDAPIO =====\n")
+
         return {
-            "cardapio": {},
-            "estoque": []
+            "cardapio": cardapio,
+            "estoque": sobras
         }
 
-    # 🔥 PASSO 1: gerar receitas com base no estoque
-    gerar_tudo(estoque)
+    except Exception as e:
+        import traceback
 
-    # 🔥 PASSO 2: carregar receitas recém-geradas
-    receitas = carregar_receitas()
-    sobras = carregar_sobras()
+        print("\n💥💥💥 ERRO NO BACKEND 💥💥💥")
+        print("Erro:", str(e))
+        traceback.print_exc()
+        print("💥💥💥 FIM ERRO 💥💥💥\n")
 
-    # 🔥 PASSO 3: montar cardápio
-    cardapio = montar_cardapio(receitas)
-
-    return {
-        "cardapio": cardapio,
-        "estoque": sobras
-    }
-
+        return {
+            "erro": str(e),
+            "tipo": type(e).__name__
+        }
 # =========================
 # INGREDIENTES
 # =========================

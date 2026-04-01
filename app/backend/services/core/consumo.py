@@ -101,6 +101,11 @@ def simular_consumo(estoque, categoria, qtd, subcategoria=None, bloquear=False):
 # =========================
 def aplicar_consumo(item_simulado):
     if not item_simulado:
+        print("💥 aplicar_consumo recebeu None")
+        return
+
+    if "ref" not in item_simulado:
+        print("💥 ERRO: item sem ref", item_simulado)
         return
 
     item_real = item_simulado["ref"]

@@ -8,6 +8,8 @@ from app.backend.services.geradores.jantar import gerar_janta
 
 def gerar_tudo(estoque_usuario):
 
+    print("👉 Entrou no gerar_tudo")
+
     estoque_copia = deepcopy(estoque_usuario)
 
     estoque_classificado = classificar_estoque(estoque_copia)
