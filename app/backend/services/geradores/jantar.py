@@ -214,5 +214,6 @@ def gerar_janta(estoque):
             }
 
         receitas.append(receita)
-
+        print("receitas:", len(receitas))
+        
     return receitas

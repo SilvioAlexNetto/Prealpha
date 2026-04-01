@@ -214,5 +214,6 @@ def gerar_cafe(estoque):
         }
 
         receitas.append(receita)
+        print("receitas:", len(receitas))
 
     return receitas

@@ -148,5 +148,6 @@ def gerar_almoco(estoque):
             }
 
         receitas.append(receita)
+        print("receitas:", len(receitas))
 
     return receitas

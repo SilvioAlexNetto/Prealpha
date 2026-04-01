@@ -88,10 +88,6 @@ def simular_consumo(estoque, categoria, qtd, subcategoria=None, bloquear=False):
         "subcategorias": item_convertido.get("subcategorias", item.get("subcategorias", []))
     }
 
-    ULTIMOS_USADOS[chave].append(resultado["nome"])
-
-    if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
-        ULTIMOS_USADOS[chave].pop(0)
 
     return resultado
 
@@ -111,6 +107,25 @@ def aplicar_consumo(item_simulado):
     item_real = item_simulado["ref"]
     item_real["quantidade"] -= item_simulado["quantidade_original"]
 
+    # 🔥 CONTROLE DE REPETIÇÃO AGORA ACONTECE AQUI
+    categorias = item_simulado.get("categorias", [])
+    subcategorias = item_simulado.get("subcategorias", [])
+
+    if not categorias:
+        return
+
+    categoria = categorias[0]
+    subcategoria = subcategorias[0] if subcategorias else None
+
+    chave = f"{categoria}_{subcategoria}" if subcategoria else categoria
+
+    if chave not in ULTIMOS_USADOS:
+        ULTIMOS_USADOS[chave] = []
+
+    ULTIMOS_USADOS[chave].append(item_simulado["nome"])
+
+    if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
+        ULTIMOS_USADOS[chave].pop(0)
 
 # =========================
 # 🔥 CONSUMO LEGADO (EVITAR)
