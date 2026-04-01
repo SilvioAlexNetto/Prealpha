@@ -1,46 +1,76 @@
 import os
 import json
-from app.backend.services.bases import ( proteinasKG, proteinasUN, folhas_saladas, carboidratos, massas, molhos, legumes, unidades, frutas, proteinasCF, carboidratosCF, liquidos, cereais, farinhas, fermentos, produtoBruto)
+
+from app.backend.services.bases import (
+    proteinasKG, proteinasUN, folhas_saladas, carboidratos,
+    massas, molhos, legumes, unidades, frutas,
+    proteinasCF, carboidratosCF, liquidos,
+    cereais, farinhas, fermentos, produtoBruto
+)
+
 from app.backend.services.config.paths import RECEITAS_PATH, SOBRAS_PATH
 
-def salvar_resultado(resultado):
-    with open(RECEITAS_PATH, "w", encoding="utf-8") as f:
-        json.dump(resultado["receitas"], f, ensure_ascii=False, indent=4)
 
-    with open(SOBRAS_PATH, "w", encoding="utf-8") as f:
-        json.dump(resultado["sobras"], f, ensure_ascii=False, indent=4)
+# =========================
+# 💾 SALVAR RESULTADO
+# =========================
+def salvar_resultado(resultado):
+
+    try:
+        os.makedirs(os.path.dirname(RECEITAS_PATH), exist_ok=True)
+
+        with open(RECEITAS_PATH, "w", encoding="utf-8") as f:
+            json.dump(resultado.get("receitas", []), f, ensure_ascii=False, indent=4)
+
+        with open(SOBRAS_PATH, "w", encoding="utf-8") as f:
+            json.dump(resultado.get("sobras", []), f, ensure_ascii=False, indent=4)
+
+        print("💾 Receitas e sobras salvas com sucesso", flush=True)
+
+    except Exception as e:
+        print("💥 Erro ao salvar resultado:", e, flush=True)
 
 
 # =========================
-# CARREGAR RECEITAS
+# 📥 CARREGAR RECEITAS
 # =========================
 def carregar_receitas():
-    if not os.path.exists(RECEITAS_PATH):
-        return []
+    try:
+        if not os.path.exists(RECEITAS_PATH):
+            return []
 
-    with open(RECEITAS_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+        with open(RECEITAS_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    except Exception as e:
+        print("💥 Erro ao carregar receitas:", e, flush=True)
+        return []
 
 
 # =========================
-# CARREGAR SOBRAS
+# 📥 CARREGAR SOBRAS
 # =========================
 def carregar_sobras():
-    if not os.path.exists(SOBRAS_PATH):
+    try:
+        if not os.path.exists(SOBRAS_PATH):
+            return []
+
+        with open(SOBRAS_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    except Exception as e:
+        print("💥 Erro ao carregar sobras:", e, flush=True)
         return []
 
-    with open(SOBRAS_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
-
 
 # =========================
-# ORGANIZAR CARDÁPIO
+# 📅 ORGANIZAR CARDÁPIO
 # =========================
 def montar_cardapio(receitas):
+
     cardapio = {}
     total_dias = 31
 
-    # 🔥 separa por categoria (ESSA É A CORREÇÃO PRINCIPAL)
     cafes = [r for r in receitas if r.get("categoria") == "cafe"]
     almocos = [r for r in receitas if r.get("categoria") == "almoco"]
     jantas = [r for r in receitas if r.get("categoria") == "jantar"]
@@ -54,33 +84,22 @@ def montar_cardapio(receitas):
 
     return cardapio
 
+
 # =========================
-# LISTAR INGREDIENTES
+# 🧾 LISTAR INGREDIENTES
 # =========================
 def listar_ingredientes_e_unidades():
 
     todas_listas = (
-        proteinasKG +
-        proteinasUN +
-        folhas_saladas +
-        carboidratos +
-        massas +
-        molhos +
-        frutas +
-        proteinasCF +
-        carboidratosCF+
-        legumes +
-        liquidos +
-        cereais +
-        farinhas +
-        fermentos +
-        produtoBruto
+        proteinasKG + proteinasUN + folhas_saladas + carboidratos +
+        massas + molhos + frutas + proteinasCF + carboidratosCF +
+        legumes + liquidos + cereais + farinhas +
+        fermentos + produtoBruto
     )
 
     ingredientes = set()
 
     for item in todas_listas:
-        # 🔥 PROTEÇÃO TOTAL
         if isinstance(item, dict):
             nome = item.get("nome")
         else:
@@ -96,13 +115,14 @@ def listar_ingredientes_e_unidades():
 
 
 # =========================
-# FUNÇÃO PRINCIPAL (USO NO BACKEND)
+# 🎯 OBTER CARDÁPIO
 # =========================
 def obter_cardapio():
+
     receitas = carregar_receitas()
 
-    # 🔒 proteção
     if not receitas:
+        print("⚠️ Nenhuma receita encontrada", flush=True)
         return {
             "cardapio": {},
             "sobras": [],
@@ -111,6 +131,8 @@ def obter_cardapio():
 
     cardapio = montar_cardapio(receitas)
     sobras = carregar_sobras()
+
+    print(f"🍽️ Receitas carregadas: {len(receitas)}", flush=True)
 
     return {
         "cardapio": cardapio,
