@@ -1,10 +1,10 @@
-from config.paths import RECEITAS_PATH, SOBRAS_PATH
+from app.backend.services.config.paths import RECEITAS_PATH, SOBRAS_PATH
 from copy import deepcopy
 
-from core.classificador import classificar_estoque
-from geradores.cafe import gerar_cafe_com_copia
-from geradores.almoco import gerar_almoco
-from geradores.jantar import gerar_janta
+from app.backend.services.core.classificador import classificar_estoque
+from app.backend.services.geradores.cafe import gerar_cafe_com_copia
+from app.backend.services.geradores.almoco import gerar_almoco
+from app.backend.services.geradores.jantar import gerar_janta
 
 def gerar_tudo(estoque_usuario):
 
