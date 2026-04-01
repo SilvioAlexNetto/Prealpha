@@ -1,5 +1,4 @@
-import os
-import json
+import os, json, calendar, datetime
 
 from app.backend.services.bases import (
     proteinasKG, proteinasUN, folhas_saladas, carboidratos,
@@ -66,10 +65,16 @@ def carregar_sobras():
 # =========================
 # 📅 ORGANIZAR CARDÁPIO
 # =========================
-def montar_cardapio(receitas):
+def montar_cardapio(receitas, ano=None, mes=None):
+
+    if not ano or not mes:
+        hoje = datetime.now()
+        ano = hoje.year
+        mes = hoje.month
+
+    total_dias = calendar.monthrange(ano, mes)[1]
 
     cardapio = {}
-    total_dias = 31
 
     cafes = [r for r in receitas if r.get("categoria") == "cafe"]
     almocos = [r for r in receitas if r.get("categoria") == "almoco"]
@@ -117,22 +122,19 @@ def listar_ingredientes_e_unidades():
 # =========================
 # 🎯 OBTER CARDÁPIO
 # =========================
-def obter_cardapio():
+def obter_cardapio(ano=None, mes=None):
 
     receitas = carregar_receitas()
 
     if not receitas:
-        print("⚠️ Nenhuma receita encontrada", flush=True)
         return {
             "cardapio": {},
             "sobras": [],
             "total_receitas": 0
         }
 
-    cardapio = montar_cardapio(receitas)
+    cardapio = montar_cardapio(receitas, ano, mes)
     sobras = carregar_sobras()
-
-    print(f"🍽️ Receitas carregadas: {len(receitas)}", flush=True)
 
     return {
         "cardapio": cardapio,
