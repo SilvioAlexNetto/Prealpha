@@ -4,7 +4,6 @@ from copy import deepcopy
 from app.backend.services.core.consumo import (
     simular_consumo,
     simular_leite,
-    simular_cafe_completo,
     aplicar_consumo,
     ajustar_porcionamento
 )
@@ -18,6 +17,7 @@ def gerar_cafe_com_copia(estoque, total_dias):
     estoque_temp = deepcopy(estoque)
     receitas = gerar_cafe(estoque_temp, total_dias)
 
+    # aplica consumo no estoque real
     for item_temp in estoque_temp:
         for item_real in estoque:
             if item_temp["nome"] == item_real["nome"]:
@@ -33,7 +33,7 @@ def gerar_cafe(estoque, total_dias):
     receitas = []
     tentativas = 0
 
-    while len(receitas) < total_dias and tentativas < 300:
+    while len(receitas) < total_dias and tentativas < 400:
         tentativas += 1
 
         ingredientes = []
@@ -48,93 +48,92 @@ def gerar_cafe(estoque, total_dias):
         # =========================
         if tipo_prato == "robusto":
 
-            prato = random.choice(["Panqueca", "Mingau", "Crepioca", "Vitamina"])
+            prato = random.choice(["Vitamina", "Panqueca", "Mingau", "Crepioca"])
 
+            # -------------------------
             # 🥤 VITAMINA
+            # -------------------------
             if prato == "Vitamina":
 
                 liquido, tipo_leite = simular_leite(estoque, 200)
                 fruta1 = simular_consumo(estoque, "fruta", 1)
 
-                if liquido and fruta1:
+                if not liquido or not fruta1:
+                    continue  # 🔥 NÃO consome nada
 
-                    fruta2 = simular_consumo(estoque, "fruta", 1)
-                    fruta3 = simular_consumo(estoque, "fruta", 1)
-                    cereal = simular_consumo(estoque, "cereal", 30)
+                fruta2 = simular_consumo(estoque, "fruta", 1)
+                cereal = simular_consumo(estoque, "cereal", 30)
 
-                    ingredientes = [liquido, fruta1]
+                ingredientes_temp = [liquido, fruta1]
 
-                    if fruta2:
-                        ingredientes.append(fruta2)
-                    if fruta3 and random.random() < 0.5:
-                        ingredientes.append(fruta3)
-                    if cereal and random.random() < 0.5:
-                        ingredientes.append(cereal)
+                if fruta2:
+                    ingredientes_temp.append(fruta2)
 
-                    # 🔥 CONSOME SÓ AGORA
-                    for i in ingredientes:
-                        aplicar_consumo(i)
+                if cereal and random.random() < 0.5:
+                    ingredientes_temp.append(cereal)
 
-                    ingredientes = [ajustar_porcionamento(i) for i in ingredientes]
-                    ingredientes = consolidar_ingredientes(ingredientes)
+                # 🔥 AGORA SIM consome
+                for i in ingredientes_temp:
+                    aplicar_consumo(i)
 
-                    frutas_nome = [
-                        i["nome"] for i in ingredientes
-                        if "fruta" in i.get("categorias", []) or "fruta" in i.get("subcategorias", [])
-                    ]
+                ingredientes = [ajustar_porcionamento(i) for i in ingredientes_temp]
+                ingredientes = consolidar_ingredientes(ingredientes)
 
-                    frutas_nome = list(dict.fromkeys(frutas_nome))
+                frutas_nome = [
+                    i["nome"] for i in ingredientes
+                    if "fruta" in i.get("categorias", [])
+                ]
 
-                    nome = f"Vitamina de {' e '.join(frutas_nome)} com {tipo_leite}"
+                nome = f"Vitamina de {' e '.join(frutas_nome)} com {tipo_leite}"
 
-                    modo_preparo = [
-                        f"Bata {' e '.join(frutas_nome)} com {tipo_leite}.",
-                        "Sirva gelado."
-                    ]
+                modo_preparo = [
+                    f"Bata {' e '.join(frutas_nome)} com {tipo_leite}.",
+                    "Sirva gelado."
+                ]
 
-                    tempo = 5
+                tempo = 5
 
-            # 🍽️ OUTROS
+            # -------------------------
+            # 🍽️ OUTROS ROBUSTOS
+            # -------------------------
             else:
 
-                base = simular_consumo(estoque, "farinha", 50) if prato in ["Panqueca", "Crepioca"] \
-                    else simular_consumo(estoque, "cereal", 50) or simular_consumo(estoque, "farinha", 50)
+                base = simular_consumo(estoque, "farinha", 50) \
+                    or simular_consumo(estoque, "cereal", 50)
 
                 liquido = simular_consumo(estoque, "liquido", 100)
                 proteina = simular_consumo(estoque, "proteinaCF", 1, subcategoria="cafe")
 
-                if base and liquido and proteina:
+                if not base or not liquido or not proteina:
+                    continue  # 🔥 NÃO consome
 
-                    fruta = simular_consumo(estoque, "fruta", 1)
-                    fermento = simular_consumo(estoque, "fermento", 5) if prato == "Panqueca" else None
+                fruta = simular_consumo(estoque, "fruta", 1)
 
-                    ingredientes = [base, liquido, proteina]
+                ingredientes_temp = [base, liquido, proteina]
 
-                    if fruta:
-                        ingredientes.append(fruta)
-                    if fermento:
-                        ingredientes.append(fermento)
+                if fruta:
+                    ingredientes_temp.append(fruta)
 
-                    # 🔥 CONSOME SÓ AGORA
-                    for i in ingredientes:
-                        aplicar_consumo(i)
+                # 🔥 consome só aqui
+                for i in ingredientes_temp:
+                    aplicar_consumo(i)
 
-                    ingredientes = [ajustar_porcionamento(i) for i in ingredientes]
+                ingredientes = [ajustar_porcionamento(i) for i in ingredientes_temp]
 
-                    nome = nome_prato_cafe(
-                        prato,
-                        proteina=proteina["nome"],
-                        fruta=fruta["nome"] if fruta else None
-                    )
+                nome = nome_prato_cafe(
+                    prato,
+                    proteina=proteina["nome"],
+                    fruta=fruta["nome"] if fruta else None
+                )
 
-                    modo_preparo = gerar_preparo_cafe(
-                        prato,
-                        proteina=proteina["nome"],
-                        liquido=liquido["nome"],
-                        fruta=fruta["nome"] if fruta else None
-                    )
+                modo_preparo = gerar_preparo_cafe(
+                    prato,
+                    proteina=proteina["nome"],
+                    liquido=liquido["nome"],
+                    fruta=fruta["nome"] if fruta else None
+                )
 
-                    tempo = random.randint(10, 20)
+                tempo = random.randint(10, 20)
 
         # =========================
         # 🔹 SIMPLES
@@ -142,81 +141,76 @@ def gerar_cafe(estoque, total_dias):
         else:
 
             carbo = simular_consumo(estoque, "carboCF", 2, subcategoria="cafe")
+
+            if not carbo:
+                continue
+
             fruta = simular_consumo(estoque, "fruta", 1)
+            proteina = simular_consumo(estoque, "proteinaCF", 1, subcategoria="cafe")
 
-            if carbo:
+            ingredientes_temp = [carbo]
 
-                proteina = simular_consumo(estoque, "proteinaCF", 1, subcategoria="cafe")
-                liquido = simular_consumo(estoque, "liquido", 200)
+            if fruta:
+                ingredientes_temp.append(fruta)
 
-                ingredientes = [carbo]
+            if proteina:
+                ingredientes_temp.append(proteina)
 
-                if proteina:
-                    ingredientes.append(proteina)
+            # 🔥 consome só depois de validar
+            for i in ingredientes_temp:
+                aplicar_consumo(i)
 
-                if fruta:
-                    ingredientes.append(fruta)
+            ingredientes = [ajustar_porcionamento(i) for i in ingredientes_temp]
 
-                if liquido and random.random() < 0.5:
-                    ingredientes.append(liquido)
+            nome = nome_prato_cafe(
+                carbo["nome"],
+                proteina=proteina["nome"] if proteina else None,
+                fruta=fruta["nome"] if fruta else None
+            )
 
-                # 🔥 CONSOME SÓ AGORA
-                for i in ingredientes:
-                    aplicar_consumo(i)
+            modo_preparo = gerar_preparo_cafe(
+                "simples",
+                proteina=proteina["nome"] if proteina else None,
+                fruta=fruta["nome"] if fruta else None
+            )
 
-                ingredientes = [ajustar_porcionamento(i) for i in ingredientes]
-
-                nome = nome_prato_cafe(
-                    carbo["nome"],
-                    proteina=proteina["nome"] if proteina else None,
-                    fruta=fruta["nome"] if fruta else None
-                )
-
-                modo_preparo = gerar_preparo_cafe(
-                    "simples",
-                    proteina=proteina["nome"] if proteina else None,
-                    liquido=liquido["nome"] if liquido else None,
-                    fruta=fruta["nome"] if fruta else None
-                )
-
-                tempo = 5
+            tempo = 5
 
         # =========================
-        # 🔥 FALLBACK OBRIGATÓRIO
+        # 🔥 FALLBACK CONTROLADO
         # =========================
         if not ingredientes:
 
             fruta = simular_consumo(estoque, "fruta", 1)
 
-            if fruta:
-                aplicar_consumo(fruta)
+            if not fruta:
+                continue  # 🔥 NÃO consome nada
 
-                ingredientes = [ajustar_porcionamento(fruta)]
+            # 🔥 só consome se realmente vai usar
+            aplicar_consumo(fruta)
 
-                nome = fruta["nome"]
+            ingredientes = [ajustar_porcionamento(fruta)]
 
-                modo_preparo = [
-                    f"Lave e prepare {fruta['nome']}.",
-                    "Sirva imediatamente."
-                ]
+            nome = fruta["nome"]
 
-                tempo = 2
+            modo_preparo = [
+                f"Lave e sirva {fruta['nome']}."
+            ]
+
+            tempo = 2
 
         # =========================
-        # FINALIZA
+        # FINAL
         # =========================
-        if ingredientes:
+        receitas.append({
+            "nome": nome,
+            "categoria": "cafe",
+            "ingredientes": ingredientes,
+            "modo_preparo": modo_preparo,
+            "tempo_preparo": f"{tempo} minutos",
+            "Porcao": "1"
+        })
 
-            receita = {
-                "nome": nome,
-                "categoria": "cafe",
-                "ingredientes": ingredientes,
-                "modo_preparo": modo_preparo,
-                "tempo_preparo": f"{tempo} minutos",
-                "Porcao": "1"
-            }
-
-            receitas.append(receita)
-            print("receitas:", len(receitas), flush=True)
+        print("receitas:", len(receitas), flush=True)
 
     return receitas
