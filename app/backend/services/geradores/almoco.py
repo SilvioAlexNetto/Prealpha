@@ -57,7 +57,11 @@ def gerar_almoco(estoque, total_dias):
                 consumo_max_por_dia=150
             )
 
-            if proteina and proteina.get("subcategoria") == "liquido":
+            # 🔥 VALIDA EXISTÊNCIA
+            if not proteina or not carbo:
+                continue
+
+            if proteina.get("subcategoria") == "liquido":
                 continue
 
             if not receita_valida(proteina, carbo):
@@ -85,11 +89,11 @@ def gerar_almoco(estoque, total_dias):
             if folha:
                 ingredientes_temp_pf.append(folha)
 
-            # 🔥 VALIDA FINAL ANTES DE CONSUMIR
-            if not ingredientes_temp_pf:
+            # 🔥 VALIDA RECEITA COMPLETA (CRÍTICO)
+            if not receita_valida(*ingredientes_temp_pf):
                 continue
 
-            # 🔥 CONSUMO REAL (AGORA SIM SEGURO)
+            # 🔥 CONSUMO REAL
             for i in ingredientes_temp_pf:
                 aplicar_consumo(i)
 
@@ -135,6 +139,10 @@ def gerar_almoco(estoque, total_dias):
                 consumo_max_por_dia=200
             )
 
+            # 🔥 VALIDA EXISTÊNCIA
+            if not massa or not molho or not proteina:
+                continue
+
             if not receita_valida(massa, molho, proteina):
                 continue
 
@@ -160,11 +168,11 @@ def gerar_almoco(estoque, total_dias):
             if folha:
                 ingredientes_temp_massa.append(folha)
 
-            # 🔥 VALIDA FINAL
-            if not ingredientes_temp_massa:
+            # 🔥 VALIDA RECEITA COMPLETA (CRÍTICO)
+            if not receita_valida(*ingredientes_temp_massa):
                 continue
 
-            # 🔥 CONSUMO REAL (SÓ AGORA)
+            # 🔥 CONSUMO REAL
             for i in ingredientes_temp_massa:
                 aplicar_consumo(i)
 
