@@ -14,11 +14,11 @@ from app.backend.services.preparos.finalizacao import finalizar_prato
 from app.backend.services.bases import proteinas_proibidas_sopa
 
 
-def gerar_janta(estoque):
+def gerar_janta(estoque, total_dias):
     receitas = []
     tentativas = 0
 
-    while len(receitas) < 31 and tentativas < 200:
+    while len(receitas) < total_dias and tentativas < 200:
         tentativas += 1
 
         tipo = random.choice(["pf", "massa", "sopa"])
@@ -215,5 +215,5 @@ def gerar_janta(estoque):
 
         receitas.append(receita)
         print("receitas:", len(receitas))
-        
+
     return receitas

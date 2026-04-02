@@ -1,4 +1,6 @@
 from copy import deepcopy
+from datetime import datetime
+import calendar
 
 from app.backend.services.core.classificador import classificar_estoque
 from app.backend.services.geradores.cafe import gerar_cafe_com_copia
@@ -10,19 +12,22 @@ from app.backend.services.cardapio_service import salvar_resultado
 
 def gerar_tudo(estoque_usuario):
 
+    hoje = datetime.now()
+    total_dias = calendar.monthrange(hoje.year, hoje.month)[1]
+
     print("👉 Entrou no gerar_tudo", flush=True)
 
     estoque_copia = deepcopy(estoque_usuario)
     estoque_classificado = classificar_estoque(estoque_copia)
 
     print("☕ Gerando café...", flush=True)
-    cafe = gerar_cafe_com_copia(estoque_classificado)
+    cafe = gerar_cafe_com_copia(estoque_classificado, total_dias)
 
     print("🍽️ Gerando almoço...", flush=True)
-    almoco = gerar_almoco(estoque_classificado)
+    almoco = gerar_almoco(estoque_classificado, total_dias)
 
     print("🌙 Gerando jantar...", flush=True)
-    janta = gerar_janta(estoque_classificado)
+    janta = gerar_janta(estoque_classificado, total_dias)
 
     todas_receitas = cafe + almoco + janta
 

@@ -14,9 +14,9 @@ from app.backend.services.utils.ingredientes import consolidar_ingredientes
 from app.backend.services.preparos.cafe import gerar_preparo_cafe
 
 
-def gerar_cafe_com_copia(estoque):
+def gerar_cafe_com_copia(estoque, total_dias):
     estoque_temp = deepcopy(estoque)
-    receitas = gerar_cafe(estoque_temp)
+    receitas = gerar_cafe(estoque_temp, total_dias)
 
     for item_temp in estoque_temp:
         for item_real in estoque:
@@ -26,14 +26,14 @@ def gerar_cafe_com_copia(estoque):
     return receitas
 
 
-def gerar_cafe(estoque):
+def gerar_cafe(estoque, total_dias):
 
     print("☕ Gerando café...", flush=True)
 
     receitas = []
     tentativas = 0
 
-    while len(receitas) < 31 and tentativas < 300:
+    while len(receitas) < total_dias and tentativas < 300:
         tentativas += 1
 
         ingredientes = []

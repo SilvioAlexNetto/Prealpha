@@ -12,12 +12,12 @@ from app.backend.services.preparos.molho import preparo_molho
 from app.backend.services.preparos.proteina import preparo_proteina
 from app.backend.services.preparos.finalizacao import finalizar_prato
 
-def gerar_almoco(estoque):
+def gerar_almoco(estoque, total_dias):
     receitas = []
 
     tentativas = 0
 
-    while len(receitas) < 31 and tentativas < 200:
+    while len(receitas) < total_dias and tentativas < 200:
         tentativas += 1
 
         tipo = random.choice(["pf", "massa"])
