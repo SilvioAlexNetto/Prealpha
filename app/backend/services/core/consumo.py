@@ -33,15 +33,39 @@ def simular_consumo(estoque, categoria, qtd, subcategoria=None, bloquear=False):
 
 
 def aplicar_consumo(item_simulado):
-    if not item_simulado or "ref" not in item_simulado:
+    if not item_simulado:
+        return
+
+    if "ref" not in item_simulado:
         return
 
     item_real = item_simulado["ref"]
+
+    # 🔥 PROTEÇÃO: evita consumo negativo
+    if item_real["quantidade"] < item_simulado["quantidade_original"]:
+        return
+
     item_real["quantidade"] -= item_simulado["quantidade_original"]
 
-    # proteção contra negativo
-    if item_real["quantidade"] < 0:
-        item_real["quantidade"] = 0
+    # 🔥 CONTROLE DE REPETIÇÃO AQUI (correto)
+    categorias = item_simulado.get("categorias", [])
+    subcategorias = item_simulado.get("subcategorias", [])
+
+    if not categorias:
+        return
+
+    categoria = categorias[0]
+    subcategoria = subcategorias[0] if subcategorias else None
+
+    chave = f"{categoria}_{subcategoria}" if subcategoria else categoria
+
+    if chave not in ULTIMOS_USADOS:
+        ULTIMOS_USADOS[chave] = []
+
+    ULTIMOS_USADOS[chave].append(item_simulado["nome"])
+
+    if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
+        ULTIMOS_USADOS[chave].pop(0)
 
 
 # =========================
