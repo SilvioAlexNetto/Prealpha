@@ -5,7 +5,10 @@ from app.backend.services.core.consumo import (
     simular_consumo,
     simular_leite,
     aplicar_consumo,
-    ajustar_porcionamento
+    ajustar_porcionamento,
+    analisar_estoque,
+    gerar_opcoes_cafe,
+    escolher_opcao
 )
 
 from app.backend.services.utils.nomes import nome_prato_cafe
