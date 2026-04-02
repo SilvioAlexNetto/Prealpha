@@ -1,4 +1,5 @@
-import os, json, calendar, datetime
+import os, json, calendar
+from datetime import datetime
 
 from app.backend.services.bases import (
     proteinasKG, proteinasUN, folhas_saladas, carboidratos,
