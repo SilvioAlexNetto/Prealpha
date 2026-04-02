@@ -334,3 +334,51 @@ def preparar_item_bruto(item):
         }
 
     return item
+
+def analisar_estoque(estoque):
+    return {
+        "tem_fruta": any("fruta" in i["categorias"] and i["quantidade"] > 0 for i in estoque),
+        "tem_leite": any("liquido" in i["categorias"] and "leite" in i["nome"].lower() for i in estoque),
+        "tem_cafe": any("cafe" in i["nome"].lower() for i in estoque),
+        "tem_carbo_cafe": any("carboCF" in i["categorias"] for i in estoque),
+        "tem_proteina_cafe": any("proteinaCF" in i["categorias"] for i in estoque),
+        "tem_cereal": any("cereal" in i["categorias"] for i in estoque),
+        "tem_farinha": any("farinha" in i["categorias"] for i in estoque),
+    }
+
+def gerar_opcoes_cafe(status):
+    opcoes = []
+
+    if status["tem_fruta"]:
+        opcoes.append("fruta")
+
+    if status["tem_leite"] and status["tem_fruta"]:
+        opcoes.append("vitamina")
+
+    if status["tem_cereal"] and status["tem_leite"]:
+        opcoes.append("mingau")
+
+    if status["tem_farinha"] and status["tem_leite"]:
+        opcoes.append("panqueca")
+
+    if status["tem_carbo_cafe"]:
+        opcoes.append("simples")
+
+    return opcoes
+
+def escolher_opcao(opcoes):
+    pesos = {
+        "vitamina": 4,
+        "mingau": 2,
+        "panqueca": 2,
+        "simples": 3,
+        "fruta": 1
+    }
+
+    opcoes_validas = [o for o in opcoes if o in pesos]
+
+    return random.choices(
+        opcoes_validas,
+        weights=[pesos[o] for o in opcoes_validas],
+        k=1
+    )[0]
