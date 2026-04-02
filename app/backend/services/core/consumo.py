@@ -74,7 +74,7 @@ def simular_consumo(
             limite_total = dias_restantes * consumo_max_por_dia
 
             # 🔥 se já está "no limite", evita usar
-            if item["quantidade"] <= limite_total:
+            if item["quantidade"] >= limite_total:
                 candidatos_filtrados.append(item)
 
         if candidatos_filtrados:
@@ -158,18 +158,18 @@ def aplicar_consumo(item_simulado):
 # =========================
 # 🔥 CONSUMO LEGADO (EVITAR)
 # =========================
-def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
-    simulado = simular_consumo(estoque, categoria, qtd, subcategoria, bloquear)
+# def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
+#    simulado = simular_consumo(estoque, categoria, qtd, subcategoria, bloquear)
+#
+#    if not simulado:
+#        return None
 
-    if not simulado:
-        return None
+#    aplicar_consumo(simulado)
 
-    aplicar_consumo(simulado)
-
-    return {
-        k: v for k, v in simulado.items()
-        if k not in ["ref", "quantidade_original"]
-    }
+#    return {
+#        k: v for k, v in simulado.items()
+#        if k not in ["ref", "quantidade_original"]
+#    }
 
 
 # =========================
