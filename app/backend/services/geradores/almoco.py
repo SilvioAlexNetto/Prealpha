@@ -63,7 +63,7 @@ def gerar_almoco(estoque, total_dias):
             if not receita_valida(proteina, carbo):
                 continue
 
-            ingredientes_temp.extend([proteina, carbo])
+            ingredientes_temp_pf = [proteina, carbo]
 
             # 🥕 LEGUME
             legume = simular_consumo(
@@ -73,7 +73,7 @@ def gerar_almoco(estoque, total_dias):
             )
 
             if legume:
-                ingredientes_temp.append(legume)
+                ingredientes_temp_pf.append(legume)
 
             # 🥬 FOLHA
             folha = simular_consumo(
@@ -83,13 +83,17 @@ def gerar_almoco(estoque, total_dias):
             )
 
             if folha:
-                ingredientes_temp.append(folha)
+                ingredientes_temp_pf.append(folha)
 
-            # 🔥 CONSUMO REAL (só agora)
-            for i in ingredientes_temp:
+            # 🔥 VALIDA FINAL ANTES DE CONSUMIR
+            if not ingredientes_temp_pf:
+                continue
+
+            # 🔥 CONSUMO REAL (AGORA SIM SEGURO)
+            for i in ingredientes_temp_pf:
                 aplicar_consumo(i)
 
-            ingredientes = ingredientes_temp
+            ingredientes = ingredientes_temp_pf
 
             nome = nome_prato_pf(
                 proteina["nome"],
@@ -134,7 +138,7 @@ def gerar_almoco(estoque, total_dias):
             if not receita_valida(massa, molho, proteina):
                 continue
 
-            ingredientes_temp.extend([massa, molho, proteina])
+            ingredientes_temp_massa = [massa, molho, proteina]
 
             # 🥕 LEGUME
             legume = simular_consumo(
@@ -144,7 +148,7 @@ def gerar_almoco(estoque, total_dias):
             )
 
             if legume:
-                ingredientes_temp.append(legume)
+                ingredientes_temp_massa.append(legume)
 
             # 🥬 FOLHA
             folha = simular_consumo(
@@ -154,13 +158,17 @@ def gerar_almoco(estoque, total_dias):
             )
 
             if folha:
-                ingredientes_temp.append(folha)
+                ingredientes_temp_massa.append(folha)
 
-            # 🔥 CONSUMO REAL
-            for i in ingredientes_temp:
+            # 🔥 VALIDA FINAL
+            if not ingredientes_temp_massa:
+                continue
+
+            # 🔥 CONSUMO REAL (SÓ AGORA)
+            for i in ingredientes_temp_massa:
                 aplicar_consumo(i)
 
-            ingredientes = ingredientes_temp
+            ingredientes = ingredientes_temp_massa
 
             modo_preparo = []
             modo_preparo += preparo_massa(massa["nome"])
@@ -186,6 +194,9 @@ def gerar_almoco(estoque, total_dias):
         # =========================
         # FINALIZA
         # =========================
+        if not ingredientes:
+            continue
+
         receitas.append({
             "nome": nome,
             "categoria": "almoco",

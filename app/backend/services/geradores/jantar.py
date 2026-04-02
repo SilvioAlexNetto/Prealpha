@@ -31,7 +31,6 @@ def gerar_janta(estoque, total_dias):
         dias_restantes = total_dias - len(receitas)
 
         ingredientes = []
-        ingredientes_temp = []
 
         nome = None
         modo_preparo = []
@@ -61,7 +60,7 @@ def gerar_janta(estoque, total_dias):
             if not receita_valida(proteina, carbo):
                 continue
 
-            ingredientes_temp.extend([proteina, carbo])
+            ingredientes_temp_pf = [proteina, carbo]
 
             # 🥕 LEGUME
             legume = simular_consumo(
@@ -71,7 +70,7 @@ def gerar_janta(estoque, total_dias):
             )
 
             if legume:
-                ingredientes_temp.append(legume)
+                ingredientes_temp_pf.append(legume)
 
             # 🥬 FOLHA
             folha = simular_consumo(
@@ -81,13 +80,17 @@ def gerar_janta(estoque, total_dias):
             )
 
             if folha:
-                ingredientes_temp.append(folha)
+                ingredientes_temp_pf.append(folha)
+
+            # 🔥 VALIDA FINAL
+            if not ingredientes_temp_pf:
+                continue
 
             # 🔥 CONSUMO REAL
-            for i in ingredientes_temp:
+            for i in ingredientes_temp_pf:
                 aplicar_consumo(i)
 
-            ingredientes = ingredientes_temp
+            ingredientes = ingredientes_temp_pf
 
             nome = nome_prato_pf(
                 proteina["nome"],
@@ -132,7 +135,7 @@ def gerar_janta(estoque, total_dias):
             if not receita_valida(massa, molho, proteina):
                 continue
 
-            ingredientes_temp.extend([massa, molho, proteina])
+            ingredientes_temp_massa = [massa, molho, proteina]
 
             # 🥕 LEGUME
             legume = simular_consumo(
@@ -142,7 +145,7 @@ def gerar_janta(estoque, total_dias):
             )
 
             if legume:
-                ingredientes_temp.append(legume)
+                ingredientes_temp_massa.append(legume)
 
             # 🥬 FOLHA
             folha = simular_consumo(
@@ -152,13 +155,17 @@ def gerar_janta(estoque, total_dias):
             )
 
             if folha:
-                ingredientes_temp.append(folha)
+                ingredientes_temp_massa.append(folha)
+
+            # 🔥 VALIDA FINAL
+            if not ingredientes_temp_massa:
+                continue
 
             # 🔥 CONSUMO REAL
-            for i in ingredientes_temp:
+            for i in ingredientes_temp_massa:
                 aplicar_consumo(i)
 
-            ingredientes = ingredientes_temp
+            ingredientes = ingredientes_temp_massa
 
             modo_preparo = []
             modo_preparo += preparo_massa(massa["nome"])
@@ -217,19 +224,23 @@ def gerar_janta(estoque, total_dias):
             if proteina["nome"] in proteinas_proibidas_sopa:
                 continue
 
-            # evita duplicação feia
+            # evita duplicação
             if legume2 and legume1 and legume2["nome"] == legume1["nome"]:
                 legume2 = None
 
-            ingredientes_temp = [caldo, proteina, legume1]
+            ingredientes_temp_sopa = [caldo, proteina, legume1]
             if legume2:
-                ingredientes_temp.append(legume2)
+                ingredientes_temp_sopa.append(legume2)
+
+            # 🔥 VALIDA FINAL
+            if not ingredientes_temp_sopa:
+                continue
 
             # 🔥 CONSUMO REAL
-            for i in ingredientes_temp:
+            for i in ingredientes_temp_sopa:
                 aplicar_consumo(i)
 
-            ingredientes = ingredientes_temp
+            ingredientes = ingredientes_temp_sopa
 
             nome = random.choice([
                 f"Sopa caseira de {proteina['nome']} com legumes",
@@ -258,6 +269,9 @@ def gerar_janta(estoque, total_dias):
         # =========================
         # FINALIZA
         # =========================
+        if not ingredientes:
+            continue
+
         receitas.append({
             "nome": nome,
             "categoria": "jantar",
