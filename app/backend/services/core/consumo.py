@@ -28,7 +28,15 @@ MAX_REPETICAO = 4
 # =========================
 # 🔥 SIMULAÇÃO BASE
 # =========================
-def simular_consumo(estoque, categoria, qtd, subcategoria=None, bloquear=False):
+def simular_consumo(
+    estoque,
+    categoria,
+    qtd,
+    subcategoria=None,
+    bloquear=False,
+    dias_restantes=None,          # 🔥 NOVO
+    consumo_max_por_dia=None      # 🔥 NOVO
+):
 
     candidatos = [
         i for i in estoque
@@ -54,6 +62,24 @@ def simular_consumo(estoque, categoria, qtd, subcategoria=None, bloquear=False):
 
     if not candidatos:
         return None
+
+    # =========================
+    # 🔥 CONTROLE INTELIGENTE DE CONSUMO
+    # =========================
+    if dias_restantes and consumo_max_por_dia:
+
+        candidatos_filtrados = []
+
+        for item in candidatos:
+            limite_total = dias_restantes * consumo_max_por_dia
+
+            # 🔥 se já está "no limite", evita usar
+            if item["quantidade"] <= limite_total:
+                candidatos_filtrados.append(item)
+
+        if candidatos_filtrados:
+            candidatos = candidatos_filtrados
+        # se não sobrar nada → usa original (fail safe)
 
     chave = f"{categoria}_{subcategoria}" if subcategoria else categoria
 
@@ -87,7 +113,6 @@ def simular_consumo(estoque, categoria, qtd, subcategoria=None, bloquear=False):
         "categorias": item_convertido.get("categorias", item.get("categorias", [])),
         "subcategorias": item_convertido.get("subcategorias", item.get("subcategorias", []))
     }
-
 
     return resultado
 
@@ -382,3 +407,40 @@ def escolher_opcao(opcoes):
         weights=[pesos[o] for o in opcoes_validas],
         k=1
     )[0]
+
+def calcular_limites(estoque, total_dias):
+
+    limites = {}
+
+    for item in estoque:
+        nome = item["nome"]
+        qtd = item["quantidade"]
+
+        limite_dia = qtd / total_dias
+
+        limites[nome] = {
+            "total": qtd,
+            "por_dia": limite_dia
+        }
+
+    return limites
+
+def pode_usar(item, limites, dia_atual):
+    nome = item["nome"]
+
+    if nome not in limites:
+        return True
+
+    usado_ate_agora = limites[nome].get("usado", 0)
+    limite_total_ate_dia = limites[nome]["por_dia"] * dia_atual
+
+    return usado_ate_agora <= limite_total_ate_dia
+
+def registrar_uso(item, limites):
+    nome = item["nome"]
+
+    if nome not in limites:
+        return
+
+    limites[nome]["usado"] = limites[nome].get("usado", 0) + item["quantidade_original"]
+

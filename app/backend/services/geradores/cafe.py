@@ -8,7 +8,9 @@ from app.backend.services.core.consumo import (
     ajustar_porcionamento,
     analisar_estoque,
     gerar_opcoes_cafe,
-    escolher_opcao
+    escolher_opcao,
+    registrar_uso,
+    pode_usar
 )
 
 from app.backend.services.utils.nomes import nome_prato_cafe
@@ -43,6 +45,8 @@ def gerar_cafe(estoque, total_dias):
         modo_preparo = []
         tempo = 5
 
+        dias_restantes = total_dias - len(receitas)
+
         # 🔥 NOVO MODELO INTELIGENTE
         status = analisar_estoque(estoque)
         opcoes = gerar_opcoes_cafe(status)
@@ -52,6 +56,20 @@ def gerar_cafe(estoque, total_dias):
             break
 
         tipo = escolher_opcao(opcoes)
+
+        # =========================
+        # 🥤 VITAMINA (CONTROLADA)
+        # =========================
+        if tipo == "vitamina":
+
+            # 🔥 só permite vitamina se não for "gastar demais"
+            frutas_disponiveis = sum(
+                i["quantidade"] for i in estoque if "fruta" in i["categorias"]
+            )
+
+            # média segura: 1 fruta por dia restante
+            if frutas_disponiveis < dias_restantes:
+                tipo = "simples"  # 🔥 força downgrade
 
         # =========================
         # 🥤 VITAMINA
@@ -65,10 +83,15 @@ def gerar_cafe(estoque, total_dias):
 
                 ingredientes_temp = [liquido, fruta]
 
-                # opcional extra
-                fruta2 = simular_consumo(estoque, "fruta", 1)
-                if fruta2 and random.random() < 0.5:
-                    ingredientes_temp.append(fruta2)
+                # 🔥 só adiciona fruta extra se tiver folga
+                frutas_disponiveis = sum(
+                    i["quantidade"] for i in estoque if "fruta" in i["categorias"]
+                )
+
+                if frutas_disponiveis > dias_restantes * 1.5:
+                    fruta2 = simular_consumo(estoque, "fruta", 1)
+                    if fruta2:
+                        ingredientes_temp.append(fruta2)
 
                 for i in ingredientes_temp:
                     aplicar_consumo(i)
@@ -196,7 +219,7 @@ def gerar_cafe(estoque, total_dias):
                 tempo = 2
 
         # =========================
-        # 🔥 FALLBACK FINAL (só se tudo falhar)
+        # 🔥 FALLBACK FINAL
         # =========================
         if not ingredientes:
 
@@ -218,9 +241,6 @@ def gerar_cafe(estoque, total_dias):
 
             tempo = 2
 
-        # =========================
-        # FINALIZA
-        # =========================
         receitas.append({
             "nome": nome,
             "categoria": "cafe",
