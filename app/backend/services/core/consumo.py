@@ -68,15 +68,16 @@ def simular_consumo(
     # =========================
     if dias_restantes and consumo_max_por_dia:
 
-        limite_total = dias_restantes * consumo_max_por_dia
+        candidatos_filtrados = []
 
-        candidatos_filtrados = [
-            item for item in candidatos
-            if item["quantidade"] <= limite_total
-        ]
+        for item in candidatos:
+            limite_total = dias_restantes * consumo_max_por_dia
 
-        # 🔥 só aplica filtro se ainda tiver opções suficientes
-        if len(candidatos_filtrados) >= 2:
+            # 🔥 se já está "no limite", evita usar
+            if item["quantidade"] >= limite_total:
+                candidatos_filtrados.append(item)
+
+        if candidatos_filtrados:
             candidatos = candidatos_filtrados
         # se não sobrar nada → usa original (fail safe)
 

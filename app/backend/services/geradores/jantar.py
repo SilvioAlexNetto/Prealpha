@@ -1,5 +1,5 @@
 import random
-
+from copy import deepcopy
 from app.backend.services.core.consumo import (
     simular_consumo,
     aplicar_consumo
@@ -18,20 +18,45 @@ from app.backend.services.preparos.finalizacao import finalizar_prato
 from app.backend.services.bases import proteinas_proibidas_sopa
 
 
+def aplicar_consumo_local(item_simulado):
+    if not item_simulado or "ref" not in item_simulado:
+        return
+
+    item = item_simulado["ref"]
+
+    if item["quantidade"] < item_simulado["quantidade_original"]:
+        return
+
+    item["quantidade"] -= item_simulado["quantidade_original"]
+
+
+def gerar_janta_com_copia(estoque, total_dias):
+    from copy import deepcopy
+
+    estoque_temp = deepcopy(estoque)
+
+    receitas = gerar_janta(estoque_temp, total_dias)
+
+    # commit final
+    for item_temp in estoque_temp:
+        for item_real in estoque:
+            if item_temp["nome"] == item_real["nome"]:
+                item_real["quantidade"] = item_temp["quantidade"]
+
+    return receitas
+
+
 def gerar_janta(estoque, total_dias):
 
     print("🌙 Gerando jantar...", flush=True)
 
     receitas = []
     tentativas = 0
-
+    
     while len(receitas) < total_dias and tentativas < 300:
         tentativas += 1
 
         dias_restantes = total_dias - len(receitas)
-
-        # 🔥 ISOLA SIMULAÇÃO
-        estoque_temp = [i.copy() for i in estoque]
 
         ingredientes = []
 
@@ -88,7 +113,7 @@ def gerar_janta(estoque, total_dias):
 
             # 🔥 aplica no TEMP
             for i in ingredientes_temp_pf:
-                aplicar_consumo(i)
+                aplicar_consumo_local(i)
 
             ingredientes = ingredientes_temp_pf
 
@@ -159,7 +184,7 @@ def gerar_janta(estoque, total_dias):
                 continue
 
             for i in ingredientes_temp_massa:
-                aplicar_consumo(i)
+                aplicar_consumo_local(i)
 
             ingredientes = ingredientes_temp_massa
 
@@ -231,7 +256,7 @@ def gerar_janta(estoque, total_dias):
                 continue
 
             for i in ingredientes_temp_sopa:
-                aplicar_consumo(i)
+                aplicar_consumo_local(i)
 
             ingredientes = ingredientes_temp_sopa
 
@@ -259,17 +284,7 @@ def gerar_janta(estoque, total_dias):
 
             tempo = random.randint(25, 40)
 
-        # =========================
-        # FINALIZA
-        # =========================
-        if not ingredientes:
-            continue
 
-        # 🔥 COMMIT REAL (AQUI ESTÁ A CORREÇÃO)
-        for item_temp in estoque_temp:
-            for item_real in estoque:
-                if item_temp["nome"] == item_real["nome"]:
-                    item_real["quantidade"] = item_temp["quantidade"]
 
         receitas.append({
             "nome": nome,
