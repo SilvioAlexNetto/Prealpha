@@ -73,16 +73,12 @@ def simular_consumo(
     if not candidatos:
         return None
 
-    # 🔥 CORREÇÃO: lógica de proteção real
+    # 🔥 proteção de consumo ao longo dos dias
     if dias_restantes and consumo_max_por_dia:
 
         candidatos_filtrados = []
 
         for item in candidatos:
-            # quanto PRECISA sobrar pra completar os dias
-            necessario_total = dias_restantes * consumo_max_por_dia
-
-            # só usa se tiver margem segura
             if item["quantidade"] >= consumo_max_por_dia:
                 candidatos_filtrados.append(item)
 
@@ -101,25 +97,20 @@ def simular_consumo(
 
     pool = filtrados or candidatos
 
-    # 🔥 prioriza estoque
-    pool_priorizado = priorizar_candidatos(pool, dias_restantes)
+    # 🔥 priorização suave (com fallback seguro)
+    pool_priorizado = priorizar_candidatos(pool, dias_restantes) or pool
 
-    # 🔥 aplica peso inteligente
+    # 🔥 pesos inteligentes
     pesos = [calcular_peso(i) for i in pool_priorizado]
 
+    # ✅ SORTEIO CORRETO (uma única vez)
     item = random.choices(
         pool_priorizado,
         weights=pesos,
         k=1
     )[0]
 
-    item = random.choices(
-        pool_priorizado,
-        weights=pesos,
-        k=1
-    )[0]
-
-    # 🔥 CORREÇÃO CRÍTICA: NÃO permite consumo parcial
+    # 🔥 NÃO permite consumo parcial
     if item["quantidade"] < qtd:
         return None
 
