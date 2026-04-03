@@ -74,7 +74,7 @@ def simular_consumo(
             limite_total = dias_restantes * consumo_max_por_dia
 
             # 🔥 se já está "no limite", evita usar
-            if item["quantidade"] >= limite_total:
+            if item["quantidade"] <= limite_total:
                 candidatos_filtrados.append(item)
 
         if candidatos_filtrados:

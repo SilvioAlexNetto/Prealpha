@@ -31,8 +31,6 @@ def aplicar_consumo_local(item_simulado):
 
 
 def gerar_janta_com_copia(estoque, total_dias):
-    from copy import deepcopy
-
     estoque_temp = deepcopy(estoque)
 
     receitas = gerar_janta(estoque_temp, total_dias)
@@ -52,7 +50,7 @@ def gerar_janta(estoque, total_dias):
 
     receitas = []
     tentativas = 0
-    
+
     while len(receitas) < total_dias and tentativas < 300:
         tentativas += 1
 
@@ -72,14 +70,14 @@ def gerar_janta(estoque, total_dias):
         if tipo == "pf":
 
             proteina = simular_consumo(
-                estoque_temp, "proteina", 120,
+                estoque, "proteina", 120,
                 bloquear=True,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=200
             )
 
             carbo = simular_consumo(
-                estoque_temp, "carbo", 100,
+                estoque, "carbo", 100,
                 bloquear=True,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=150
@@ -91,7 +89,7 @@ def gerar_janta(estoque, total_dias):
             ingredientes_temp_pf = [proteina, carbo]
 
             legume = simular_consumo(
-                estoque_temp, "legume", 80,
+                estoque, "legume", 80,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=100
             )
@@ -100,7 +98,7 @@ def gerar_janta(estoque, total_dias):
                 ingredientes_temp_pf.append(legume)
 
             folha = simular_consumo(
-                estoque_temp, "folha", 50,
+                estoque, "folha", 50,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=50
             )
@@ -111,7 +109,6 @@ def gerar_janta(estoque, total_dias):
             if not ingredientes_temp_pf:
                 continue
 
-            # 🔥 aplica no TEMP
             for i in ingredientes_temp_pf:
                 aplicar_consumo_local(i)
 
@@ -139,19 +136,19 @@ def gerar_janta(estoque, total_dias):
         elif tipo == "massa":
 
             massa = simular_consumo(
-                estoque_temp, "massa", 100,
+                estoque, "massa", 100,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=120
             )
 
             molho = simular_consumo(
-                estoque_temp, "molho", 50,
+                estoque, "molho", 50,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=80
             )
 
             proteina = simular_consumo(
-                estoque_temp, "proteina", 100,
+                estoque, "proteina", 100,
                 bloquear=True,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=200
@@ -163,7 +160,7 @@ def gerar_janta(estoque, total_dias):
             ingredientes_temp_massa = [massa, molho, proteina]
 
             legume = simular_consumo(
-                estoque_temp, "legume", 80,
+                estoque, "legume", 80,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=100
             )
@@ -172,7 +169,7 @@ def gerar_janta(estoque, total_dias):
                 ingredientes_temp_massa.append(legume)
 
             folha = simular_consumo(
-                estoque_temp, "folha", 50,
+                estoque, "folha", 50,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=50
             )
@@ -215,26 +212,26 @@ def gerar_janta(estoque, total_dias):
         else:
 
             proteina = simular_consumo(
-                estoque_temp, "proteina", 80,
+                estoque, "proteina", 80,
                 bloquear=True,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=150
             )
 
             caldo = simular_consumo(
-                estoque_temp, "caldo", 500,
+                estoque, "caldo", 500,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=600
             )
 
             legume1 = simular_consumo(
-                estoque_temp, "legume", 80,
+                estoque, "legume", 80,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=100
             )
 
             legume2 = simular_consumo(
-                estoque_temp, "legume", 80,
+                estoque, "legume", 80,
                 dias_restantes=dias_restantes,
                 consumo_max_por_dia=100
             )
@@ -284,7 +281,9 @@ def gerar_janta(estoque, total_dias):
 
             tempo = random.randint(25, 40)
 
-
+        # 🔥 GARANTE RECEITA VÁLIDA
+        if not ingredientes:
+            continue
 
         receitas.append({
             "nome": nome,
