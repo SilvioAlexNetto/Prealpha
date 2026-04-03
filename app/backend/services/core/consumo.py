@@ -1,9 +1,6 @@
 from app.backend.services.core.normalizacao import normalizar
 import random
 
-# =========================
-# CONTROLE DE REPETIÇÃO
-# =========================
 ULTIMOS_USADOS = {
     "proteina": [],
     "carbo": [],
@@ -25,17 +22,14 @@ ULTIMOS_USADOS = {
 MAX_REPETICAO = 4
 
 
-# =========================
-# 🔥 SIMULAÇÃO BASE
-# =========================
 def simular_consumo(
     estoque,
     categoria,
     qtd,
     subcategoria=None,
     bloquear=False,
-    dias_restantes=None,          # 🔥 NOVO
-    consumo_max_por_dia=None      # 🔥 NOVO
+    dias_restantes=None,
+    consumo_max_por_dia=None
 ):
 
     candidatos = [
@@ -63,23 +57,21 @@ def simular_consumo(
     if not candidatos:
         return None
 
-    # =========================
-    # 🔥 CONTROLE INTELIGENTE DE CONSUMO
-    # =========================
+    # 🔥 CORREÇÃO: lógica de proteção real
     if dias_restantes and consumo_max_por_dia:
 
         candidatos_filtrados = []
 
         for item in candidatos:
-            limite_total = dias_restantes * consumo_max_por_dia
+            # quanto PRECISA sobrar pra completar os dias
+            necessario_total = dias_restantes * consumo_max_por_dia
 
-            # 🔥 se já está "no limite", evita usar
-            if item["quantidade"] <= limite_total:
+            # só usa se tiver margem segura
+            if item["quantidade"] >= consumo_max_por_dia:
                 candidatos_filtrados.append(item)
 
         if candidatos_filtrados:
             candidatos = candidatos_filtrados
-        # se não sobrar nada → usa original (fail safe)
 
     chave = f"{categoria}_{subcategoria}" if subcategoria else categoria
 
@@ -93,7 +85,11 @@ def simular_consumo(
 
     item = random.choice(filtrados or candidatos)
 
-    usar = min(item["quantidade"], qtd)
+    # 🔥 CORREÇÃO CRÍTICA: NÃO permite consumo parcial
+    if item["quantidade"] < qtd:
+        return None
+
+    usar = qtd
 
     convertido = item_precisa_preparo(item)
 
@@ -104,7 +100,7 @@ def simular_consumo(
         item_convertido = item
         quantidade_final = usar
 
-    resultado = {
+    return {
         "ref": item,
         "nome": item_convertido["nome"],
         "quantidade": quantidade_final,
@@ -114,28 +110,18 @@ def simular_consumo(
         "subcategorias": item_convertido.get("subcategorias", item.get("subcategorias", []))
     }
 
-    return resultado
 
-
-# =========================
-# 🔥 COMMIT REAL
-# =========================
 def aplicar_consumo(item_simulado):
-    if not item_simulado:
-        return
-
-    if "ref" not in item_simulado:
+    if not item_simulado or "ref" not in item_simulado:
         return
 
     item_real = item_simulado["ref"]
 
-    # 🔥 PROTEÇÃO: evita consumo negativo
     if item_real["quantidade"] < item_simulado["quantidade_original"]:
         return
 
     item_real["quantidade"] -= item_simulado["quantidade_original"]
 
-    # 🔥 CONTROLE DE REPETIÇÃO AQUI (correto)
     categorias = item_simulado.get("categorias", [])
     subcategorias = item_simulado.get("subcategorias", [])
 
@@ -154,23 +140,6 @@ def aplicar_consumo(item_simulado):
 
     if len(ULTIMOS_USADOS[chave]) > MAX_REPETICAO:
         ULTIMOS_USADOS[chave].pop(0)
-
-# =========================
-# 🔥 CONSUMO LEGADO (EVITAR)
-# =========================
-# def consumir(estoque, categoria, qtd, subcategoria=None, bloquear=False):
-#    simulado = simular_consumo(estoque, categoria, qtd, subcategoria, bloquear)
-#
-#    if not simulado:
-#        return None
-
-#    aplicar_consumo(simulado)
-
-#    return {
-#        k: v for k, v in simulado.items()
-#        if k not in ["ref", "quantidade_original"]
-#    }
-
 
 # =========================
 # 🥛 LEITE (SIMULADO)
