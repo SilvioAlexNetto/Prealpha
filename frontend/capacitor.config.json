@@ -2,8 +2,9 @@
   "appId": "com.silvionetto.HealthPantry",
   "appName": "Health Pantry",
   "webDir": "dist",
+  "bundledWebRuntime": true,
   "server": {
-    "url": "https://prealpha.onrender.com",
+    "url": "",
     "cleartext": false
   },
   "plugins": {
