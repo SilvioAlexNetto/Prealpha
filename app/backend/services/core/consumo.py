@@ -101,10 +101,17 @@ def simular_consumo(
 
     pool = filtrados or candidatos
 
-# 🔥 NOVO: prioriza estoque
+    # 🔥 prioriza estoque
     pool_priorizado = priorizar_candidatos(pool, dias_restantes)
 
+    # 🔥 aplica peso inteligente
     pesos = [calcular_peso(i) for i in pool_priorizado]
+
+    item = random.choices(
+        pool_priorizado,
+        weights=pesos,
+        k=1
+    )[0]
 
     item = random.choices(
         pool_priorizado,
@@ -447,21 +454,18 @@ def priorizar_candidatos(candidatos, dias_restantes):
         return candidatos
 
     def score(item):
-        # quanto “sobra” por dia
         return item["quantidade"] / dias_restantes
 
-    # 🔥 ordena do maior risco de sobra → menor
     candidatos_ordenados = sorted(
         candidatos,
         key=score,
         reverse=True
     )
 
-    # 🔥 pega os TOP mais críticos
+    # 🔥 suaviza: não corta demais a variedade
     top_n = max(3, len(candidatos) // 2)
-    top = candidatos_ordenados[:top_n]
 
-    return top
+    return candidatos_ordenados[:top_n]
 
 def montar_base_cafe(estoque, tipo, dias_restantes):
     itens = []
