@@ -31,6 +31,22 @@ def simular_consumo(
     dias_restantes=None,
     consumo_max_por_dia=None
 ):
+    
+    def calcular_peso(item):
+        peso = 1.0
+
+        # 📦 mais quantidade → mais chance
+        peso += item["quantidade"] / 1000  
+
+        # 🔁 penaliza repetição recente
+        chave = f"{categoria}_{subcategoria}" if subcategoria else categoria
+
+        if chave in ULTIMOS_USADOS:
+            repeticoes = ULTIMOS_USADOS[chave].count(item["nome"])
+            peso -= repeticoes * 0.5
+
+        # 🛑 evita peso negativo
+        return max(peso, 0.1)
 
     candidatos = [
         i for i in estoque
@@ -83,7 +99,18 @@ def simular_consumo(
         if i["nome"] not in ULTIMOS_USADOS[chave]
     ]
 
-    item = random.choice(filtrados or candidatos)
+    pool = filtrados or candidatos
+
+# 🔥 NOVO: prioriza estoque
+    pool_priorizado = priorizar_candidatos(pool, dias_restantes)
+
+    pesos = [calcular_peso(i) for i in pool_priorizado]
+
+    item = random.choices(
+        pool_priorizado,
+        weights=pesos,
+        k=1
+    )[0]
 
     # 🔥 CORREÇÃO CRÍTICA: NÃO permite consumo parcial
     if item["quantidade"] < qtd:
@@ -412,4 +439,157 @@ def registrar_uso(item, limites):
         return
 
     limites[nome]["usado"] = limites[nome].get("usado", 0) + item["quantidade_original"]
+
+
+def priorizar_candidatos(candidatos, dias_restantes):
+
+    if not candidatos or not dias_restantes:
+        return candidatos
+
+    def score(item):
+        # quanto “sobra” por dia
+        return item["quantidade"] / dias_restantes
+
+    # 🔥 ordena do maior risco de sobra → menor
+    candidatos_ordenados = sorted(
+        candidatos,
+        key=score,
+        reverse=True
+    )
+
+    # 🔥 pega os TOP mais críticos
+    top_n = max(3, len(candidatos) // 2)
+    top = candidatos_ordenados[:top_n]
+
+    return top
+
+def montar_base_cafe(estoque, tipo, dias_restantes):
+    itens = []
+
+    # =========================
+    # ☕ BEBIDA (SEMPRE TENTA)
+    # =========================
+    bebida_base = None
+
+    tem_cafe = any("cafe" in i["nome"].lower() for i in estoque)
+    tem_leite = any("leite" in i["nome"].lower() for i in estoque)
+
+    # 🔥 tenta café primeiro (melhor uso de estoque parado)
+    if tem_cafe:
+        bebida, cafe, leite = simular_cafe_completo(estoque)
+
+        if bebida:
+            itens.append(("bebida", bebida, cafe, leite))
+            bebida_base = bebida
+
+    # fallback → leite puro
+    if not bebida_base and tem_leite:
+        leite, tipo_leite = simular_leite(estoque, 200)
+
+        if leite:
+            itens.append(("bebida", {
+                "nome": tipo_leite,
+                "quantidade": 200,
+                "unidade": "ml",
+                "categorias": ["bebida"],
+                "subcategorias": ["cafe"]
+            }, leite, None))
+
+    # =========================
+    # 🍞 BASE SÓLIDA
+    # =========================
+    if tipo == "simples":
+
+        carbo = simular_consumo(estoque, "carboCF", 2, subcategoria="cafe")
+        if carbo:
+            itens.append(("principal", carbo))
+
+    elif tipo == "mingau":
+
+        cereal = simular_consumo(estoque, "cereal", 40)
+        leite = simular_leite(estoque, 200)[0]
+
+        if cereal and leite:
+            itens.append(("principal", cereal))
+            itens.append(("extra", leite))
+
+    elif tipo == "panqueca":
+
+        farinha = simular_consumo(estoque, "farinha", 50)
+        liquido = simular_consumo(estoque, "liquido", 100)
+
+        if farinha and liquido:
+            itens.append(("principal", farinha))
+            itens.append(("extra", liquido))
+
+    elif tipo == "vitamina":
+
+        fruta = simular_consumo(estoque, "fruta", 1)
+        leite = simular_leite(estoque, 200)[0]
+
+        if fruta and leite:
+            itens.append(("principal", fruta))
+            itens.append(("extra", leite))
+
+    elif tipo == "fruta":
+
+        fruta = simular_consumo(estoque, "fruta", 1)
+        if fruta:
+            itens.append(("principal", fruta))
+
+    # =========================
+    # 🍎 COMPLEMENTOS INTELIGENTES
+    # =========================
+    # 🔥 aqui entra o ganho real
+
+    # adiciona fruta se tiver pouco uso
+    frutas_restantes = sum(i["quantidade"] for i in estoque if "fruta" in i["categorias"])
+
+    if frutas_restantes > dias_restantes:
+        fruta_extra = simular_consumo(estoque, "fruta", 1)
+        if fruta_extra:
+            itens.append(("extra", fruta_extra))
+
+    # adiciona proteína leve
+    proteina = simular_consumo(estoque, "proteinaCF", 1, subcategoria="cafe")
+    if proteina and random.random() < 0.5:
+        itens.append(("extra", proteina))
+
+    return itens
+
+def aplicar_itens_cafe(itens_base):
+    ingredientes = []
+    bebidas = []
+
+    for tipo_item in itens_base:
+
+        # estrutura pode variar (bebida tem mais dados)
+        if tipo_item[0] == "bebida":
+            _, bebida, cafe_ref, leite_ref = tipo_item
+
+            # aplica consumo real
+            if cafe_ref:
+                aplicar_consumo(cafe_ref)
+
+            if leite_ref:
+                aplicar_consumo(leite_ref)
+
+            bebidas.append(bebida)
+            continue
+
+        # =========================
+        # 🍽️ ITENS NORMAIS
+        # =========================
+        _, item = tipo_item
+
+        if not item:
+            continue
+
+        aplicar_consumo(item)
+
+        item_ajustado = ajustar_porcionamento(item)
+
+        ingredientes.append(item_ajustado)
+
+    return ingredientes, bebidas
 
