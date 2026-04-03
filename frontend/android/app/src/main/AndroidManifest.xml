@@ -1,16 +1,11 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- INTERNET -->
+    
+    <!-- PERMISSÕES -->
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- CAMERA -->
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- GALERIA / ARMAZENAMENTO -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- ANDROID 13+ -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <uses-feature android:name="android.hardware.camera" android:required="false" />
@@ -23,6 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
+        <!-- ACTIVITY PRINCIPAL -->
         <activity
             android:name=".MainActivity"
             android:fitsSystemWindows="true"
@@ -37,12 +34,16 @@
             </intent-filter>
         </activity>
 
+        <!-- FILE PROVIDER PARA ARQUIVOS LOCAIS -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 </manifest>
