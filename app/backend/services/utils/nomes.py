@@ -29,70 +29,40 @@ def nome_prato_pf(proteina, carbo, legume=None, folha=None):
 def nome_prato_cafe(base, proteina=None, fruta=None, recheio=None):
 
     base_lower = base.lower()
+
+    extras = []
+
+    if proteina:
+        extras.append(proteina)
+
+    if fruta:
+        extras.append(fruta)
+
+    # 🔥 REMOVE DUPLICADOS (CRÍTICO)
+    extras = list(dict.fromkeys(extras))
+
+    # =========================
+    # ☕ CASO: BEBIDA
+    # =========================
+    if "cafe" in base_lower or "leite" in base_lower:
+
+        if not extras:
+            return base.capitalize()
+
+        return f"{base} acompanhado de {' e '.join(extras)}".capitalize()
+
+    # =========================
+    # 🥞 MASSAS / BASES
+    # =========================
     nome = base
 
-    # =========================
-    # 🧠 NORMALIZA
-    # =========================
-    usados = set()
+    if recheio:
+        nome += f" com recheio de {recheio}"
 
-    def adicionar(item):
-        if not item:
-            return None
-
-        item_lower = item.lower()
-
-        # 🔥 evita duplicar leite
-        if "leite" in item_lower and "leite" in base_lower:
-            return None
-
-        # 🔥 evita duplicar ingrediente
-        if item_lower in usados:
-            return None
-
-        usados.add(item_lower)
-        return item
-
-    proteina = adicionar(proteina)
-    fruta = adicionar(fruta)
-    recheio = adicionar(recheio)
-
-    # =========================
-    # 🥞 CASOS COM RECHEIO
-    # =========================
-    if base_lower in ["panqueca", "crepioca"]:
-
-        partes = []
-
-        if recheio:
-            partes.append(f"recheio de {recheio}")
-
-        if proteina:
-            partes.append(proteina)
-
-        if fruta:
-            partes.append(fruta)
-
-        if partes:
-            nome += " com " + " e ".join(partes)
-
-    # =========================
-    # ☕ CASOS GERAIS
-    # =========================
-    else:
-        partes = []
-
-        if proteina:
-            partes.append(proteina)
-
-        if fruta:
-            partes.append(fruta)
-
-        if partes:
-            nome += " com " + " e ".join(partes)
+    if extras:
+        nome += f" com {' e '.join(extras)}"
 
     return nome.capitalize()
-
 
 def combinar_partes_nome(base, extras):
     """
