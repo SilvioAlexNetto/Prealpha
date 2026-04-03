@@ -3,7 +3,7 @@
 # =========================
 
 proteinasKG = [
-    "Peito de frango", "Coxa de frango", "Sobrecoxa de frango", "Frango inteiro", "Galinha inteiro"
+    "Peito de frango", "Coxa de frango", "Sobrecoxa de frango", "Frango inteiro", "Galinha inteiro",
     "Filé de frango", "Asa de frango", "Frango desfiado",
 
     "Tilápia inteira", "Corvina inteira", "Merluza", "Pescada branca", "Pescada amarela", 
@@ -17,7 +17,7 @@ proteinasKG = [
     "Tilápia em filé", "Tilápia inteira", "Merluza em filé", "Polaca do Alasca", "Polaca do Alasca em filé", "Hake", "Hake em filé", "Bacalhau", "Bacalhau em posta", 
     "Bacalhau desfiado", "Abadejo", "Abadejo em filé", "Linguado", "Linguado inteiro", "Linguado em filé", "Roncador inteiro", "Roncador em posta", "Espada", "Peixe-espada inteiro", 
     "Peixe-espada em filé", "Carapau inteiro", "Carapau em filé", "Anchoveta inteira", "Anchoveta em filé", "Tainha inteira", "Tainha em posta", "Savelha inteira", "Savelha em posta",
-    "Piau inteiro", "Piau em posta", "Traíra inteira", "Traíra em filé", "Lula inteira", "Polvo inteiro"
+    "Piau inteiro", "Piau em posta", "Traíra inteira", "Traíra em filé", "Lula inteira", "Polvo inteiro",
 
     "Patinho", "Acém", "Alcatra", "Músculo bovino", "Coxão mole",
     "Coxão duro", "Lagarto", "Fraldinha", "Picanha", "Contrafilé",

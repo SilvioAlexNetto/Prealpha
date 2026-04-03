@@ -27,12 +27,10 @@ def classificar_estoque(estoque):
         ("bruto", produtoBruto, "ambos")
     ]
 
-    # 🔥 MATCH SEGURO (PALAVRA)
     def match_seguro(nome_item, termo):
         nome = normalizar(nome_item)
         termo = normalizar(termo)
-        palavras = nome.split()
-        return termo in palavras
+        return termo in nome
 
     for item in estoque:
         nome_original = item["nome"]
@@ -41,31 +39,26 @@ def classificar_estoque(estoque):
         categorias_encontradas = []
         subcategorias_encontradas = []
 
-        # =========================
-        # 🔍 CLASSIFICAÇÃO SEGURA
-        # =========================
+        # 🔍 CLASSIFICAÇÃO
         for cat, lista, sub in categorias:
             if any(match_seguro(nome_original, x) for x in lista):
-                categorias_encontradas.append(cat)
-                subcategorias_encontradas.append(sub)
+                if cat not in categorias_encontradas:
+                    categorias_encontradas.append(cat)
+                    subcategorias_encontradas.append(sub)
 
-        # =========================
-        # 🔥 FALLBACK INTELIGENTE
-        # =========================
+        # 🔥 FALLBACK
         if not categorias_encontradas:
             if any(x in nome for x in ["arroz", "feijao", "batata"]):
                 categorias_encontradas.append("carbo")
                 subcategorias_encontradas.append("ambos")
-            elif any(x in nome for x in ["frango", "carne", "ovo"]):
+            elif any(x in nome for x in ["frango", "carne", "linguica", "ovo"]):
                 categorias_encontradas.append("proteina")
                 subcategorias_encontradas.append("ambos")
             elif "leite" in nome:
                 categorias_encontradas.append("liquido")
                 subcategorias_encontradas.append("cafe")
 
-        # =========================
-        # 🛡️ ANTI-CONFLITO (CRÍTICO)
-        # =========================
+        # 🛡️ ANTI-CONFLITO
         if "massa" in categorias_encontradas and "fruta" in categorias_encontradas:
             idx = categorias_encontradas.index("fruta")
             categorias_encontradas.pop(idx)
@@ -76,9 +69,7 @@ def classificar_estoque(estoque):
             categorias_encontradas.pop(idx)
             subcategorias_encontradas.pop(idx)
 
-        # =========================
         # 📏 NORMALIZA UNIDADE
-        # =========================
         if categorias_encontradas:
             unidade = str(item.get("unidade", "")).strip().lower()
             quantidade = float(item.get("quantidade", 0))
