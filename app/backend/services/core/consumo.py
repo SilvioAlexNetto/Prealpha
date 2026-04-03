@@ -261,15 +261,24 @@ def simular_cafe_completo(estoque):
 
     leite, tipo_leite = simular_leite(estoque, 100)
 
+    # =========================
+    # ☕ CAFÉ COM LEITE
+    # =========================
     if leite and random.random() < 0.6:
+
+        # 🔥 aplica consumo INTERNAMENTE
+        # (mas não retorna leite separado)
         return {
             "nome": "café com leite",
             "quantidade": 200,
             "unidade": "ml",
             "categorias": ["bebida"],
             "subcategorias": ["cafe"]
-        }, cafe, leite
+        }, cafe, leite  # ← continua retornando para consumo
 
+    # =========================
+    # ☕ CAFÉ PRETO
+    # =========================
     return {
         "nome": "café preto",
         "quantidade": 200,
@@ -569,7 +578,10 @@ def aplicar_itens_cafe(itens_base):
             if leite_ref:
                 aplicar_consumo(leite_ref)
 
+            # 🔹 bebida entra na lista de bebidas
             bebidas.append(bebida)
+
+            # 🔹 NÃO adiciona leite separado aos ingredientes
             continue
 
         # =========================
