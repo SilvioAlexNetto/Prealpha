@@ -254,38 +254,44 @@ def simular_cafe(estoque, ml_desejado=200):
 
 
 def simular_cafe_completo(estoque):
-
+    """
+    Simula um café completo, evitando duplicar 'leite' no nome e combinando frutas/sabores.
+    Retorna: bebida principal, café básico, leite (se houver)
+    """
+    # Simula o café básico (ex.: café puro ou com fruta)
     cafe = simular_cafe(estoque, 200)
     if not cafe:
         return None, None, None
 
+    # Simula o leite
     leite, tipo_leite = simular_leite(estoque, 100)
 
-    # =========================
-    # ☕ CAFÉ COM LEITE
-    # =========================
+    nome_base = "café preto"
+    ingredientes_extra = []
+
     if leite and random.random() < 0.6:
+        # Café com leite
+        nome_base = "café com leite"
 
-        # 🔥 aplica consumo INTERNAMENTE
-        # (mas não retorna leite separado)
-        return {
-            "nome": "café com leite",
-            "quantidade": 200,
-            "unidade": "ml",
-            "categorias": ["bebida"],
-            "subcategorias": ["cafe"]
-        }, cafe, leite  # ← continua retornando para consumo
+        # Se o café básico tiver ingrediente que não seja leite, adiciona ao nome
+        if cafe.get("nome"):
+            cafe_nome_lower = cafe["nome"].lower()
+            if "leite" not in cafe_nome_lower:
+                ingredientes_extra.append(cafe["nome"])
 
-    # =========================
-    # ☕ CAFÉ PRETO
-    # =========================
-    return {
-        "nome": "café preto",
+        # Combina extras sem repetir "leite"
+        if ingredientes_extra:
+            nome_base += " e " + " e ".join(ingredientes_extra)
+
+    bebida_final = {
+        "nome": nome_base,
         "quantidade": 200,
         "unidade": "ml",
         "categorias": ["bebida"],
         "subcategorias": ["cafe"]
-    }, cafe, None
+    }
+
+    return bebida_final, cafe, leite
 
 
 # =========================
@@ -562,41 +568,35 @@ def montar_base_cafe(estoque, tipo, dias_restantes):
     return itens
 
 def aplicar_itens_cafe(itens_base):
+    """
+    Aplica consumo dos itens do café e retorna lista de ingredientes e bebidas.
+    Evita duplicação de leite e organiza corretamente os itens.
+    """
     ingredientes = []
     bebidas = []
 
     for tipo_item in itens_base:
-
-        # estrutura pode variar (bebida tem mais dados)
+        # 🍹 Bebida (café, leite)
         if tipo_item[0] == "bebida":
             _, bebida, cafe_ref, leite_ref = tipo_item
 
-            # aplica consumo real
             if cafe_ref:
                 aplicar_consumo(cafe_ref)
 
             if leite_ref:
                 aplicar_consumo(leite_ref)
 
-            # 🔹 bebida entra na lista de bebidas
+            # 🔹 Adiciona bebida final
             bebidas.append(bebida)
-
-            # 🔹 NÃO adiciona leite separado aos ingredientes
             continue
 
-        # =========================
-        # 🍽️ ITENS NORMAIS
-        # =========================
+        # 🍽️ Itens normais
         _, item = tipo_item
-
         if not item:
             continue
 
         aplicar_consumo(item)
-
         item_ajustado = ajustar_porcionamento(item)
-
         ingredientes.append(item_ajustado)
 
     return ingredientes, bebidas
-
