@@ -255,31 +255,34 @@ def simular_cafe(estoque, ml_desejado=200):
 
 def simular_cafe_completo(estoque):
     """
-    Simula um café completo, evitando duplicar 'leite' no nome e combinando frutas/sabores.
+    Simula um café completo sem repetir 'café' ou 'leite' no nome.
     Retorna: bebida principal, café básico, leite (se houver)
     """
-    # Simula o café básico (ex.: café puro ou com fruta)
+    # Café básico
     cafe = simular_cafe(estoque, 200)
     if not cafe:
         return None, None, None
 
-    # Simula o leite
+    # Leite opcional
     leite, tipo_leite = simular_leite(estoque, 100)
 
     nome_base = "café preto"
     ingredientes_extra = []
 
     if leite and random.random() < 0.6:
-        # Café com leite
         nome_base = "café com leite"
 
-        # Se o café básico tiver ingrediente que não seja leite, adiciona ao nome
-        if cafe.get("nome"):
+        # 🔹 Extrai apenas frutas ou extras do café básico, removendo 'café' e 'leite'
+        if cafe and cafe.get("nome"):
             cafe_nome_lower = cafe["nome"].lower()
-            if "leite" not in cafe_nome_lower:
-                ingredientes_extra.append(cafe["nome"])
+            extras = [
+                word.strip()
+                for word in cafe_nome_lower.replace("café", "").replace("leite", "").split(" e ")
+                if word
+            ]
+            ingredientes_extra.extend(extras)
 
-        # Combina extras sem repetir "leite"
+        # 🔹 Adiciona extras ao nome do café
         if ingredientes_extra:
             nome_base += " e " + " e ".join(ingredientes_extra)
 
