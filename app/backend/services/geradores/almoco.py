@@ -30,8 +30,6 @@ def gerar_almoco(estoque, total_dias):
         dias_restantes = total_dias - len(receitas)
 
         ingredientes = []
-        ingredientes_temp = []
-
         nome = None
         modo_preparo = []
         tempo = 20
@@ -57,17 +55,14 @@ def gerar_almoco(estoque, total_dias):
                 consumo_max_por_dia=150
             )
 
-            # 🔥 VALIDA EXISTÊNCIA
-            if not proteina or not carbo:
+            # 🔥 valida base
+            if not receita_valida(proteina, carbo):
                 continue
 
             if proteina.get("subcategoria") == "liquido":
                 continue
 
-            if not receita_valida(proteina, carbo):
-                continue
-
-            ingredientes_temp_pf = [proteina, carbo]
+            ingredientes_temp = [proteina, carbo]
 
             # 🥕 LEGUME
             legume = simular_consumo(
@@ -77,7 +72,7 @@ def gerar_almoco(estoque, total_dias):
             )
 
             if legume:
-                ingredientes_temp_pf.append(legume)
+                ingredientes_temp.append(legume)
 
             # 🥬 FOLHA
             folha = simular_consumo(
@@ -87,17 +82,17 @@ def gerar_almoco(estoque, total_dias):
             )
 
             if folha:
-                ingredientes_temp_pf.append(folha)
+                ingredientes_temp.append(folha)
 
-            # 🔥 VALIDA RECEITA COMPLETA (CRÍTICO)
-            if not receita_valida(*ingredientes_temp_pf):
+            # 🔥 valida final (igual café: só segue se tudo ok)
+            if not receita_valida(*ingredientes_temp):
                 continue
 
-            # 🔥 CONSUMO REAL
-            for i in ingredientes_temp_pf:
+            # 🔥 consumo só acontece aqui
+            for i in ingredientes_temp:
                 aplicar_consumo(i)
 
-            ingredientes = ingredientes_temp_pf
+            ingredientes = ingredientes_temp
 
             nome = nome_prato_pf(
                 proteina["nome"],
@@ -139,14 +134,11 @@ def gerar_almoco(estoque, total_dias):
                 consumo_max_por_dia=200
             )
 
-            # 🔥 VALIDA EXISTÊNCIA
-            if not massa or not molho or not proteina:
-                continue
-
+            # 🔥 valida base
             if not receita_valida(massa, molho, proteina):
                 continue
 
-            ingredientes_temp_massa = [massa, molho, proteina]
+            ingredientes_temp = [massa, molho, proteina]
 
             # 🥕 LEGUME
             legume = simular_consumo(
@@ -156,7 +148,7 @@ def gerar_almoco(estoque, total_dias):
             )
 
             if legume:
-                ingredientes_temp_massa.append(legume)
+                ingredientes_temp.append(legume)
 
             # 🥬 FOLHA
             folha = simular_consumo(
@@ -166,17 +158,17 @@ def gerar_almoco(estoque, total_dias):
             )
 
             if folha:
-                ingredientes_temp_massa.append(folha)
+                ingredientes_temp.append(folha)
 
-            # 🔥 VALIDA RECEITA COMPLETA (CRÍTICO)
-            if not receita_valida(*ingredientes_temp_massa):
+            # 🔥 valida final
+            if not receita_valida(*ingredientes_temp):
                 continue
 
-            # 🔥 CONSUMO REAL
-            for i in ingredientes_temp_massa:
+            # 🔥 consumo só aqui
+            for i in ingredientes_temp:
                 aplicar_consumo(i)
 
-            ingredientes = ingredientes_temp_massa
+            ingredientes = ingredientes_temp
 
             modo_preparo = []
             modo_preparo += preparo_massa(massa["nome"])
@@ -200,7 +192,7 @@ def gerar_almoco(estoque, total_dias):
             nome = f"{massa['nome']} com {molho['nome']} e {proteina['nome']}"
 
         # =========================
-        # FINALIZA
+        # FINAL
         # =========================
         if not ingredientes:
             continue
