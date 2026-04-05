@@ -1,21 +1,55 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# =========================
+# PROGUARD PARA CAPACITOR + REACT
+# =========================
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Mantém todas as classes do Capacitor e plugins
+-keep class com.getcapacitor.** { *; }
+-keep class com.getcapacitor.plugin.** { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Mantém classes do AndroidX usadas por Capacitor
+-keep class androidx.core.** { *; }
+-keep class androidx.appcompat.** { *; }
+-keep class androidx.fragment.app.** { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Mantém classes de Parcelable (necessário para FileProvider e Plugins)
+-keep class android.os.Parcelable { *; }
+
+# Mantém classes que usam annotations do Capacitor
+-keepclassmembers class * {
+    @com.getcapacitor.JSObject *;
+    @com.getcapacitor.PluginMethod *;
+    @com.getcapacitor.annotation.* *;
+}
+
+# Mantém classes e métodos usados pelo React Native / React Web via JS
+-keep class com.facebook.react.** { *; }
+-keep class com.facebook.hermes.** { *; }
+
+# Mantém os recursos do service worker e manifest
+-keep class android.webkit.WebView { *; }
+-keep class android.webkit.WebViewClient { *; }
+
+# Evita renomear nomes de métodos de interface usados pelo JS
+-keepattributes Signature, *Annotation*, EnclosingMethod, InnerClasses
+
+# Mantém nomes de arquivos de recursos para stacktrace (opcional)
+-keepattributes SourceFile,LineNumberTable
+
+# =========================
+# PLUGINS COMUNS
+# =========================
+# Camera, Files, Storage, SplashScreen
+-keep class com.getcapacitor.plugin.camera.** { *; }
+-keep class com.getcapacitor.plugin.filesystem.** { *; }
+-keep class com.getcapacitor.plugin.splashscreen.** { *; }
+-keep class com.getcapacitor.plugin.storage.** { *; }
+
+# =========================
+# MISC
+# =========================
+# Evita remover classes que possam ser usadas via reflection
+-keep class * implements java.io.Serializable { *; }
+
+# =========================
+# FIM
+# =========================
