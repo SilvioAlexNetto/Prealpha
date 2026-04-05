@@ -1,6 +1,6 @@
-from app.backend.services.http_client import buscar_url
-from app.backend.services.parser_nfe import extrair_dados_nota
-from app.backend.services.normalizar import normalizar
+from app.backend.services.utils.http_client import buscar_url
+from app.backend.services.parsers.nf_parser import extrair_dados_nota
+from app.backend.services.core.normalizacao import normalizar
 
 
 async def ler_nota_fiscal(url: str):
