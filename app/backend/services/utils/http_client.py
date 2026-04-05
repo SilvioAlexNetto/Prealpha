@@ -1,10 +1,10 @@
-import requests
+import httpx
 
 # Tempo máximo de espera (evita travar backend)
 TIMEOUT = 10
 
 
-def buscar_url(url: str) -> str:
+async def buscar_url(url: str) -> str:
     """
     Faz GET em uma URL e retorna o HTML da página.
 
@@ -18,21 +18,22 @@ def buscar_url(url: str) -> str:
         Exception: se não conseguir acessar ou status != 200
     """
     try:
-        response = requests.get(url, timeout=TIMEOUT)
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.get(url)
 
         if response.status_code != 200:
             raise Exception(f"Erro HTTP: {response.status_code}")
 
         return response.text
 
-    except requests.exceptions.Timeout:
+    except httpx.ReadTimeout:
         raise Exception("Tempo de requisição excedido")
 
-    except requests.exceptions.RequestException as e:
+    except httpx.RequestError as e:
         raise Exception(f"Erro na requisição: {str(e)}")
 
 
-def buscar_url_json(url: str) -> dict:
+async def buscar_url_json(url: str) -> dict:
     """
     Faz GET e tenta retornar JSON (caso alguma SEFAZ futura suporte JSON).
 
@@ -43,7 +44,8 @@ def buscar_url_json(url: str) -> dict:
         dict
     """
     try:
-        response = requests.get(url, timeout=TIMEOUT)
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.get(url)
 
         if response.status_code != 200:
             raise Exception(f"Erro HTTP: {response.status_code}")
@@ -53,5 +55,5 @@ def buscar_url_json(url: str) -> dict:
     except ValueError:
         raise Exception("Resposta não é JSON válido")
 
-    except Exception as e:
+    except httpx.RequestError as e:
         raise Exception(f"Erro ao buscar JSON: {str(e)}")

@@ -8,7 +8,7 @@ async def ler_nota_fiscal(url: str):
         # =========================
         # 🌐 1. BAIXAR HTML
         # =========================
-        html = buscar_url(url)
+        html = await buscar_url(url)
 
         # =========================
         # 🧾 2. PARSEAR NOTA
@@ -30,13 +30,15 @@ async def ler_nota_fiscal(url: str):
             if not nome:
                 continue
 
+            nome_original = nome
             nome_limpo = normalizar(nome)
 
             itens_normalizados.append({
-                "nome": nome_limpo,
+                "nome": nome_original,       # 👈 UI
+                "nome_normalizado": nome_limpo,  # 👈 backend inteligente
                 "quantidade": item.get("quantidade"),
                 "unidade": item.get("unidade"),
-                "valor_kg": item.get("valor_kg"),
+                "valor_kg": item.get("valor_kg", None),  # 👈 preparado pro futuro
                 "preco_total": item.get("preco_total")
             })
 
