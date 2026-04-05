@@ -6,7 +6,9 @@
   --bege-card: #F5EBDD;
   --bege-card-2: #EFE2CF;
   --dourado: #E8D8B0;
-  padding-bottom: env(safe-area-inset-bottom);
+
+  /* 🔥 SAFE AREA CORRETO */
+  --safe-bottom: env(safe-area-inset-bottom);
 }
 
 * {
@@ -20,24 +22,13 @@ html, body, #root {
   width: 100%;
 }
 
-.hp-title-main {
-  font-size: 20px;
-  font-weight: 600;
-}
+/* 🔥 GARANTE QUE O CONTEÚDO NÃO FIQUE SOB A NAVBAR */
+body {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(to bottom, var(--verde-principal), var(--verde-escuro));
+  overflow-x: hidden;
 
-.hp-title {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.hp-text {
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.hp-small {
-  font-size: 12px;
-  font-weight: 400;
+  padding-bottom: max(env(safe-area-inset-bottom), 12px);
 }
 
 /* ================= HEADER GLASS ================= */
@@ -72,10 +63,26 @@ html, body, #root {
   letter-spacing: 1px;
 }
 
-body {
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: linear-gradient(to bottom, var(--verde-principal), var(--verde-escuro));
-  overflow-x: hidden;
+/* ================= TIPOGRAFIA ================= */
+
+.hp-title-main {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.hp-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.hp-text {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.hp-small {
+  font-size: 12px;
+  font-weight: 400;
 }
 
 button {
@@ -83,6 +90,13 @@ button {
   cursor: pointer;
 }
 
+/* ================= FOOTER (CORREÇÃO REAL) ================= */
+
 footer {
-  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+
+  /* 🔥 ESSENCIAL */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
 }

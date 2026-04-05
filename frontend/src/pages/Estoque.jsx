@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import Quagga from "quagga";
-const BASE_URL = "https://prealpha.onrender.com"
 import { Camera, CameraResultType } from '@capacitor/camera';
 import "../components/Estoque.css";
 import EstoqueTwoIcon from "../assets/icons/EstoqueTwoIcon.png";
 import HistoricoIcon from "../assets/icons/HistoricoIcon.png";
 import CameraIcon from "../assets/icons/CameraIcon.png";
 import DeleteIcon from "../assets/icons/DeleteIcon.png";
+import jsQR from "jsqr";
+
+
+const BASE_URL = "https://prealpha.onrender.com"
 
 export default function Estoque() {
     const [nomeDigitado, setNomeDigitado] = useState("");
@@ -85,6 +88,33 @@ export default function Estoque() {
         setNumeroPacotes(1);
     }
 
+
+    const [notaFiscal, setNotaFiscal] = useState(null);
+    const [itensSelecionados, setItensSelecionados] = useState([]);
+
+
+    function detectarQRCode(video) {
+        if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
+            return null;
+        }
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        try {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, canvas.width, canvas.height);
+            return code ? code.data : null;
+        } catch {
+            return null;
+        }
+    }
+
     function removerItem(index) {
         const novoEstoque = estoque.filter((_, i) => i !== index);
         setEstoque(novoEstoque);
@@ -123,6 +153,8 @@ export default function Estoque() {
     const [mostrarAvisoIngrediente, setMostrarAvisoIngrediente] = useState(false);
     const [sugestoesIngredientes, setSugestoesIngredientes] = useState([]);
 
+    const deviceIdRef = useRef(null);
+
     // ============================
     // 🔥 FUNÇÃO PARA AUTOCOMPLETE IGUAL AO MANUAL
     // ============================
@@ -156,6 +188,44 @@ export default function Estoque() {
         setSugestoesIngredientes([]);
     }
 
+    function toggleItemSelecionado(index) {
+        setItensSelecionados(prev => {
+            if (prev.includes(index)) {
+                return prev.filter(i => i !== index);
+            } else {
+                return [...prev, index];
+            }
+        });
+    }
+
+    function adicionarItensNotaAoEstoque() {
+        if (!notaFiscal) return;
+
+        const itensEscolhidos = itensSelecionados.map(i => notaFiscal.itens[i]);
+
+        const novosItens = itensEscolhidos
+            .filter(item => item.nome && item.quantidade && item.unidade)
+            .map(item => ({
+                nome: item.nome,
+                quantidade: item.quantidade,
+                unidade: item.unidade
+            }));
+
+        if (novosItens.length === 0) {
+            alert("Nenhum item válido selecionado.");
+            return;
+        }
+
+        const novoEstoque = [...estoque, ...novosItens];
+
+        setEstoque(novoEstoque);
+        enviarEstoqueParaAPI(novoEstoque);
+
+        // limpa estado
+        setNotaFiscal(null);
+        setItensSelecionados([]);
+    }
+
     // ============================
     // 🔥 SUA FUNÇÃO ORIGINAL (NÃO REMOVIDO NADA)
     // ============================
@@ -164,8 +234,61 @@ export default function Estoque() {
         return permission.camera === "granted";
     }
 
+
+    function iniciarQuagga(constraints, target) {
+        return new Promise((resolve, reject) => {
+            Quagga.init(
+                {
+                    inputStream: {
+                        type: "LiveStream",
+                        target,
+                        constraints
+                    },
+                    locator: { patchSize: "medium", halfSample: true },
+                    numOfWorkers: navigator.hardwareConcurrency || 4,
+                    frequency: 10,
+                    decoder: { readers: ["ean_reader"] },
+                    locate: true
+                },
+                err => {
+                    if (err) return reject(err);
+                    Quagga.start();
+                    resolve();
+                }
+            );
+        });
+    }
+
+
+    async function processarQRCode(url) {
+        try {
+            const res = await fetch(`${BASE_URL}/nota-fiscal/ler`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ url })
+            });
+
+            const data = await res.json();
+
+            if (!data || !data.itens || data.itens.length === 0) {
+                alert("Nenhum item encontrado na nota.");
+                return;
+            }
+
+            setNotaFiscal(data);
+            setItensSelecionados([]);
+
+        } catch (e) {
+            console.error(e);
+            alert("Erro ao processar QR Code");
+        }
+    }
+
     async function iniciarLeituraCodigo() {
         if (quaggaAtivoRef.current) return;
+
         const permitido = await solicitarPermissao();
 
         if (!permitido) {
@@ -182,13 +305,11 @@ export default function Estoque() {
                 return;
             }
 
-            const cameraPreferida = cameras[0];
-
             setCameraAtiva(true);
             setTempoRestante(10);
             quaggaAtivoRef.current = true;
 
-            requestAnimationFrame(() => {
+            requestAnimationFrame(async function initCamera() {
                 const target = document.querySelector("#camera");
 
                 if (!target) {
@@ -197,41 +318,77 @@ export default function Estoque() {
                     return;
                 }
 
-                Quagga.init(
-                    {
-                        inputStream: {
-                            type: "LiveStream",
-                            target,
-                            constraints: {
-                                deviceId: cameraPreferida.deviceId,
-                                facingMode: "environment",
-                                width: { ideal: 640 },
-                                height: { ideal: 480 }
-                            }
-                        },
-                        locator: { patchSize: "medium", halfSample: true },
-                        numOfWorkers: navigator.hardwareConcurrency || 4,
-                        frequency: 10,
-                        decoder: { readers: ["ean_reader"] },
-                        locate: true,
-                        area: {
-                            top: "25%",
-                            right: "10%",
-                            left: "10%",
-                            bottom: "25%"
-                        }
-                    },
-                    err => {
-                        if (err) {
-                            console.error(err);
-                            alert("Erro ao iniciar a câmera.");
+                let constraints;
+
+                try {
+                    if (deviceIdRef.current) {
+                        constraints = {
+                            deviceId: { exact: deviceIdRef.current }
+                        };
+                    } else {
+                        constraints = {
+                            facingMode: { exact: "environment" }
+                        };
+                    }
+
+                    await iniciarQuagga(constraints, target);
+
+                } catch (erroFacing) {
+                    console.warn("Fallback câmera...", erroFacing);
+
+                    try {
+                        let cameraPreferida =
+                            cameras.find(device =>
+                                device.label.toLowerCase().includes("back") ||
+                                device.label.toLowerCase().includes("traseira") ||
+                                device.label.toLowerCase().includes("environment")
+                            ) || cameras[cameras.length - 1];
+
+                        deviceIdRef.current = cameraPreferida.deviceId;
+
+                        constraints = {
+                            deviceId: { exact: cameraPreferida.deviceId }
+                        };
+
+                        await iniciarQuagga(constraints, target);
+
+                    } catch (erroFinal) {
+                        console.error(erroFinal);
+                        alert("Erro ao iniciar a câmera.");
+                        encerrarCamera();
+                        return;
+                    }
+                }
+
+                // =========================
+                // 🔥 QR CODE LOOP
+                // =========================
+                function scanQRCodeLoop() {
+                    if (!quaggaAtivoRef.current) return;
+
+                    const video = target.querySelector("video");
+
+                    if (video && video.readyState === 4) {
+                        const qr = detectarQRCode(video);
+
+                        if (qr && qr.startsWith("http")) {
+                            console.log("QR detectado:", qr);
+
+                            quaggaAtivoRef.current = false; // 🔥 trava tudo
                             encerrarCamera();
+                            processarQRCode(qr);
                             return;
                         }
-                        Quagga.start();
                     }
-                );
 
+                    requestAnimationFrame(scanQRCodeLoop);
+                }
+
+                scanQRCodeLoop();
+
+                // =========================
+                // 🔥 BARCODE (SEU CÓDIGO ORIGINAL)
+                // =========================
                 let codigoDetectado = null;
 
                 Quagga.onDetected(async data => {
@@ -350,10 +507,13 @@ export default function Estoque() {
                     }
                 });
 
+                // =========================
+                // ⏱️ TIMER
+                // =========================
                 timerRef.current = setInterval(() => {
                     setTempoRestante(t => {
                         if (t <= 1) {
-                            alert("Tempo esgotado. Use o cadastro manual.");
+                            alert("Tempo esgotado.");
                             encerrarCamera();
                             return 0;
                         }
@@ -706,6 +866,71 @@ export default function Estoque() {
                                     setSugestoesIngredientes([]);
                                 }}
                             >
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {notaFiscal && (
+                <div className="hp-overlay">
+                    <div className="hp-camera-box" style={{ maxHeight: "80vh", overflowY: "auto" }}>
+
+                        <h3>Nota Fiscal</h3>
+
+                        <p><strong>Mercado:</strong> {notaFiscal.mercado || "Não identificado"}</p>
+                        <p><strong>Data:</strong> {notaFiscal.data || "Não identificada"}</p>
+
+                        <hr />
+
+                        <h4>Itens encontrados</h4>
+
+                        {notaFiscal.itens.length === 0 && (
+                            <p>Nenhum item encontrado.</p>
+                        )}
+
+                        {notaFiscal.itens.map((item, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 8,
+                                    padding: 6,
+                                    borderBottom: "1px solid #eee"
+                                }}
+                            >
+                                <input
+                                    type="checkbox"
+                                    checked={itensSelecionados.includes(index)}
+                                    onChange={() => toggleItemSelecionado(index)}
+                                />
+
+                                <div>
+                                    <div><strong>{item.nome}</strong></div>
+
+                                    <div style={{ fontSize: 12, opacity: 0.7 }}>
+                                        {item.quantidade || "?"} {item.unidade || ""}
+                                        {item.preco_total && (
+                                            <> — R$ {item.preco_total}</>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+
+                        <hr />
+
+                        <div style={{ display: "flex", gap: 8 }}>
+                            <button onClick={adicionarItensNotaAoEstoque}>
+                                Adicionar ao estoque
+                            </button>
+
+                            <button onClick={() => {
+                                setNotaFiscal(null);
+                                setItensSelecionados([]);
+                            }}>
                                 Cancelar
                             </button>
                         </div>

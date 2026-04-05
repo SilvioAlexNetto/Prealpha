@@ -1,10 +1,9 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.backend.services.FabricaReceitas import gerar_tudo
-
+from app.backend.services.nota_fiscal_service import ler_nota_fiscal
 from .backend.services.cardapio_service import (
     carregar_receitas,
-    obter_cardapio,
     listar_ingredientes_e_unidades,
     carregar_sobras,
     montar_cardapio
@@ -159,3 +158,13 @@ def gerar_cardapio_api():
 def get_ingredientes():
     return listar_ingredientes_e_unidades()
 
+
+@app.post("/nota-fiscal/ler")
+async def ler_nota(request: Request):
+    data = await request.json()
+    url = data.get("url")
+
+    if not url:
+        return {"erro": "URL não enviada"}
+
+    return await ler_nota_fiscal(url)

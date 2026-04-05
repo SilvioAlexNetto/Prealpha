@@ -1,5 +1,5 @@
 /* ================================
-   🎨 HEALTHCARE DESIGN SYSTEM
+   🎨 HEALTHPANTRY DESIGN SYSTEM
 ================================ */
 
 /* -------- VARIÁVEIS -------- */
@@ -21,6 +21,9 @@
   --radius-pequeno: 10px;
 
   --sombra-card: 0 15px 40px rgba(0,0,0,0.15);
+
+  /* 🔥 SAFE AREA (ESSENCIAL) */
+  --safe-bottom: env(safe-area-inset-bottom);
 }
 
 /* -------- RESET BASE -------- */
@@ -34,6 +37,9 @@ body {
   font-family: "Segoe UI", sans-serif;
   color: var(--cor-texto);
   background: #f9f9f9;
+
+  /* 🔥 garante que conteúdo não fique sob a navbar */
+  padding-bottom: max(env(safe-area-inset-bottom), 12px);
 }
 
 /* ================================
@@ -148,6 +154,7 @@ body {
   object-fit: contain;
   gap: 6px;
 }
+
 /* ================================
    🧱 CONTAINER FLEX PADRÃO
 ================================ */
