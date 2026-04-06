@@ -14,7 +14,6 @@ import LojaIcon from "./assets/icons/LojaIcon.png";
 import EstoqueIcon from "./assets/icons/EstoqueIcon.png";
 import PerfilIcon from "./assets/icons/PerfilIcon.png";
 import { LocalNotifications } from '@capacitor/local-notifications';
-import Logo from "./assets/icons/Logo.png";
 
 /* =========================
    CONFIG TERMOS
@@ -99,7 +98,7 @@ function App() {
 ========================= */
   useEffect(() => {
     if (termosAceitos && perfilCadastrado) {
-      agendarNotificacoes();
+      agendarNotificacoes().catch(err => console.error("Erro notificações:", err));
     }
   }, [termosAceitos, perfilCadastrado]);
 
@@ -170,7 +169,7 @@ function App() {
         title: `🍽 Hora do ${refeicao.charAt(0).toUpperCase() + refeicao.slice(1)}`,
         body: `Prepare-se para o ${refeicao}!`,
         schedule: { at: dataNotificacao },
-        smallIcon: 'Logo', // precisa existir no Android
+        smallIcon: 'ic_launcher', // precisa existir no Android
         sound: 'default',
         // estilo de notificação grande
         extra: { bigText: `Não esqueça: o ${refeicao} começará em 30 minutos.` }
