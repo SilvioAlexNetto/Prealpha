@@ -13,7 +13,8 @@ import CalendarioIcon from "./assets/icons/CalendarioIcon.png";
 import LojaIcon from "./assets/icons/LojaIcon.png";
 import EstoqueIcon from "./assets/icons/EstoqueIcon.png";
 import PerfilIcon from "./assets/icons/PerfilIcon.png";
-
+import { LocalNotifications } from '@capacitor/local-notifications';
+import Logo from "./assets/icons/Logo.png";
 
 /* =========================
    CONFIG TERMOS
@@ -32,6 +33,8 @@ function App() {
 
   const [perfil, setPerfil] = useState(null);
   const [editarPerfil, setEditarPerfil] = useState(false);
+
+  const HORARIOS = { cafe: "08:00", almoco: "12:30", jantar: "19:00" };
 
 
   /* =========================
@@ -91,6 +94,15 @@ function App() {
     return <LoadingInicial />;
   }
 
+  /* =========================
+   AGENDAR AO ABRIR APP
+========================= */
+  useEffect(() => {
+    if (termosAceitos && perfilCadastrado) {
+      agendarNotificacoes();
+    }
+  }, [termosAceitos, perfilCadastrado]);
+
 
   /* =========================
      ACEITAR TERMOS
@@ -123,6 +135,52 @@ function App() {
   function campo(valor) {
     return valor ? valor : "—";
   }
+
+  /* =========================
+        NOTIFICAÇÕES
+  ========================= */
+
+
+  async function agendarNotificacoes() {
+    const permitido = await solicitarPermissaoNotificacoes();
+    if (!permitido) return;
+
+    // Cancela notificações antigas
+    await LocalNotifications.cancel({
+      notifications: [{ id: 1 }, { id: 2 }, { id: 3 }]
+    });
+
+    const hoje = new Date();
+    const ids = [1, 2, 3];
+
+    const notificacoes = Object.entries(HORARIOS).map(([refeicao, horario], index) => {
+      const [h, m] = horario.split(":").map(Number);
+      const dataNotificacao = new Date(hoje);
+      dataNotificacao.setHours(h);
+      dataNotificacao.setMinutes(m - 30);
+      dataNotificacao.setSeconds(0);
+
+      // Se já passou, agenda para amanhã
+      if (dataNotificacao < new Date()) {
+        dataNotificacao.setDate(dataNotificacao.getDate() + 1);
+      }
+
+      return {
+        id: ids[index],
+        title: `🍽 Hora do ${refeicao.charAt(0).toUpperCase() + refeicao.slice(1)}`,
+        body: `Prepare-se para o ${refeicao}!`,
+        schedule: { at: dataNotificacao },
+        smallIcon: 'Logo', // precisa existir no Android
+        sound: 'default',
+        // estilo de notificação grande
+        extra: { bigText: `Não esqueça: o ${refeicao} começará em 30 minutos.` }
+      };
+    });
+
+    await LocalNotifications.schedule({ notifications: notificacoes });
+  }
+
+
 
   /* =========================
      CONTEÚDO DAS ABAS
@@ -232,7 +290,7 @@ function Tab({ icon, ativo, onClick }) {
 const appStyle = {
   maxWidth: 480,
   margin: "0 auto",
-  height: "100vh",
+  minHeight: "100vh",
   display: "flex",
   flexDirection: "column",
 };
@@ -241,11 +299,13 @@ const conteudoStyle = {
   flex: 1,
   padding: 16,
   overflowY: "auto",
+  paddingBottom: `calc(16px + 60px + env(safe-area-inset-bottom))`
 };
 
 const tabBarStyle = {
   display: "flex",
   borderTop: "1px solid #ccc",
+  paddingBottom: "env(safe-area-inset-bottom)"
 };
 
 export default App;
