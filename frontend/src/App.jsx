@@ -27,15 +27,33 @@ async function solicitarPermissaoNotificacoes() {
   return perm.display === 'granted';
 }
 
+function calcularStreak(progresso) {
+  const hoje = new Date();
+  let streak = 0;
+
+  for (let i = hoje.getDate(); i >= 1; i--) {
+    const d = progresso[i];
+
+    if (d?.cafe && d?.almoco && d?.jantar) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
 function App() {
   const [loadingInicial, setLoadingInicial] = useState(true);
   const BASE_URL = "https://prealpha.onrender.com"
   const [abaAtiva, setAbaAtiva] = useState("cardapio");
   const [erro, setErro] = useState(null);
-
+  const [streak, setStreak] = useState(0);
+  const [streakAnimando, setStreakAnimando] = useState(false);
   const [termosAceitos, setTermosAceitos] = useState(false);
   const [perfilCadastrado, setPerfilCadastrado] = useState(false);
-
+  const [mostrarCompartilhar, setMostrarCompartilhar] = useState(null);
   const [perfil, setPerfil] = useState(null);
   const [editarPerfil, setEditarPerfil] = useState(false);
 
@@ -108,6 +126,33 @@ function App() {
     return <LoadingInicial />;
   }
 
+  useEffect(() => {
+    const progresso = JSON.parse(localStorage.getItem("progresso") || "{}");
+    const novo = calcularStreak(progresso);
+
+    setStreak(prev => {
+      if (novo > prev) {
+        triggerStreakAnimacao();
+
+        // 🎯 marcos importantes
+        const marcos = [1, 7, 14, 21, 30];
+
+        if (marcos.includes(novo)) {
+          const chave = `streak_${novo}_mostrado`;
+          const jaMostrou = localStorage.getItem(chave);
+
+          if (!jaMostrou) {
+            setMostrarCompartilhar(novo);
+            localStorage.setItem(chave, "true");
+          }
+        }
+      }
+
+      return novo;
+    });
+
+  }, [abaAtiva]);
+
 
   /* =========================
      ACEITAR TERMOS
@@ -122,6 +167,19 @@ function App() {
       })
     );
     setTermosAceitos(true);
+  }
+
+  function triggerStreakAnimacao() {
+    setStreakAnimando(true);
+
+    // vibração (mobile)
+    if (navigator.vibrate) {
+      navigator.vibrate(100);
+    }
+
+    setTimeout(() => {
+      setStreakAnimando(false);
+    }, 800);
   }
 
   /* =========================
@@ -139,6 +197,25 @@ function App() {
   ========================= */
   function campo(valor) {
     return valor ? valor : "—";
+  }
+
+  async function compartilharStreak() {
+    const texto = `🔥 ${mostrarCompartilhar} dias seguidos! 💪 Foco total na alimentação`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Meu streak 🔥",
+          text: texto,
+          url: window.location.href
+        });
+      } catch (err) {
+        console.log("Erro ao compartilhar", err);
+      }
+    } else {
+      navigator.clipboard.writeText(texto);
+      alert("Texto copiado!");
+    }
   }
 
   /* =========================
@@ -223,6 +300,17 @@ function App() {
       {termosAceitos && perfilCadastrado && (
         <div style={appStyle}>
           <Header />
+          <div style={{
+            ...streakStyle,
+            transform: streakAnimando
+              ? "translateX(-50%) scale(1.1)"
+              : "translateX(-50%)"
+          }}>
+            <span className={streakAnimando ? "streak-pop" : ""}>
+              🔥 {streak} dias
+            </span>
+          </div>
+
           <div style={conteudoStyle}>
             {erro ? erro : renderConteudo()}
           </div>
@@ -252,6 +340,27 @@ function App() {
               onClick={() => setAbaAtiva("loja")}
             />
           </div>
+          {mostrarCompartilhar && (
+            <div style={overlayStyle}>
+              <div style={modalStyle}>
+                <h3>🔥 {mostrarCompartilhar} dias seguidos!</h3>
+
+                <img
+                  src={`/streak${mostrarCompartilhar}.png`}
+                  alt="Compartilhar streak"
+                  style={{ width: "100%", borderRadius: 12 }}
+                />
+
+                <button onClick={compartilharStreak}>
+                  📤 Compartilhar
+                </button>
+
+                <button onClick={() => setMostrarCompartilhar(null)}>
+                  Fechar
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>
@@ -295,7 +404,7 @@ function Tab({ icon, ativo, onClick }) {
 const appStyle = {
   maxWidth: 480,
   margin: "0 auto",
-  Height: "100vh",
+  height: "100vh",
   display: "flex",
   flexDirection: "column",
 };
@@ -317,6 +426,44 @@ const tabBarStyle = {
   background: "#fff",
   zIndex: 1000,
   paddingBottom: "env(safe-area-inset-bottom)"
+};
+
+const streakStyle = {
+  position: "fixed",
+  top: 70,
+  left: "50%",
+  transform: "translateX(-50%)",
+  background: "#111",
+  color: "#fff",
+  padding: "6px 14px",
+  borderRadius: 20,
+  fontSize: 14,
+  fontWeight: "bold",
+  boxShadow: "0 0 10px rgba(255,120,0,0.4)",
+  zIndex: 999,
+  transition: "0.2s",
+};
+
+const overlayStyle = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: "rgba(0,0,0,0.6)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: 2000
+};
+
+const modalStyle = {
+  background: "#fff",
+  padding: 20,
+  borderRadius: 16,
+  width: "90%",
+  maxWidth: 350,
+  textAlign: "center"
 };
 
 export default App;
