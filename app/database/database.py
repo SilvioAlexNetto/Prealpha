@@ -57,6 +57,16 @@ def criar_tabelas():
     )
     """)
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS aprendizado_produtos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome_original TEXT UNIQUE,
+        nome_normalizado TEXT,
+        nome_final TEXT,
+        fonte TEXT
+    )
+    """)
+
     conn.commit()
     conn.close()
 

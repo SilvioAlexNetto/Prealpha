@@ -1,6 +1,6 @@
 from app.backend.services.utils.http_client import buscar_url
 from app.backend.services.parsers.nf_parser import extrair_dados_nota
-from app.backend.services.core.normalizacao import normalizar
+from app.backend.services.core.resolver_nome_produto import resolver_nome
 
 
 async def ler_nota_fiscal(url: str):
@@ -31,14 +31,15 @@ async def ler_nota_fiscal(url: str):
                 continue
 
             nome_original = nome
-            nome_limpo = normalizar(nome)
+
+            nome_resolvido = await resolver_nome(nome_original)
 
             itens_normalizados.append({
-                "nome": nome_original,       # 👈 UI
-                "nome_normalizado": nome_limpo,  # 👈 backend inteligente
+                "nome": nome_original,            # UI
+                "nome_resolvido": nome_resolvido, # 🔥 NOVO INTELIGENTE
                 "quantidade": item.get("quantidade"),
                 "unidade": item.get("unidade"),
-                "valor_kg": item.get("valor_kg", None),  # 👈 preparado pro futuro
+                "valor_kg": item.get("valor_kg", None),
                 "preco_total": item.get("preco_total")
             })
 

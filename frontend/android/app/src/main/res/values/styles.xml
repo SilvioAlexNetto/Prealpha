@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <!-- 🔥 EDGE TO EDGE (ESSENCIAL) -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
@@ -18,7 +19,8 @@
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
 
-        <!-- 🔥 EDGE TO EDGE AQUI TAMBÉM -->
+        <!-- 🔥 EDGE TO EDGE -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
@@ -26,17 +28,19 @@
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
 
-        <!-- cor de fundo -->
+        <!-- splash -->
         <item name="windowSplashScreenBackground">@android:color/white</item>
-
-        <!-- imagem do splash -->
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash</item>
-
-        <!-- duração -->
         <item name="windowSplashScreenAnimationDuration">300</item>
 
-        <!-- tema após splash -->
+        <!-- 🔥 AQUI É O MAIS IMPORTANTE -->
         <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
+
+        <!-- 🔥 EDGE TO EDGE TAMBÉM NO SPLASH -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
 
     </style>
 
