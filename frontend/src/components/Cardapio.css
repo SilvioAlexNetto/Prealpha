@@ -128,3 +128,53 @@
   font-weight: 500;
   margin-top: 6px;
 }
+
+.hp-card.completo {
+  border: 2px solid #22c55e;
+  box-shadow: 0 0 12px rgba(34,197,94,0.5);
+  transform: scale(1.02);
+}
+
+.hp-card.animando {
+  animation: pulse 0.6s ease;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1.02); }
+}
+
+.confete-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confete {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  top: -10px;
+  left: calc(100% * var(--i));
+  animation: cair 1.5s linear forwards;
+}
+
+.confete:nth-child(odd) {
+  background: #4ade80;
+}
+
+.confete:nth-child(even) {
+  background: #16a34a;
+}
+
+@keyframes cair {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+  }
+}

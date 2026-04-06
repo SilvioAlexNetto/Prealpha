@@ -20,6 +20,12 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 ========================= */
 const TERMOS_VERSAO_ATUAL = "1.2";
 
+async function solicitarPermissaoNotificacoes() {
+  const perm = await LocalNotifications.requestPermissions();
+  console.log("Permissão:", perm);
+
+  return perm.display === 'granted';
+}
 
 function App() {
   const [loadingInicial, setLoadingInicial] = useState(true);
@@ -88,19 +94,19 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  /* AQUI */
+  /* ✅ AGENDAR NOTIFICAÇÕES (CORRETO) */
+  useEffect(() => {
+    if (termosAceitos && perfilCadastrado) {
+      agendarNotificacoes().catch(err =>
+        console.error("Erro notificações:", err)
+      );
+    }
+  }, [termosAceitos, perfilCadastrado]);
+
+  /* 👇 SÓ DEPOIS o return */
   if (loadingInicial) {
     return <LoadingInicial />;
   }
-
-  /* =========================
-   AGENDAR AO ABRIR APP
-========================= */
-  useEffect(() => {
-    if (termosAceitos && perfilCadastrado) {
-      agendarNotificacoes().catch(err => console.error("Erro notificações:", err));
-    }
-  }, [termosAceitos, perfilCadastrado]);
 
 
   /* =========================
@@ -289,7 +295,7 @@ function Tab({ icon, ativo, onClick }) {
 const appStyle = {
   maxWidth: 480,
   margin: "0 auto",
-  minHeight: "100vh",
+  Height: "100vh",
   display: "flex",
   flexDirection: "column",
 };
@@ -298,12 +304,18 @@ const conteudoStyle = {
   flex: 1,
   padding: 16,
   overflowY: "auto",
-  paddingBottom: `calc(16px + 60px + env(safe-area-inset-bottom))`
+  paddingBottom: `calc(80px + env(safe-area-inset-bottom))`
 };
 
 const tabBarStyle = {
+  position: "fixed",
+  bottom: 0,
+  left: 0,
+  right: 0,
   display: "flex",
   borderTop: "1px solid #ccc",
+  background: "#fff",
+  zIndex: 1000,
   paddingBottom: "env(safe-area-inset-bottom)"
 };
 
