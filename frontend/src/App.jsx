@@ -27,21 +27,42 @@ async function solicitarPermissaoNotificacoes() {
   return perm.display === 'granted';
 }
 
-function calcularStreak(progresso) {
-  const hoje = new Date();
+
+function getDataKey(date) {
+  return date.toISOString().split("T")[0];
+}
+
+function calcularStreak(progresso, freezeDisponivel, freezeUsados) {
   let streak = 0;
+  let data = new Date();
+  let freezeUsado = 0;
 
-  for (let i = hoje.getDate(); i >= 1; i--) {
-    const d = progresso[i];
+  let limite = 3650; // ~10 anos
 
-    if (d?.cafe && d?.almoco && d?.jantar) {
+  while (limite--) {
+    const key = getDataKey(data);
+    const dia = progresso[key];
+
+    const completo =
+      dia?.cafe &&
+      dia?.almoco &&
+      dia?.jantar;
+
+    if (completo) {
       streak++;
     } else {
-      break;
+      if (!freezeUsados[key] && freezeUsado < freezeDisponivel) {
+        freezeUsado++;
+        freezeUsados[key] = true; // 🔥 marca uso
+      } else {
+        break;
+      }
     }
+
+    data.setDate(data.getDate() - 1);
   }
 
-  return streak;
+  return { streak, freezeUsado, freezeUsados };
 }
 
 function App() {
@@ -59,7 +80,9 @@ function App() {
 
   const HORARIOS = { cafe: "08:00", almoco: "12:30", jantar: "19:00" };
 
-
+  const [freeze, setFreeze] = useState(() => {
+    return Number(localStorage.getItem("freeze")) || 1;
+  });
   /* =========================
      VERIFICA TERMOS
   ========================= */
@@ -94,9 +117,11 @@ function App() {
     }
   }, []);
 
-  /* =======================
-     FETCH RECEITAS
-  ========================= */
+
+  useEffect(() => {
+    localStorage.setItem("freeze", freeze);
+  }, [freeze]);
+
   useEffect(() => {
     fetch(`${BASE_URL}/receitas`)
       .then((res) => res.json())
@@ -121,37 +146,67 @@ function App() {
     }
   }, [termosAceitos, perfilCadastrado]);
 
+  useEffect(() => {
+    const atualizar = () => {
+      let progresso = {};
+
+      try {
+        progresso = JSON.parse(localStorage.getItem("progresso")) || {};
+      } catch {
+        progresso = {};
+      }
+
+      const freezeUsadosSalvo = JSON.parse(localStorage.getItem("freeze_usados") || "{}");
+
+      const { streak: novo, freezeUsado, freezeUsados } =
+        calcularStreak(progresso, freeze, freezeUsadosSalvo);
+
+      localStorage.setItem("freeze_usados", JSON.stringify(freezeUsados));
+
+      setStreak(prev => {
+        if (novo > prev) {
+          triggerStreakAnimacao();
+
+          const marcos = [1, 7, 14, 21, 30];
+
+          if (marcos.includes(novo)) {
+            const chave = `streak_${novo}_mostrado`;
+            const jaMostrou = localStorage.getItem(chave);
+
+            if (!jaMostrou) {
+              setMostrarCompartilhar(novo);
+              localStorage.setItem(chave, "true");
+            }
+          }
+        }
+        return novo;
+      });
+
+      const novosUsos = Object.keys(freezeUsados).filter(
+        key => !freezeUsadosSalvo[key]
+      );
+
+      if (novosUsos.length > 0) {
+        setFreeze(prev => Math.max(prev - novosUsos.length, 0));
+      }
+    };
+
+    window.addEventListener("streakAtualizado", atualizar);
+
+    atualizar(); // roda ao iniciar
+
+    return () => {
+      window.removeEventListener("streakAtualizado", atualizar);
+    };
+  }, [freeze]);
+
+
   /* 👇 SÓ DEPOIS o return */
   if (loadingInicial) {
     return <LoadingInicial />;
   }
 
-  useEffect(() => {
-    const progresso = JSON.parse(localStorage.getItem("progresso") || "{}");
-    const novo = calcularStreak(progresso);
 
-    setStreak(prev => {
-      if (novo > prev) {
-        triggerStreakAnimacao();
-
-        // 🎯 marcos importantes
-        const marcos = [1, 7, 14, 21, 30];
-
-        if (marcos.includes(novo)) {
-          const chave = `streak_${novo}_mostrado`;
-          const jaMostrou = localStorage.getItem(chave);
-
-          if (!jaMostrou) {
-            setMostrarCompartilhar(novo);
-            localStorage.setItem(chave, "true");
-          }
-        }
-      }
-
-      return novo;
-    });
-
-  }, [abaAtiva]);
 
 
   /* =========================
@@ -430,7 +485,7 @@ const tabBarStyle = {
 
 const streakStyle = {
   position: "fixed",
-  top: 70,
+  top: 110,
   left: "50%",
   transform: "translateX(-50%)",
   background: "#111",

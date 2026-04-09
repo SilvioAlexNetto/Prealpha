@@ -16,8 +16,11 @@ export default function Cardapio() {
 
     // 🆕 PROGRESSO
     const [progresso, setProgresso] = useState(() => {
-        const salvo = localStorage.getItem("progresso");
-        return salvo ? JSON.parse(salvo) : {};
+        try {
+            return JSON.parse(localStorage.getItem("progresso")) || {};
+        } catch {
+            return {};
+        }
     });
 
     const [carregando, setCarregando] = useState(false);
@@ -30,6 +33,22 @@ export default function Cardapio() {
     useEffect(() => {
         gerarDiasDoMes();
     }, []);
+
+    // 🆕 RESET AUTOMÁTICO POR MÊS
+    useEffect(() => {
+        const hoje = new Date();
+        const prefixoMes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}`;
+
+        const progressoFiltrado = Object.fromEntries(
+            Object.entries(progresso).filter(([key]) => key.startsWith(prefixoMes))
+        );
+
+        // só atualiza se realmente mudou (evita loop infinito)
+        if (JSON.stringify(progressoFiltrado) !== JSON.stringify(progresso)) {
+            setProgresso(progressoFiltrado);
+        }
+
+    }, []); // roda só ao carregar o componente
 
     useEffect(() => {
         localStorage.setItem("cardapio", JSON.stringify(cardapio));
@@ -96,6 +115,27 @@ export default function Cardapio() {
     const hoje = new Date();
     const mesNome = hoje.toLocaleString("pt-BR", { month: "long" });
     const ano = hoje.getFullYear();
+    const diaHoje = hoje.getDate();
+    const mesAtual = hoje.getMonth();
+    const anoAtual = hoje.getFullYear();
+
+    function getStatusDia(dia) {
+        if (dia < diaHoje) return "passado";
+        if (dia === diaHoje) return "hoje";
+        return "futuro";
+    }
+
+    function getDataKey(date) {
+        return date.toISOString().split("T")[0];
+    }
+
+    const dataSelecionada = diaSelecionado
+        ? new Date(anoAtual, mesAtual, diaSelecionado.dia)
+        : null;
+
+    const keySelecionado = dataSelecionada
+        ? getDataKey(dataSelecionada)
+        : null;
 
     function togglePreparo(tipo) {
         setPreparoAberto(prev => ({
@@ -112,16 +152,19 @@ export default function Cardapio() {
 
     // 🆕 marcar refeição
     function toggleRefeicao(dia, tipo) {
+        const data = new Date(anoAtual, mesAtual, dia);
+        const key = getDataKey(data);
+
         setProgresso(prev => {
             const novo = {
                 ...prev,
-                [dia]: {
-                    ...prev[dia],
-                    [tipo]: !prev[dia]?.[tipo]
+                [key]: {
+                    ...prev[key],
+                    [tipo]: !prev[key]?.[tipo]
                 }
             };
 
-            const d = novo[dia];
+            const d = novo[key];
 
             if (d?.cafe && d?.almoco && d?.jantar) {
                 triggerAnimacao(dia);
@@ -129,13 +172,18 @@ export default function Cardapio() {
 
             return novo;
         });
+
+        window.dispatchEvent(new Event("streakAtualizado"));
     }
 
     // 🆕 concluir dia inteiro
     function concluirDia(dia) {
+        const data = new Date(anoAtual, mesAtual, dia);
+        const key = getDataKey(data);
+
         setProgresso(prev => ({
             ...prev,
-            [dia]: {
+            [key]: {
                 cafe: true,
                 almoco: true,
                 jantar: true
@@ -143,7 +191,14 @@ export default function Cardapio() {
         }));
 
         triggerAnimacao(dia);
+        window.dispatchEvent(new Event("streakAtualizado"));
     }
+
+    const statusSelecionado = diaSelecionado
+        ? getStatusDia(diaSelecionado.dia)
+        : null;
+
+    const podeMarcar = statusSelecionado === "hoje";
 
     return (
         <>
@@ -163,26 +218,40 @@ export default function Cardapio() {
 
                 <div className="hp-grid">
                     {dias.map(dia => {
+
+                        const status = getStatusDia(dia);
+
+                        const bloqueado = false;
+                        const futuro = status === "futuro";
+
                         const dados = cardapio[dia] || {};
-                        const progressoDia = progresso[dia] || {};
+                        const data = new Date(anoAtual, mesAtual, dia);
+                        const key = getDataKey(data);
+                        const progressoDia = progresso[key] || {};
 
                         const completo =
                             progressoDia.cafe &&
                             progressoDia.almoco &&
                             progressoDia.jantar;
 
+
                         return (
                             <div
                                 key={dia}
                                 className={`hp-card 
                                     ${completo ? "completo" : ""} 
-                                    ${animacaoDia === dia ? "animando" : ""}`
-                                }
+                                    ${animacaoDia === dia ? "animando" : ""}
+                                    ${bloqueado ? "bloqueado" : ""}
+                                    ${futuro ? "futuro" : ""}
+                                `}
                                 onClick={() => {
+                                    if (bloqueado) return;
                                     setDiaSelecionado({ dia, dados });
                                     setPreparoAberto({});
                                 }}
+
                             >
+
                                 <h4>Dia {dia}</h4>
 
                                 {/* 🆕 PROGRESSO VISUAL */}
@@ -235,6 +304,8 @@ export default function Cardapio() {
                             {/* 🆕 BOTÃO CONCLUIR DIA */}
                             <button
                                 onClick={() => concluirDia(diaSelecionado.dia)}
+
+                                disabled={!podeMarcar}
                                 style={{ marginBottom: 15 }}
                             >
                                 ✅ Concluir dia
@@ -242,6 +313,8 @@ export default function Cardapio() {
 
                             {["cafe", "almoco", "jantar"].map(tipo => {
                                 const receita = diaSelecionado.dados[tipo];
+                                const status = getStatusDia(diaSelecionado.dia);
+                                const podeMarcar = status === "hoje";
                                 if (!receita) return null;
 
                                 return (
@@ -253,10 +326,13 @@ export default function Cardapio() {
                                         </h4>
 
                                         {/* 🆕 CHECKBOX */}
+
                                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+
                                             <input
                                                 type="checkbox"
-                                                checked={progresso[diaSelecionado.dia]?.[tipo] || false}
+                                                disabled={!podeMarcar}
+                                                checked={keySelecionado ? progresso[keySelecionado]?.[tipo] || false : false}
                                                 onChange={() => toggleRefeicao(diaSelecionado.dia, tipo)}
                                             />
                                             <strong>{receita.nome}</strong>

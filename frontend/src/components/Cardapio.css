@@ -178,3 +178,14 @@
     transform: translateY(100vh) rotate(360deg);
   }
 }
+
+/* passado */
+.hp-card.bloqueado {
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+/* futuro (preview) */
+.hp-card.futuro {
+    opacity: 0.7;
+}
