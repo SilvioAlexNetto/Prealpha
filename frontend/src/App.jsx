@@ -307,7 +307,7 @@ function App() {
         title: `🍽 Hora do ${refeicao.charAt(0).toUpperCase() + refeicao.slice(1)}`,
         body: `Prepare-se para o ${refeicao}!`,
         schedule: { at: dataNotificacao },
-        smallIcon: 'ic_launcher', // precisa existir no Android
+        smallIcon: 'ic_stat_logo', // precisa existir no Android
         sound: 'default',
         // estilo de notificação grande
         extra: { bigText: `Não esqueça: o ${refeicao} começará em 30 minutos.` }
