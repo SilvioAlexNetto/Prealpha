@@ -17,37 +17,69 @@
   );
 }
 
-.hp-loading-logo {
-  font-size: 34px;
-  font-weight: bold;
-  color: var(--verde-escuro);
-  margin-bottom: 30px;
+/* 🔥 splash fake (transição do Android) */
+
+.hp-splash-fake {
+  width: 140px;
+  animation: fadeOutSplash 0.7s ease forwards;
 }
 
-/* Spinner */
-
-.hp-spinner {
-  width: 48px;
-  height: 48px;
-
-  border: 4px solid rgba(0,0,0,0.1);
-  border-top: 4px solid var(--verde-escuro);
-
-  border-radius: 50%;
-
-  animation: hp-spin 0.8s linear infinite;
-
-  margin-bottom: 25px;
-}
-
-@keyframes hp-spin {
-  to {
-    transform: rotate(360deg);
+@keyframes fadeOutSplash {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
   }
 }
+
+/* 🔥 logo principal */
+
+.hp-logo {
+  width: 140px;
+  animation: fadeInLogo 0.6s ease, logoPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes fadeInLogo {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes logoPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* 🔥 frase com fade */
 
 .hp-loading-frase {
   max-width: 260px;
   font-size: 14px;
   opacity: 0.85;
+  margin-top: 20px;
+
+  animation: fadeFrase 0.5s ease;
+}
+
+@keyframes fadeFrase {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 0.85;
+    transform: translateY(0);
+  }
 }
