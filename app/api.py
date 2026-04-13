@@ -6,7 +6,8 @@ from .backend.services.cardapio_service import (
     carregar_receitas,
     listar_ingredientes_e_unidades,
     carregar_sobras,
-    montar_cardapio
+    montar_cardapio,
+    carregar_consumidos
 )
 
 
@@ -107,7 +108,6 @@ async def gerar_cardapio_api(request: Request):
         except:
             data = {}
 
-
         ingredientes_custom = data.get("ingredientes_custom", {})
 
         estoque = listar_estoque_atual()
@@ -115,55 +115,28 @@ async def gerar_cardapio_api(request: Request):
         print(f"📦 Estoque carregado: {len(estoque)} itens")
 
         if not estoque:
-            print("⚠️ Estoque vazio")
-            return {
-                "cardapio": {},
-                "estoque": []
-            }
+            return {"cardapio": {}, "estoque": []}
 
-        # =========================
-        # 🔥 PASSO 1: GERAR
-        # =========================
         print("⚙️ Gerando receitas...")
         gerar_tudo(estoque, ingredientes_custom)
         print("✅ gerar_tudo OK")
 
-        # =========================
-        # 🔥 PASSO 2: CARREGAR
-        # =========================
-        print("📥 Carregando receitas...")
         receitas = carregar_receitas()
         sobras = carregar_sobras()
+        consumidos = carregar_consumidos()
 
-        print(f"🍽️ Receitas: {len(receitas)}")
-        print(f"📦 Sobras: {len(sobras)}")
-
-        # =========================
-        # 🔥 PASSO 3: MONTAR
-        # =========================
-        print("📅 Montando cardápio...")
         cardapio = montar_cardapio(receitas)
-
-        print("✅ Cardápio montado")
-        print("🔥 ===== FIM CARDAPIO =====\n")
 
         return {
             "cardapio": cardapio,
-            "estoque": sobras
+            "estoque": sobras,
+            "consumidos": consumidos
         }
 
     except Exception as e:
         import traceback
-
-        print("\n💥💥💥 ERRO NO BACKEND 💥💥💥")
-        print("Erro:", str(e))
         traceback.print_exc()
-        print("💥💥💥 FIM ERRO 💥💥💥\n")
-
-        return {
-            "erro": str(e),
-            "tipo": type(e).__name__
-        }
+        return {"erro": str(e)}
 # =========================
 # INGREDIENTES
 # =========================

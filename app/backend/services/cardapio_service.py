@@ -25,10 +25,26 @@ def salvar_resultado(resultado):
         with open(SOBRAS_PATH, "w", encoding="utf-8") as f:
             json.dump(resultado.get("sobras", []), f, ensure_ascii=False, indent=4)
 
-        print("💾 Receitas e sobras salvas com sucesso", flush=True)
+        with open("consumidos.json", "w", encoding="utf-8") as f:
+            json.dump(resultado.get("consumidos", []), f, ensure_ascii=False, indent=4)
+
+        print("💾 Receitas, sobras e consumidos salvos com sucesso", flush=True)
 
     except Exception as e:
         print("💥 Erro ao salvar resultado:", e, flush=True)
+
+
+def carregar_consumidos():
+    try:
+        if not os.path.exists("consumidos.json"):
+            return []
+
+        with open("consumidos.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    except Exception as e:
+        print("💥 Erro ao carregar consumidos:", e, flush=True)
+        return []
 
 
 # =========================
