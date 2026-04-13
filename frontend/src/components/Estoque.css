@@ -181,3 +181,13 @@
   color: #666;
   box-shadow: none;
 }
+
+.consumido {
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+.sobra {
+    color: #51cf66;
+    font-weight: 600;
+}

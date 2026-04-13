@@ -776,7 +776,7 @@ export default function Estoque() {
 
                     {historico.consumidos?.map((e, index) => (
                         <div key={index} className="hp-estoque-linha">
-                            <span>
+                            <span className="consumido">
                                 🔻 {e.nome} — {e.quantidade} {e.unidade}
                             </span>
                         </div>
@@ -795,7 +795,7 @@ export default function Estoque() {
 
                     {historico.sobras?.map((e, index) => (
                         <div key={index} className="hp-estoque-linha">
-                            <span>
+                            <span className="sobra">
                                 📦 {e.nome} — {e.quantidade} {e.unidade}
                             </span>
                         </div>
