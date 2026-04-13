@@ -29,20 +29,44 @@
 /* ================= BOTÃO FECHAR ================= */
 
 .hp-fechar {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+  position: sticky;
+  top: 0;
+
+  margin-left: auto;
+
   width: 32px;
   height: 32px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border-radius: 50%;
   border: none;
-  background: var(--verde-escuro);
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+
   color: white;
   font-size: 16px;
   cursor: pointer;
+
+  z-index: 10;
+
+  transition: all 0.2s ease;
+
+  /* 🔥 CORREÇÃO DO OVAL */
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+.hp-fechar:hover {
+  background: rgba(0, 0, 0, 0.75);
+  transform: scale(1.05);
+}
+
+.hp-fechar:active {
+  transform: scale(0.92);
 }
 
 .hp-btn-gerar {

@@ -301,75 +301,79 @@ export default function Cardapio() {
                                 <img src={CalendarioTwoIcon} /> Dia {diaSelecionado.dia}
                             </h3>
 
-                            {/* 🆕 BOTÃO CONCLUIR DIA */}
-                            <button
-                                onClick={() => concluirDia(diaSelecionado.dia)}
+                            <div className="hp-modal-content">
 
-                                disabled={!podeMarcar}
-                                style={{ marginBottom: 15 }}
-                            >
-                                ✅ Concluir dia
-                            </button>
 
-                            {["cafe", "almoco", "jantar"].map(tipo => {
-                                const receita = diaSelecionado.dados[tipo];
-                                const status = getStatusDia(diaSelecionado.dia);
-                                const podeMarcar = status === "hoje";
-                                if (!receita) return null;
+                                {/* 🆕 BOTÃO CONCLUIR DIA */}
+                                <button
+                                    onClick={() => concluirDia(diaSelecionado.dia)}
 
-                                return (
-                                    <div key={tipo} style={{ marginBottom: 20 }}>
-                                        <h4>
-                                            {tipo === "cafe" && (<><img src={CafeIcon} className="hp-icon" /> Café da manhã </>)}
-                                            {tipo === "almoco" && (<><img src={AlmocoIcon} className="hp-icon" /> Almoço </>)}
-                                            {tipo === "jantar" && (<><img src={JantarIcon} className="hp-icon" /> Jantar </>)}
-                                        </h4>
+                                    disabled={!podeMarcar}
+                                    style={{ marginBottom: 15 }}
+                                >
+                                    ✅ Concluir dia
+                                </button>
 
-                                        {/* 🆕 CHECKBOX */}
+                                {["cafe", "almoco", "jantar"].map(tipo => {
+                                    const receita = diaSelecionado.dados[tipo];
+                                    const status = getStatusDia(diaSelecionado.dia);
+                                    const podeMarcar = status === "hoje";
+                                    if (!receita) return null;
 
-                                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                    return (
+                                        <div key={tipo} style={{ marginBottom: 20 }}>
+                                            <h4>
+                                                {tipo === "cafe" && (<><img src={CafeIcon} className="hp-icon" /> Café da manhã </>)}
+                                                {tipo === "almoco" && (<><img src={AlmocoIcon} className="hp-icon" /> Almoço </>)}
+                                                {tipo === "jantar" && (<><img src={JantarIcon} className="hp-icon" /> Jantar </>)}
+                                            </h4>
 
-                                            <input
-                                                type="checkbox"
-                                                disabled={!podeMarcar}
-                                                checked={keySelecionado ? progresso[keySelecionado]?.[tipo] || false : false}
-                                                onChange={() => toggleRefeicao(diaSelecionado.dia, tipo)}
-                                            />
-                                            <strong>{receita.nome}</strong>
+                                            {/* 🆕 CHECKBOX */}
+
+                                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+
+                                                <input
+                                                    type="checkbox"
+                                                    disabled={!podeMarcar}
+                                                    checked={keySelecionado ? progresso[keySelecionado]?.[tipo] || false : false}
+                                                    onChange={() => toggleRefeicao(diaSelecionado.dia, tipo)}
+                                                />
+                                                <strong>{receita.nome}</strong>
+                                            </div>
+
+                                            <p><b>Ingredientes:</b></p>
+                                            <ul>
+                                                {receita.ingredientes?.map((i, idx) => (
+                                                    <li key={idx}>
+                                                        {i.quantidade} {i.unidade} — {i.nome}
+                                                    </li>
+                                                ))}
+                                            </ul>
+
+                                            {receita.modo_preparo && (
+                                                <>
+                                                    <p
+                                                        className="hp-toggle"
+                                                        onClick={() => togglePreparo(tipo)}
+                                                    >
+                                                        {preparoAberto[tipo] ? "🔼 Ocultar preparo" : "🔽 Como fazer"}
+                                                    </p>
+
+                                                    {preparoAberto[tipo] && (
+                                                        <div className="hp-preparo">
+                                                            <ol>
+                                                                {receita.modo_preparo.map((passo, idx) => (
+                                                                    <li key={idx}>{passo}</li>
+                                                                ))}
+                                                            </ol>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
                                         </div>
-
-                                        <p><b>Ingredientes:</b></p>
-                                        <ul>
-                                            {receita.ingredientes?.map((i, idx) => (
-                                                <li key={idx}>
-                                                    {i.quantidade} {i.unidade} — {i.nome}
-                                                </li>
-                                            ))}
-                                        </ul>
-
-                                        {receita.modo_preparo && (
-                                            <>
-                                                <p
-                                                    className="hp-toggle"
-                                                    onClick={() => togglePreparo(tipo)}
-                                                >
-                                                    {preparoAberto[tipo] ? "🔼 Ocultar preparo" : "🔽 Como fazer"}
-                                                </p>
-
-                                                {preparoAberto[tipo] && (
-                                                    <div className="hp-preparo">
-                                                        <ol>
-                                                            {receita.modo_preparo.map((passo, idx) => (
-                                                                <li key={idx}>{passo}</li>
-                                                            ))}
-                                                        </ol>
-                                                    </div>
-                                                )}
-                                            </>
-                                        )}
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
                 )}

@@ -68,12 +68,20 @@ body {
     var(--cor-fundo-grad-1),
     var(--cor-fundo-grad-2)
   );
-  padding: 24px;
+
+  padding: 20px;
   border-radius: var(--radius-grande);
+
   width: 90%;
   max-width: 500px;
+
   box-shadow: var(--sombra-card);
   animation: fadeIn 0.2s ease;
+
+  /* 🔥 ESSENCIAL */
+  max-height: 85vh;     /* limita altura */
+  display: flex;
+  flex-direction: column;
 }
 
 /* ================================
@@ -211,9 +219,9 @@ body {
 }
 
 .hp-modal-content {
-  max-height: 300px;
   overflow-y: auto;
-  margin-bottom: 15px;
+  flex: 1;                 /* 🔥 ocupa espaço restante */
+  padding-right: 6px;      /* evita cortar scrollbar */
 }
 
 .hp-checkbox {

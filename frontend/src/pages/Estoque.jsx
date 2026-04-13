@@ -15,9 +15,12 @@ export default function Estoque() {
     const [nomeDigitado, setNomeDigitado] = useState("");
     const [ingredienteSelecionado, setIngredienteSelecionado] = useState(null);
 
+    const [novoIngrediente, setNovoIngrediente] = useState(null);
+    const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
+
     const [quantidade, setQuantidade] = useState("");
     const [unidade, setUnidade] = useState("");
-    const [numeroPacotes, setNumeroPacotes] = useState("");
+    const [numeroPacotes, setNumeroPacotes] = useState(1);
 
     const [modoHistorico, setModoHistorico] = useState(false);
 
@@ -35,7 +38,7 @@ export default function Estoque() {
     const [unidadesBanco, setUnidadesBanco] = useState([]);
 
     const [cameraAtiva, setCameraAtiva] = useState(false);
-    const [tempoRestante, setTempoRestante] = useState(10);
+    const [tempoRestante, setTempoRestante] = useState(30);
     const [produtoEscaneado, setProdutoEscaneado] = useState(null);
 
     const timerRef = useRef(null);
@@ -58,13 +61,44 @@ export default function Estoque() {
         localStorage.setItem("estoque", JSON.stringify(estoque));
     }, [estoque]);
 
-    function adicionarItem() {
-        if (!ingredienteSelecionado || !quantidade || !unidade) return;
+    function normalizarTexto(texto) {
+        if (!texto) return "";
 
-        // 🔴 VALIDAÇÃO OBRIGATÓRIA
+        return texto
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    }
+
+    function nomeValido(texto) {
+        return /^[A-Za-zÀ-ÿ\s]+$/.test(texto.trim());
+    }
+
+    function adicionarItem() {
+        if (!nomeDigitado.trim() || !quantidade || Number(quantidade) <= 0 || !unidade) {
+            alert("Preencha todos os campos corretamente.");
+            return;
+        }
+
         if (!numeroPacotes || Number(numeroPacotes) < 1) {
             alert("Informe o N° de pacotes (mínimo 1).");
             return;
+        }
+
+        const existe = ingredientesCompletos.some(
+            item =>
+                normalizarTexto(item) === normalizarTexto(nomeDigitado)
+        );
+
+        if (!existe) {
+            if (!nomeValido(nomeDigitado)) {
+                alert("Nome inválido. Use apenas letras.");
+                return;
+            }
+
+            setNovoIngrediente(nomeDigitado);
+            return; // 🔥 abre modal
         }
 
         const quantidadeFinal = Number(quantidade) * Number(numeroPacotes);
@@ -72,7 +106,7 @@ export default function Estoque() {
         const novoEstoque = [
             ...estoque,
             {
-                nome: ingredienteSelecionado,
+                nome: nomeDigitado,
                 quantidade: quantidadeFinal,
                 unidade
             }
@@ -81,8 +115,8 @@ export default function Estoque() {
         setEstoque(novoEstoque);
         enviarEstoqueParaAPI(novoEstoque);
 
+        // reset
         setNomeDigitado("");
-        setIngredienteSelecionado(null);
         setQuantidade("");
         setUnidade("");
         setNumeroPacotes(1);
@@ -142,9 +176,42 @@ export default function Estoque() {
         });
     }
 
-    const sugestoes = ingredientesBanco.filter(item =>
-        item.toLowerCase().includes(nomeDigitado.toLowerCase())
-    );
+    const categoriasDisponiveis = [
+        "proteinasKG",
+        "proteinasUN",
+        "proteinasCF",
+        "carboidratosCF",
+        "frutas",
+        "liquidos",
+        "cereais",
+        "fermentos",
+        "produtoBruto",
+        "farinhas",
+        "folhas_saladas",
+        "carboidratos",
+        "massas",
+        "molhos",
+        "caldos",
+        "legumes"
+    ];
+
+    const [ingredientesCustom, setIngredientesCustom] = useState(() => {
+        const salvo = localStorage.getItem("ingredientes_custom");
+        return salvo ? JSON.parse(salvo) : {};
+    });
+
+    const ingredientesCompletos = [
+        ...ingredientesBanco,
+        ...Object.values(ingredientesCustom || {}).flat()
+    ];
+
+    const sugestoes = nomeDigitado
+        ? ingredientesCompletos
+            .filter(item =>
+                normalizarTexto(item).includes(normalizarTexto(nomeDigitado))
+            )
+            .slice(0, 5)
+        : [];
 
     // ============================
     // 🔥 NOVOS STATES (ADICIONE JUNTO AOS OUTROS STATES DO COMPONENTE)
@@ -246,7 +313,7 @@ export default function Estoque() {
                     },
                     locator: { patchSize: "medium", halfSample: true },
                     numOfWorkers: navigator.hardwareConcurrency || 4,
-                    frequency: 10,
+                    frequency: 30,
                     decoder: { readers: ["ean_reader"] },
                     locate: true
                 },
@@ -306,7 +373,7 @@ export default function Estoque() {
             }
 
             setCameraAtiva(true);
-            setTempoRestante(10);
+            setTempoRestante(30);
             quaggaAtivoRef.current = true;
 
             requestAnimationFrame(async function initCamera() {
@@ -588,6 +655,12 @@ export default function Estoque() {
                         }}
                     />
 
+                    {mostrarAvisoIngrediente && (
+                        <p className="hp-erro">
+                            Ingrediente não encontrado no banco.
+                        </p>
+                    )}
+
                     {nomeDigitado && !ingredienteSelecionado && (
                         <div className="hp-sugestoes">
                             {sugestoes.map((item, index) => (
@@ -642,7 +715,7 @@ export default function Estoque() {
                     </select>
 
                     <div style={{ display: "flex", gap: 8 }}>
-                        <button className="hp-btn-save" onClick={adicionarItem} disabled={!ingredienteSelecionado}>
+                        <button className="hp-btn-save" onClick={adicionarItem}>
                             Salvar
                         </button>
 
@@ -771,8 +844,7 @@ export default function Estoque() {
                                             onClick={() => {
                                                 setProdutoEscaneado({
                                                     ...produtoEscaneado,
-                                                    nome: item,
-                                                    unidade: item
+                                                    nome: item
                                                 });
 
                                                 setSugestoesIngredientes([]);
@@ -836,11 +908,7 @@ export default function Estoque() {
                         <div style={{ display: "flex", gap: 8 }}>
                             <button
                                 onClick={() => {
-                                    const ingredienteExiste = ingredientesBanco.some(
-                                        item =>
-                                            item.toLowerCase() ===
-                                            produtoEscaneado.nome.toLowerCase()
-                                    );
+                                    const ingredienteExiste = ingredientesBanco.some(normalizarTexto(item) === normalizarTexto(produtoEscaneado.nome));
 
                                     if (!ingredienteExiste) {
                                         alert(
@@ -934,6 +1002,84 @@ export default function Estoque() {
                                 Cancelar
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {novoIngrediente && (
+                <div className="hp-overlay">
+                    <div className="hp-modal">
+
+                        <h3>Novo ingrediente</h3>
+
+                        <p><strong>{novoIngrediente}</strong> não existe.</p>
+
+                        <select
+                            value={categoriaSelecionada}
+                            onChange={(e) => setCategoriaSelecionada(e.target.value)}
+                        >
+                            <option value="">Selecione a categoria</option>
+
+                            {categoriasDisponiveis.map((cat, i) => (
+                                <option key={i} value={cat}>
+                                    {cat}
+                                </option>
+                            ))}
+                        </select>
+
+                        <div className="hp-flex">
+                            <button
+                                className="hp-btn"
+                                onClick={() => {
+                                    if (!categoriaSelecionada) {
+                                        alert("Selecione a categoria");
+                                        return;
+                                    }
+
+                                    const atualizado = {
+                                        ...ingredientesCustom,
+                                        [categoriaSelecionada]: [
+                                            ...(ingredientesCustom[categoriaSelecionada] || []),
+                                            novoIngrediente
+                                        ]
+                                    };
+
+                                    setIngredientesCustom(atualizado);
+                                    localStorage.setItem(
+                                        "ingredientes_custom",
+                                        JSON.stringify(atualizado)
+                                    );
+
+                                    setNovoIngrediente(null);
+                                    setCategoriaSelecionada("");
+
+                                    // 🔥 já adiciona no estoque automaticamente
+                                    setIngredientesBanco(prev => [...prev, novoIngrediente]);
+                                    setTimeout(() => {
+                                        setNomeDigitado(novoIngrediente);
+                                        adicionarItem();
+                                    }, 0);
+
+                                    if (!nomeValido(novoIngrediente)) {
+                                        alert("Nome inválido. Apenas letras.");
+                                        return;
+                                    }
+                                }}
+                            >
+                                Salvar
+                            </button>
+
+                            <button
+                                className="hp-btn-secundario"
+                                onClick={() => {
+                                    setNovoIngrediente(null);
+                                    setCategoriaSelecionada("");
+                                }}
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             )}

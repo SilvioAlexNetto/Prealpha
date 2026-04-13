@@ -127,6 +127,7 @@ frutas = [
     "uva", "uva verde", "uva roxa",
     "morango",
     "kiwi",
+    "abacate",
     "goiaba",
     "acerola",
     "caju",
