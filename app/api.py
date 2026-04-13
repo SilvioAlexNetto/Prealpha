@@ -102,7 +102,11 @@ async def gerar_cardapio_api(request: Request):
     try:
         print("\n🔥 ===== INICIO CARDAPIO =====")
 
-        data = await request.json()
+        try:
+            data = await request.json()
+        except:
+            data = {}
+
 
         ingredientes_custom = data.get("ingredientes_custom", {})
 
