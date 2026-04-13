@@ -31,7 +31,10 @@ export default function Estoque() {
 
     const [historico, setHistorico] = useState(() => {
         const salvo = localStorage.getItem("estoque_historico");
-        return salvo ? JSON.parse(salvo) : [];
+
+        return salvo
+            ? JSON.parse(salvo)
+            : { sobras: [], consumidos: [] };
     });
 
     const [ingredientesBanco, setIngredientesBanco] = useState([]);
@@ -633,7 +636,7 @@ export default function Estoque() {
                 <button className="hp-subaba-btn" onClick={() => {
                     setModoHistorico(!modoHistorico);
                     const salvo = localStorage.getItem("estoque_historico");
-                    setHistorico(salvo ? JSON.parse(salvo) : []);
+                    setHistorico(salvo ? JSON.parse(salvo) : { sobras: [], consumidos: [] });
                 }}>
                     <img
                         src={modoHistorico ? EstoqueTwoIcon : HistoricoIcon}
@@ -753,7 +756,7 @@ export default function Estoque() {
 
             {modoHistorico && (
                 <>
-                    <h3>Histórico pós-cardápio</h3>
+                    <h3>📊 Histórico do Cardápio</h3>
 
                     <button
                         onClick={limparHistorico}
@@ -762,11 +765,39 @@ export default function Estoque() {
                         Limpar Histórico
                     </button>
 
-                    {historico.length === 0 && <p>Nenhum histórico disponível.</p>}
+                    {/* ========================= */}
+                    {/* 🍽️ CONSUMIDOS */}
+                    {/* ========================= */}
+                    <h4>🔥 Itens utilizados</h4>
 
-                    {historico.map((e, index) => (
+                    {historico.consumidos?.length === 0 && (
+                        <p>Nenhum item consumido.</p>
+                    )}
+
+                    {historico.consumidos?.map((e, index) => (
                         <div key={index} className="hp-estoque-linha">
-                            <span>{e.nome} — {e.quantidade} {e.unidade}</span>
+                            <span>
+                                🔻 {e.nome} — {e.quantidade} {e.unidade}
+                            </span>
+                        </div>
+                    ))}
+
+                    <hr />
+
+                    {/* ========================= */}
+                    {/* 📦 SOBRAS */}
+                    {/* ========================= */}
+                    <h4>📦 Sobras do estoque</h4>
+
+                    {historico.sobras?.length === 0 && (
+                        <p>Nenhuma sobra registrada.</p>
+                    )}
+
+                    {historico.sobras?.map((e, index) => (
+                        <div key={index} className="hp-estoque-linha">
+                            <span>
+                                📦 {e.nome} — {e.quantidade} {e.unidade}
+                            </span>
                         </div>
                     ))}
                 </>

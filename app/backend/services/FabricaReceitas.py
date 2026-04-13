@@ -10,6 +10,27 @@ from app.backend.services.geradores.jantar import gerar_janta
 from app.backend.services.cardapio_service import salvar_resultado
 
 
+def calcular_consumidos(inicial, sobras):
+    sobra_map = {i["nome"]: i["quantidade"] for i in sobras}
+
+    consumidos = []
+
+    for item in inicial:
+        nome = item["nome"]
+        inicial_qtd = item["quantidade"]
+        sobra_qtd = sobra_map.get(nome, 0)
+
+        usado = inicial_qtd - sobra_qtd
+
+        if usado > 0:
+            consumidos.append({
+                "nome": nome,
+                "quantidade": usado,
+                "unidade": item["unidade"]
+            })
+
+    return consumidos
+    
 def gerar_tudo(estoque_usuario, ingredientes_custom=None):
 
     hoje = datetime.now()
@@ -24,6 +45,7 @@ def gerar_tudo(estoque_usuario, ingredientes_custom=None):
 )
 
     # 🔥 ESTOQUE ÚNICO
+    estoque_inicial = deepcopy(estoque_classificado)
     estoque_base = estoque_classificado
 
     print("☕ Gerando café...", flush=True)
@@ -41,9 +63,12 @@ def gerar_tudo(estoque_usuario, ingredientes_custom=None):
 
     sobras = [i for i in estoque_base if i["quantidade"] > 0]
 
+    consumidos = calcular_consumidos(estoque_inicial, sobras)
+
     resultado = {
         "receitas": todas_receitas,
-        "sobras": sobras
+        "sobras": sobras,
+        "consumidos": consumidos
     }
 
     salvar_resultado(resultado)
