@@ -86,9 +86,18 @@ export default function Cardapio() {
                 body: JSON.stringify(estoque)
             });
 
+            const custom = JSON.parse(localStorage.getItem("ingredientes_custom") || "{}");
+
             const res = await fetch(`${BASE_URL}/cardapio`, {
-                method: "POST"
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    ingredientes_custom: custom
+                })
             });
+            console.log("CUSTOM ENVIADO:", custom);
 
             if (!res.ok) throw new Error("Erro ao gerar cardápio");
 
