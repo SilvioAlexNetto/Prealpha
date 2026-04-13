@@ -37,6 +37,13 @@ export default function Estoque() {
             : { sobras: [], consumidos: [] };
     });
 
+    useEffect(() => {
+        const salvo = localStorage.getItem("estoque_historico");
+
+        if (salvo) {
+            setHistorico(JSON.parse(salvo));
+        }
+    }, [modoHistorico]);
 
     const [ingredientesBanco, setIngredientesBanco] = useState([]);
     const [unidadesBanco, setUnidadesBanco] = useState([]);
@@ -77,6 +84,13 @@ export default function Estoque() {
 
     function nomeValido(texto) {
         return /^[A-Za-zÀ-ÿ\s]+$/.test(texto.trim());
+    }
+
+    function normalizarHistorico(data) {
+        return {
+            sobras: data?.sobras || [],
+            consumidos: data?.consumidos || []
+        };
     }
 
     function adicionarItem() {
@@ -167,9 +181,10 @@ export default function Estoque() {
     }
 
     function limparHistorico() {
-        if (!confirm("Deseja limpar o histórico?")) return;
-        setHistorico([]);
-        localStorage.removeItem("estoque_historico");
+        const vazio = { sobras: [], consumidos: [] };
+
+        setHistorico(vazio);
+        localStorage.setItem("estoque_historico", JSON.stringify(vazio));
     }
 
     function enviarEstoqueParaAPI(novoEstoque) {

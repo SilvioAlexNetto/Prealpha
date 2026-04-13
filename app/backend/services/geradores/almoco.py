@@ -15,9 +15,10 @@ from app.backend.services.preparos.massa import preparo_massa
 from app.backend.services.preparos.molho import preparo_molho
 from app.backend.services.preparos.proteina import preparo_proteina
 from app.backend.services.preparos.finalizacao import finalizar_prato
+from app.backend.services.utils.tracker import registrar_lista_consumo
 
 
-def gerar_almoco(estoque, total_dias):
+def gerar_almoco(estoque, total_dias, tracker):
 
     print("🍽️ Gerando almoço...", flush=True)
 
@@ -89,8 +90,7 @@ def gerar_almoco(estoque, total_dias):
                 continue
 
             # 🔥 consumo só acontece aqui
-            for i in ingredientes_temp:
-                aplicar_consumo(i)
+            registrar_lista_consumo(ingredientes_temp, tracker)
 
             ingredientes = ingredientes_temp
 
@@ -165,8 +165,7 @@ def gerar_almoco(estoque, total_dias):
                 continue
 
             # 🔥 consumo só aqui
-            for i in ingredientes_temp:
-                aplicar_consumo(i)
+            registrar_lista_consumo(ingredientes_temp, tracker)
 
             ingredientes = ingredientes_temp
 
@@ -196,6 +195,8 @@ def gerar_almoco(estoque, total_dias):
         # =========================
         if not ingredientes:
             continue
+
+        registrar_lista_consumo(ingredientes_temp, tracker)
 
         receitas.append({
             "nome": nome,

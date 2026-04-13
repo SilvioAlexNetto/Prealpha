@@ -1,5 +1,6 @@
 import random
 from copy import deepcopy
+
 from app.backend.services.core.consumo import (
     simular_consumo,
     aplicar_consumo
@@ -18,21 +19,21 @@ from app.backend.services.preparos.finalizacao import finalizar_prato
 from app.backend.services.bases import proteinas_proibidas_sopa
 
 
-def gerar_janta_com_copia(estoque, total_dias):
-    estoque_temp = deepcopy(estoque)
+def registrar_lista_consumo(lista, tracker):
+    for item in lista:
+        key = f"{item['nome']}|{item.get('unidade', '')}"
 
-    receitas = gerar_janta(estoque_temp, total_dias)
+        if key not in tracker:
+            tracker[key] = {
+                "nome": item["nome"],
+                "quantidade": 0,
+                "unidade": item.get("unidade", "")
+            }
 
-    # commit final (igual café)
-    for item_temp in estoque_temp:
-        for item_real in estoque:
-            if item_temp["nome"] == item_real["nome"]:
-                item_real["quantidade"] = item_temp["quantidade"]
-
-    return receitas
+        tracker[key]["quantidade"] += item.get("quantidade", 1)
 
 
-def gerar_janta(estoque, total_dias):
+def gerar_janta(estoque, total_dias, tracker):
 
     print("🌙 Gerando jantar...", flush=True)
 
@@ -93,9 +94,10 @@ def gerar_janta(estoque, total_dias):
             if folha:
                 ingredientes_temp.append(folha)
 
-            # 🔥 APLICA SÓ DEPOIS DE VALIDAR TUDO
             for i in ingredientes_temp:
                 aplicar_consumo(i)
+
+            registrar_lista_consumo(ingredientes_temp, tracker)
 
             ingredientes = ingredientes_temp
 
@@ -162,9 +164,10 @@ def gerar_janta(estoque, total_dias):
             if folha:
                 ingredientes_temp.append(folha)
 
-            # 🔥 APLICA SÓ DEPOIS DE VALIDAR
             for i in ingredientes_temp:
                 aplicar_consumo(i)
+
+            registrar_lista_consumo(ingredientes_temp, tracker)
 
             ingredientes = ingredientes_temp
 
@@ -182,12 +185,6 @@ def gerar_janta(estoque, total_dias):
             modo_preparo += finalizar_prato()
 
             tempo = 25
-            if legume:
-                tempo += random.randint(3, 7)
-            if folha:
-                tempo += random.randint(1, 3)
-
-            nome = f"{massa['nome']} com {molho['nome']} e {proteina['nome']}"
 
         # =========================
         # 🍲 SOPA
@@ -233,9 +230,10 @@ def gerar_janta(estoque, total_dias):
             if legume2:
                 ingredientes_temp.append(legume2)
 
-            # 🔥 APLICA SÓ DEPOIS DE VALIDAR
             for i in ingredientes_temp:
                 aplicar_consumo(i)
+
+            registrar_lista_consumo(ingredientes_temp, tracker)
 
             ingredientes = ingredientes_temp
 
@@ -263,9 +261,6 @@ def gerar_janta(estoque, total_dias):
 
             tempo = random.randint(25, 40)
 
-        # =========================
-        # FINAL
-        # =========================
         if not ingredientes:
             continue
 

@@ -14,6 +14,7 @@ from app.backend.services.core.consumo import (
 from app.backend.services.utils.nomes import nome_prato_cafe
 from app.backend.services.utils.ingredientes import consolidar_ingredientes
 from app.backend.services.preparos.cafe import gerar_preparo_cafe
+from app.backend.services.utils.tracker import registrar_lista_consumo
 
 
 def montar_cafe_base(estoque, dias_restantes):
@@ -168,25 +169,7 @@ def gerar_cafe_com_copia(estoque, total_dias):
 
     return receitas
 
-def registrar_lista_consumo(lista, tracker):
-    for item in lista:
-        nome = item.get("nome")
-        unidade = item.get("unidade", "")
-        quantidade = item.get("quantidade") or 1
 
-        if not nome:
-            continue
-
-        key = f"{nome}|{unidade}"
-
-        if key not in tracker:
-            tracker[key] = {
-                "nome": nome,
-                "quantidade": 0,
-                "unidade": unidade
-            }
-
-        tracker[key]["quantidade"] += quantidade
 
 def gerar_cafe(estoque, total_dias, tracker):
 
