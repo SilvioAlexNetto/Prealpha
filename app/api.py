@@ -9,6 +9,8 @@ from .backend.services.cardapio_service import (
     montar_cardapio
 )
 
+from app.backend.services.utils.base_dinamica import categorias
+
 
 from .database.database import (
     listar_estoque_atual,
@@ -100,7 +102,7 @@ def gerar_cardapio_api():
         print("\n🔥 ===== INICIO CARDAPIO =====")
 
         estoque = listar_estoque_atual()
-        ingredientes_custom = carregar_do_usuario()
+        ingredientes_custom = categorias
         print(f"📦 Estoque carregado: {len(estoque)} itens")
 
         if not estoque:
