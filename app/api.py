@@ -97,12 +97,16 @@ async def salvar_estoque(request: Request):
 # CARDÁPIO (DEBUG MODE)
 # =========================
 @app.post("/cardapio")
-def gerar_cardapio_api():
+async def gerar_cardapio_api(request: Request):
     try:
         print("\n🔥 ===== INICIO CARDAPIO =====")
 
+        data = await request.json()
+
+        ingredientes_custom = data.get("ingredientes_custom", {})
+
         estoque = listar_estoque_atual()
-        ingredientes_custom = categorias
+
         print(f"📦 Estoque carregado: {len(estoque)} itens")
 
         if not estoque:
