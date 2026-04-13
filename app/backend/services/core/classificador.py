@@ -1,30 +1,27 @@
-from app.backend.services.bases import (
-    proteinasUN, proteinasKG, legumes, carboidratos,
-    folhas_saladas, massas, proteinas_proibidas_sopa,
-    molhos, caldos, frutas, proteinasCF, carboidratosCF, liquidos, cereais, farinhas, fermentos, produtoBruto
-)
-
+from app.backend.services.utils.base_dinamica import montar_base_dinamica
 from app.backend.services.core.normalizacao import normalizar
 
-def classificar_estoque(estoque):
-    estoque_classificado = []
+def classificar_estoque(estoque, ingredientes_custom=None):
+    bases = montar_base_dinamica(ingredientes_custom)
 
+    estoque_classificado = []
+    
     categorias = [
-        ("proteinaCF", proteinasCF, "cafe"),
-        ("carboCF", carboidratosCF, "cafe"),
-        ("liquido", liquidos, "cafe"),
-        ("proteina", proteinasKG + proteinasUN, "ambos"),
-        ("massa", massas, "ambos"),
-        ("legume", legumes, "ambos"),
-        ("carbo", carboidratos, "ambos"),
-        ("folha", folhas_saladas, "ambos"),
-        ("molho", molhos, "ambos"),
-        ("fermento", fermentos, "ambos"),
-        ("farinha", farinhas, "cafe"),
-        ("cereal", cereais, "cafe"),
-        ("caldo", [c["nome"] for c in caldos], "ambos"),
-        ("fruta", frutas, "cafe"),
-        ("bruto", produtoBruto, "ambos")
+        ("proteinaCF", bases["proteinasCF"], "cafe"),
+        ("carboCF", bases["carboidratosCF"], "cafe"),
+        ("liquido", bases["liquidos"], "cafe"),
+        ("proteina", bases["proteinasKG"] + bases["proteinasUN"], "ambos"),
+        ("massa", bases["massas"], "ambos"),
+        ("legume", bases["legumes"], "ambos"),
+        ("carbo", bases["carboidratos"], "ambos"),
+        ("folha", bases["folhas_saladas"], "ambos"),
+        ("molho", bases["molhos"], "ambos"),
+        ("fermento", bases["fermentos"], "ambos"),
+        ("farinha", bases["farinhas"], "cafe"),
+        ("cereal", bases["cereais"], "cafe"),
+        ("caldo", bases["caldos"], "ambos"),
+        ("fruta", bases["frutas"], "cafe"),
+        ("bruto", bases["produtoBruto"], "ambos")
     ]
 
     def match_seguro(nome_item, termo):

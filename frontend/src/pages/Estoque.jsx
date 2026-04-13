@@ -908,7 +908,9 @@ export default function Estoque() {
                         <div style={{ display: "flex", gap: 8 }}>
                             <button
                                 onClick={() => {
-                                    const ingredienteExiste = ingredientesBanco.some(normalizarTexto(item) === normalizarTexto(produtoEscaneado.nome));
+                                    const ingredienteExiste = ingredientesBanco.some(item =>
+                                        normalizarTexto(item) === normalizarTexto(produtoEscaneado.nome)
+                                    );
 
                                     if (!ingredienteExiste) {
                                         alert(
@@ -1054,11 +1056,14 @@ export default function Estoque() {
                                     setCategoriaSelecionada("");
 
                                     // 🔥 já adiciona no estoque automaticamente
-                                    setIngredientesBanco(prev => [...prev, novoIngrediente]);
-                                    setTimeout(() => {
-                                        setNomeDigitado(novoIngrediente);
-                                        adicionarItem();
-                                    }, 0);
+                                    setIngredientesBanco(prev => {
+                                        if (prev.some(item => normalizarTexto(item) === normalizarTexto(novoIngrediente))) {
+                                            return prev;
+                                        }
+                                        return [...prev, novoIngrediente];
+                                    });
+                                    setNomeDigitado(novoIngrediente);
+                                    setNovoIngrediente(null);
 
                                     if (!nomeValido(novoIngrediente)) {
                                         alert("Nome inválido. Apenas letras.");
