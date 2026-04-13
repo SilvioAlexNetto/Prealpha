@@ -9,7 +9,6 @@ from .backend.services.cardapio_service import (
     montar_cardapio
 )
 
-from app.backend.services.utils.base_dinamica import categorias
 
 
 from .database.database import (
@@ -96,6 +95,8 @@ async def salvar_estoque(request: Request):
 # =========================
 # CARDÁPIO (DEBUG MODE)
 # =========================
+
+
 @app.post("/cardapio")
 async def gerar_cardapio_api(request: Request):
     try:
