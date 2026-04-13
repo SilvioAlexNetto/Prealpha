@@ -28,6 +28,9 @@ def classificar_estoque(estoque, ingredientes_custom=None):
         nome = normalizar(nome_item)
         termo = normalizar(termo)
         return termo in nome
+    
+    print("🔥 CUSTOM RECEBIDO:", ingredientes_custom)
+    print("🔥 BASE FRUTAS:", bases["frutas"])
 
     for item in estoque:
         nome_original = item["nome"]
@@ -35,6 +38,9 @@ def classificar_estoque(estoque, ingredientes_custom=None):
 
         categorias_encontradas = []
         subcategorias_encontradas = []
+
+        print("📦 ITEM:", nome_original)
+        print("➡️ categorias:", categorias_encontradas)
 
         # 🔍 CLASSIFICAÇÃO
         for cat, lista, sub in categorias:
