@@ -50,7 +50,7 @@ def gerar_tudo(estoque_usuario, ingredientes_custom=None):
     resultado = {
         "receitas": todas_receitas,
         "sobras": sobras,
-        "consumidos": consumidos
+        "consumidos": list(tracker_consumo.values())
     }
 
     salvar_resultado(resultado)
