@@ -37,6 +37,7 @@ export default function Estoque() {
             : { sobras: [], consumidos: [] };
     });
 
+
     const [ingredientesBanco, setIngredientesBanco] = useState([]);
     const [unidadesBanco, setUnidadesBanco] = useState([]);
 
@@ -756,7 +757,7 @@ export default function Estoque() {
 
             {modoHistorico && (
                 <>
-                    <h3>📊 Histórico do Cardápio</h3>
+                    <h3>Histórico pós-cardápio</h3>
 
                     <button
                         onClick={limparHistorico}
@@ -765,9 +766,7 @@ export default function Estoque() {
                         Limpar Histórico
                     </button>
 
-                    {/* ========================= */}
-                    {/* 🍽️ CONSUMIDOS */}
-                    {/* ========================= */}
+                    {/* 🔥 CONSUMIDOS */}
                     <h4>🔥 Itens utilizados</h4>
 
                     {historico.consumidos?.length === 0 && (
@@ -776,28 +775,22 @@ export default function Estoque() {
 
                     {historico.consumidos?.map((e, index) => (
                         <div key={index} className="hp-estoque-linha">
-                            <span className="consumido">
-                                🔻 {e.nome} — {e.quantidade} {e.unidade}
-                            </span>
+                            <span>🔻 {e.nome} — {e.quantidade} {e.unidade}</span>
                         </div>
                     ))}
 
                     <hr />
 
-                    {/* ========================= */}
                     {/* 📦 SOBRAS */}
-                    {/* ========================= */}
                     <h4>📦 Sobras do estoque</h4>
 
                     {historico.sobras?.length === 0 && (
-                        <p>Nenhuma sobra registrada.</p>
+                        <p>Nenhuma sobra disponível.</p>
                     )}
 
                     {historico.sobras?.map((e, index) => (
                         <div key={index} className="hp-estoque-linha">
-                            <span className="sobra">
-                                📦 {e.nome} — {e.quantidade} {e.unidade}
-                            </span>
+                            <span>📦 {e.nome} — {e.quantidade} {e.unidade}</span>
                         </div>
                     ))}
                 </>
