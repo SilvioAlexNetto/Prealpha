@@ -168,7 +168,27 @@ def gerar_cafe_com_copia(estoque, total_dias):
 
     return receitas
 
-def gerar_cafe(estoque, total_dias):
+def registrar_lista_consumo(lista, tracker):
+    for item in lista:
+        nome = item.get("nome")
+        unidade = item.get("unidade", "")
+        quantidade = item.get("quantidade") or 1
+
+        if not nome:
+            continue
+
+        key = f"{nome}|{unidade}"
+
+        if key not in tracker:
+            tracker[key] = {
+                "nome": nome,
+                "quantidade": 0,
+                "unidade": unidade
+            }
+
+        tracker[key]["quantidade"] += quantidade
+
+def gerar_cafe(estoque, total_dias, tracker):
 
     print("☕ Gerando café...", flush=True)
 
@@ -245,6 +265,11 @@ def gerar_cafe(estoque, total_dias):
         # =========================
         # 📦 RECEITA FINAL
         # =========================
+        if not ingredientes and not bebidas:
+            continue
+
+        registrar_lista_consumo(ingredientes + bebidas, tracker)
+
         receitas.append({
             "nome": nome,
             "categoria": "cafe",
