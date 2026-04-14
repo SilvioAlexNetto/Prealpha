@@ -127,6 +127,10 @@ async def gerar_cardapio_api(request: Request):
 
         cardapio = montar_cardapio(receitas)
 
+        print("\n📡 DEBUG RESPONSE:")
+        print("Sobras:", len(sobras))
+        print("Consumidos:", len(consumidos))
+
         return {
             "cardapio": cardapio,
             "estoque": sobras,

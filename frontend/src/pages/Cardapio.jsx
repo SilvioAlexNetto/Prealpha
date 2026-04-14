@@ -110,8 +110,8 @@ export default function Cardapio() {
                 localStorage.setItem(
                     "estoque_historico",
                     JSON.stringify({
-                        sobras: data.estoque.sobras,
-                        consumidos: data.estoque.consumidos
+                        sobras: data.estoque || [],
+                        consumidos: data.consumidos || []
                     })
                 );
             }

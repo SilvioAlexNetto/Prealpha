@@ -45,6 +45,10 @@ export default function Estoque() {
         }
     }, [modoHistorico]);
 
+    useEffect(() => {
+        console.log("📦 HISTORICO:", historico);
+    }, [historico]);
+
     const [ingredientesBanco, setIngredientesBanco] = useState([]);
     const [unidadesBanco, setUnidadesBanco] = useState([]);
 
@@ -652,6 +656,9 @@ export default function Estoque() {
                 <button className="hp-subaba-btn" onClick={() => {
                     setModoHistorico(!modoHistorico);
                     const salvo = localStorage.getItem("estoque_historico");
+
+                    console.log("📥 LOCAL STORAGE:", salvo);
+
                     setHistorico(salvo ? JSON.parse(salvo) : { sobras: [], consumidos: [] });
                 }}>
                     <img

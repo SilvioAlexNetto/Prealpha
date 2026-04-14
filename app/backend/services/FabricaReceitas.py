@@ -53,6 +53,19 @@ def gerar_tudo(estoque_usuario, ingredientes_custom=None):
         "consumidos": list(tracker_consumo.values())
     }
 
+
+    print("\n📊 TRACKER FINAL:")
+    for k, v in tracker_consumo.items():
+        print(k, v)
+
+    print("\n📦 SOBRAS:")
+    for s in sobras[:5]:
+        print(s)
+
+    print("\n🔥 CONSUMIDOS:")
+    for c in consumidos[:5]:
+        print(c)
+
     salvar_resultado(resultado)
 
     return resultado

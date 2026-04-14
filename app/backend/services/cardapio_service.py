@@ -30,6 +30,11 @@ def salvar_resultado(resultado):
 
         print("💾 Receitas, sobras e consumidos salvos com sucesso", flush=True)
 
+        print("\n💾 DEBUG SALVAMENTO:")
+        print("Receitas:", len(resultado.get("receitas", [])))
+        print("Sobras:", len(resultado.get("sobras", [])))
+        print("Consumidos:", len(resultado.get("consumidos", [])))
+
     except Exception as e:
         print("💥 Erro ao salvar resultado:", e, flush=True)
 
