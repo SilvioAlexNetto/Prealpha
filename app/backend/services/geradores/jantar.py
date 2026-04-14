@@ -94,10 +94,11 @@ def gerar_janta(estoque, total_dias, tracker):
             if folha:
                 ingredientes_temp.append(folha)
 
-            for i in ingredientes_temp:
-                aplicar_consumo(i)
 
             registrar_lista_consumo(ingredientes_temp, tracker)
+
+            for i in ingredientes_temp:
+                aplicar_consumo(i)
 
             ingredientes = ingredientes_temp
 
@@ -164,10 +165,11 @@ def gerar_janta(estoque, total_dias, tracker):
             if folha:
                 ingredientes_temp.append(folha)
 
-            for i in ingredientes_temp:
-                aplicar_consumo(i)
 
             registrar_lista_consumo(ingredientes_temp, tracker)
+
+            for i in ingredientes_temp:
+                aplicar_consumo(i)
 
             ingredientes = ingredientes_temp
 
@@ -230,10 +232,11 @@ def gerar_janta(estoque, total_dias, tracker):
             if legume2:
                 ingredientes_temp.append(legume2)
 
-            for i in ingredientes_temp:
-                aplicar_consumo(i)
 
             registrar_lista_consumo(ingredientes_temp, tracker)
+            
+            for i in ingredientes_temp:
+                aplicar_consumo(i)
 
             ingredientes = ingredientes_temp
 
