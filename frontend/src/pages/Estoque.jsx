@@ -810,7 +810,7 @@ export default function Estoque() {
                         <p>Nenhuma sobra disponível.</p>
                     )}
 
-                    {historico.sobras?.map((e, index) => (
+                    {historico.sobras?.filter(e => e.quantidade > 0).map((e, index) => (
                         <div key={index} className="hp-estoque-linha">
                             <span>📦 {e.nome} — {e.quantidade} {e.unidade}</span>
                         </div>

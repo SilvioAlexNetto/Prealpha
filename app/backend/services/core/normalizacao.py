@@ -69,14 +69,16 @@ def normalizar_unidade(quantidade, unidade):
     except:
         return None, unidade
 
-    if unidade == "g":
-        return quantidade / 1000, "kg"
+    # 🔥 PADRÃO: TUDO PARA BASE (g / ml / un)
 
-    if unidade == "ml":
-        return quantidade / 1000, "l"
+    if unidade == "kg":
+        return quantidade * 1000, "g"
 
-    if unidade in ["kg", "l", "un", "und"]:
-        return quantidade, "kg" if unidade == "kg" else ("l" if unidade == "l" else "un")
+    if unidade == "l":
+        return quantidade * 1000, "ml"
+
+    if unidade in ["g", "ml", "un", "und"]:
+        return quantidade, "g" if unidade == "g" else ("ml" if unidade == "ml" else "un")
 
     return quantidade, unidade
 
