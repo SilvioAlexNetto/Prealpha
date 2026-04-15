@@ -94,7 +94,11 @@ def gerar_janta(estoque, total_dias, tracker):
             if folha:
                 ingredientes_temp.append(folha)
 
-        #consumo#
+       # 🔥 consumo correto
+            registrar_lista_consumo(ingredientes_temp, tracker)
+
+            for i in ingredientes_temp:
+                aplicar_consumo(i)
          
 
             ingredientes = ingredientes_temp
@@ -163,7 +167,11 @@ def gerar_janta(estoque, total_dias, tracker):
                 ingredientes_temp.append(folha)
 
 
-            #consumo#
+            # 🔥 consumo correto
+            registrar_lista_consumo(ingredientes_temp, tracker)
+
+            for i in ingredientes_temp:
+                aplicar_consumo(i)
 
             ingredientes = ingredientes_temp
 
