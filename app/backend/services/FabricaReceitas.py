@@ -35,14 +35,11 @@ def gerar_tudo(estoque_usuario, ingredientes_custom=None):
     sobras = [
         {
             "nome": item["nome"],
-            "quantidade": max(
-                0,
-                item["quantidade"]
-                - tracker_consumo.get(f"{item['nome']}|{item['unidade']}", {}).get("quantidade", 0)
-            ),
+            "quantidade": item["quantidade"],
             "unidade": item["unidade"]
         }
         for item in estoque_base
+        if item["quantidade"] > 0
     ]
 
     consumidos = list(tracker_consumo.values())
