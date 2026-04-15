@@ -90,10 +90,7 @@ def gerar_almoco(estoque, total_dias, tracker):
                 continue
 
             # 🔥 consumo só acontece aqui
-            registrar_lista_consumo(ingredientes_temp, tracker)
             
-            for i in ingredientes_temp:
-                aplicar_consumo(i)
 
             ingredientes = ingredientes_temp
 
@@ -169,10 +166,7 @@ def gerar_almoco(estoque, total_dias, tracker):
 
             # 🔥 consumo só aqui
 
-            registrar_lista_consumo(ingredientes_temp, tracker)
 
-            for i in ingredientes_temp:
-                aplicar_consumo(i)
 
             ingredientes = ingredientes_temp
 
