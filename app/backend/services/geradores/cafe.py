@@ -251,7 +251,24 @@ def gerar_cafe(estoque, total_dias, tracker):
         if not ingredientes and not bebidas:
             continue
 
-        registrar_lista_consumo(ingredientes + bebidas, tracker)
+        itens_tracker = []
+
+        for tipo_item in itens_base:
+            if tipo_item[0] == "bebida":
+                _, bebida, cafe_ref, leite_ref = tipo_item
+
+                if cafe_ref:
+                    itens_tracker.append(cafe_ref)
+
+                if leite_ref:
+                    itens_tracker.append(leite_ref)
+
+            else:
+                _, item = tipo_item
+                if item:
+                    itens_tracker.append(item)
+
+        registrar_lista_consumo(itens_tracker, tracker)
 
         receitas.append({
             "nome": nome,
