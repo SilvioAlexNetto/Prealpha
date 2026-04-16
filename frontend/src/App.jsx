@@ -485,7 +485,7 @@ const tabBarStyle = {
 
 const streakStyle = {
   position: "fixed",
-  top: 110,
+  top: 130,
   left: "50%",
   transform: "translateX(-50%)",
   background: "#111",
