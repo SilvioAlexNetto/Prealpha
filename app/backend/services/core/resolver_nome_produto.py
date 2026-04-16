@@ -103,6 +103,31 @@ async def buscar_openfoodfacts(nome: str):
 
     except:
         return None
+    
+async def buscar_openfoodfacts_por_ean(codigo: str):
+    try:
+        url = f"https://world.openfoodfacts.org/api/v0/product/{codigo}.json"
+
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.get(url)
+
+        if response.status_code != 200:
+            return None
+
+        data = response.json()
+
+        produto = data.get("product")
+        if not produto:
+            return None
+
+        nome = produto.get("product_name")
+        if not nome:
+            return None
+
+        return limpar_nome_produto(nome)
+
+    except:
+        return None
 
 
 # =========================

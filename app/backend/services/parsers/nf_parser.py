@@ -2,6 +2,63 @@ from bs4 import BeautifulSoup
 import re
 
 
+# =========================
+# 🔢 CÓDIGO DO PRODUTO
+# =========================
+def extrair_codigo_produto(texto: str):
+    texto_limpo = texto.replace(".", " ").replace(",", " ")
+
+    candidatos = re.findall(r"\b\d{4,14}\b", texto_limpo)
+
+    for codigo in candidatos:
+        # ignora datas no TEXTO
+        if re.search(r"\d{2}/\d{2}/\d{4}", texto):
+            continue
+
+        # ignora anos tipo 2023
+        if len(codigo) == 4 and codigo.startswith("20"):
+            continue
+
+        # ignora códigos muito repetitivos
+        if codigo.startswith("000"):
+            continue
+
+        return codigo
+
+    return None
+
+
+# =========================
+# 🧠 NOME LIMPO
+# =========================
+def extrair_nome_produto(texto: str):
+    texto = re.sub(r"R\$\s*\d+[\.,]\d{2}", "", texto)
+
+    texto = re.sub(
+        r"\d+[\.,]?\d*\s?(kg|g|mg|l|ml|un|und)",
+        "",
+        texto,
+        flags=re.I
+    )
+
+    texto = re.sub(r"\b\d{4,14}\b", "", texto)
+
+    # remove palavras lixo
+    texto = re.sub(
+        r"\b(cnpj|cpf|cod|codigo|valor|total|item)\b",
+        "",
+        texto,
+        flags=re.I
+    )
+
+    texto = re.sub(r"\s+", " ", texto).strip()
+
+    return texto
+
+
+# =========================
+# 🧾 PARSER PRINCIPAL
+# =========================
 def extrair_dados_nota(html: str):
     soup = BeautifulSoup(html, "html.parser")
 
@@ -19,7 +76,6 @@ def extrair_dados_nota(html: str):
         if topo:
             resultado["mercado"] = topo.get_text(" ", strip=True)
         else:
-            # fallback mais genérico
             strong = soup.find("strong")
             if strong:
                 resultado["mercado"] = strong.get_text(strip=True)
@@ -39,26 +95,40 @@ def extrair_dados_nota(html: str):
     # =========================
     # 🧾 ITENS
     # =========================
-    itens_html = soup.find_all("tr")
+    itens_html = soup.find_all(["tr", "div"])
 
     for item in itens_html:
         texto = item.get_text(" ", strip=True)
 
-        # ignora linhas inúteis
-        if len(texto) < 5:
+        # =========================
+        # 🚫 FILTROS INTELIGENTES
+        # =========================
+        if len(texto) < 10:
+            continue
+
+        if "R$" not in texto:
+            continue
+
+        # ignora linhas administrativas
+        if re.search(
+            r"(cnpj|cpf|total|pagamento|forma|troco|valor total)",
+            texto,
+            re.I
+        ):
+            continue
+
+        # precisa ter letras (nome de produto)
+        if not any(c.isalpha() for c in texto):
             continue
 
         # =========================
-        # 🧠 NOME DO PRODUTO
+        # EXTRAÇÕES
         # =========================
-        nome_match = re.match(r"^[A-Za-zÀ-ÿ].+", texto)
-        if not nome_match:
-            continue
-
-        nome = nome_match.group(0)
+        codigo = extrair_codigo_produto(texto)
+        nome = extrair_nome_produto(texto)
 
         # =========================
-        # 📦 QUANTIDADE + UNIDADE
+        # 📦 QUANTIDADE
         # =========================
         qtd_match = re.search(
             r"(\d+[\.,]?\d*)\s?(kg|g|mg|l|ml|un|und)",
@@ -74,20 +144,19 @@ def extrair_dados_nota(html: str):
             unidade = qtd_match.group(2).lower()
 
         # =========================
-        # 💰 PREÇO TOTAL
+        # 💰 PREÇO
         # =========================
-        precos = re.findall(r"\d+[\.,]\d{2}", texto)
+        preco_match = re.search(r"R\$\s*(\d+[\.,]\d{2})", texto)
         preco_total = None
 
-        if precos:
-            preco_total = float(precos[-1].replace(",", "."))
+        if preco_match:
+            preco_total = float(preco_match.group(1).replace(",", "."))
 
         # =========================
-        # 💸 VALOR POR KG / LITRO
+        # 💸 VALOR POR KG
         # =========================
         valor_kg = None
 
-        # tenta pegar explicitamente (algumas notas têm isso)
         match_kg = re.search(
             r"(?:R\$)?\s*(\d+[\.,]\d{2})\s*/\s*(kg|l)",
             texto,
@@ -97,25 +166,19 @@ def extrair_dados_nota(html: str):
         if match_kg:
             valor_kg = float(match_kg.group(1).replace(",", "."))
 
-        # fallback: calcular se não veio
         elif preco_total and quantidade and unidade:
             try:
                 if unidade in ["kg", "l"]:
                     valor_kg = preco_total / quantidade
 
-                elif unidade == "g":
+                elif unidade in ["g", "ml"]:
                     valor_kg = preco_total / (quantidade / 1000)
 
-                elif unidade == "ml":
-                    valor_kg = preco_total / (quantidade / 1000)
-
-                else:
-                    valor_kg = None
             except:
                 valor_kg = None
 
         # =========================
-        # 🚫 FILTRO DE RUÍDO
+        # 🚫 VALIDAÇÃO FINAL
         # =========================
         if not nome or len(nome) < 3:
             continue
@@ -124,10 +187,11 @@ def extrair_dados_nota(html: str):
             continue
 
         # =========================
-        # 📦 ADD ITEM
+        # 📦 ADD ITEM (SEM REMOVER DUPLICATA)
         # =========================
         resultado["itens"].append({
             "nome": nome,
+            "codigo": codigo,
             "quantidade": quantidade,
             "unidade": unidade,
             "preco_total": preco_total,

@@ -67,6 +67,16 @@ def criar_tabelas():
     )
     """)
 
+    cursor.execute("""
+    CREATE TABLE produtos_codigo (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        mercado TEXT,
+        codigo TEXT,
+        nome_normalizado TEXT,
+        UNIQUE(mercado, codigo)
+    );    
+    """)
+
     conn.commit()
     conn.close()
 
