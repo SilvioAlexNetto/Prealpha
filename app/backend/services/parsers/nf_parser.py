@@ -32,6 +32,7 @@ def extrair_codigo_produto(texto: str):
 # 🧠 NOME LIMPO
 # =========================
 def extrair_nome_produto(texto: str):
+    
     # remove preço
     texto = re.sub(r"R\$\s*\d+[\.,]\d{2}", "", texto)
 
@@ -116,11 +117,11 @@ def extrair_dados_nota(html: str):
         if len(texto) < 10:
             continue
 
-        if "R$" not in texto:
+        if not re.search(r"(R\$|Vl\.?\s*Total)", texto, re.I):
             continue
 
         if re.search(
-            r"(cnpj|cpf|total|pagamento|forma|troco|valor total)",
+            r"(cnpj|cpf|pagamento|forma|troco|valor total)",
             texto,
             re.I
         ):
@@ -135,6 +136,7 @@ def extrair_dados_nota(html: str):
         # =========================
         codigo = extrair_codigo_produto(texto)
         nome = extrair_nome_produto(texto)
+        print(f"[DEBUG] 🧠 NOME FINAL: {nome}")
 
         # =========================
         # 📦 QUANTIDADE
@@ -155,11 +157,24 @@ def extrair_dados_nota(html: str):
         # =========================
         # 💰 PREÇO
         # =========================
-        preco_match = re.search(r"R\$\s*(\d+[\.,]\d{2})", texto)
+        preco_match = re.search(
+            r"Vl\.?\s*Total\s*(\d+[\.,]\d{2})",
+            texto,
+            re.I
+        )
+
+        if not preco_match:
+            preco_match = re.search(
+                r"(?:R\$\s*)?(\d+[\.,]\d{2})",
+                texto
+            )
+
         preco_total = None
 
         if preco_match:
             preco_total = float(preco_match.group(1).replace(",", "."))
+        
+        print(f"[DEBUG] 💰 PREÇO EXTRAÍDO: {preco_total}")
 
         # =========================
         # 💸 VALOR POR KG
