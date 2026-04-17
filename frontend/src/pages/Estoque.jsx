@@ -341,14 +341,24 @@ export default function Estoque() {
     }
 
 
-    function iniciarQuagga(constraints, target) {
+    async function iniciarQuagga(constraints, target) {
+
+        // para rodar no web
+        if (isWeb) {
+            console.warn("Rodando no browser - fallback simples");
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                console.log("Camera OK no browser");
+            } catch (e) {
+                console.error("Erro camera browser:", e);
+            }
+        }
+        console.log("isWeb:", isWeb);
+        console.log("mediaDevices:", navigator.mediaDevices);
+        // para rodar no web
+
         return new Promise((resolve, reject) => {
-
-            // para rodar no web
-            console.log("isWeb:", isWeb);
-            console.log("mediaDevices:", navigator.mediaDevices);
-            // para rodar no web
-
             Quagga.init(
                 {
                     inputStream: {
@@ -368,21 +378,6 @@ export default function Estoque() {
                     resolve();
                 }
             );
-
-            // para rodar no web
-
-            if (isWeb) {
-                console.warn("Rodando no browser - fallback simples");
-
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                    console.log("Camera OK no browser");
-                } catch (e) {
-                    console.error("Erro camera browser:", e);
-                }
-            }
-
-            // para rodar no web
         });
     }
 
