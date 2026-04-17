@@ -11,7 +11,7 @@ def extrair_codigo_produto(texto: str):
     candidatos = re.findall(r"\b\d{4,14}\b", texto_limpo)
 
     for codigo in candidatos:
-        # ignora datas no TEXTO
+        # ignora se tiver data no texto (linha administrativa)
         if re.search(r"\d{2}/\d{2}/\d{4}", texto):
             continue
 
@@ -19,7 +19,7 @@ def extrair_codigo_produto(texto: str):
         if len(codigo) == 4 and codigo.startswith("20"):
             continue
 
-        # ignora códigos muito repetitivos
+        # ignora códigos inválidos
         if codigo.startswith("000"):
             continue
 
@@ -32,8 +32,10 @@ def extrair_codigo_produto(texto: str):
 # 🧠 NOME LIMPO
 # =========================
 def extrair_nome_produto(texto: str):
+    # remove preço
     texto = re.sub(r"R\$\s*\d+[\.,]\d{2}", "", texto)
 
+    # remove quantidade/unidade
     texto = re.sub(
         r"\d+[\.,]?\d*\s?(kg|g|mg|l|ml|un|und)",
         "",
@@ -41,6 +43,7 @@ def extrair_nome_produto(texto: str):
         flags=re.I
     )
 
+    # remove códigos grandes
     texto = re.sub(r"\b\d{4,14}\b", "", texto)
 
     # remove palavras lixo
@@ -51,6 +54,7 @@ def extrair_nome_produto(texto: str):
         flags=re.I
     )
 
+    # limpa espaços
     texto = re.sub(r"\s+", " ", texto).strip()
 
     return texto
@@ -60,6 +64,8 @@ def extrair_nome_produto(texto: str):
 # 🧾 PARSER PRINCIPAL
 # =========================
 def extrair_dados_nota(html: str):
+    print("[DEBUG] 🧾 Iniciando parser")
+
     soup = BeautifulSoup(html, "html.parser")
 
     resultado = {
@@ -97,8 +103,12 @@ def extrair_dados_nota(html: str):
     # =========================
     itens_html = soup.find_all(["tr", "div"])
 
+    print(f"[DEBUG] 🔍 Total de elementos encontrados: {len(itens_html)}")
+
     for item in itens_html:
         texto = item.get_text(" ", strip=True)
+
+        print(f"\n[DEBUG] 🔹 TEXTO BRUTO: {texto}")
 
         # =========================
         # 🚫 FILTROS INTELIGENTES
@@ -109,7 +119,6 @@ def extrair_dados_nota(html: str):
         if "R$" not in texto:
             continue
 
-        # ignora linhas administrativas
         if re.search(
             r"(cnpj|cpf|total|pagamento|forma|troco|valor total)",
             texto,
@@ -173,7 +182,6 @@ def extrair_dados_nota(html: str):
 
                 elif unidade in ["g", "ml"]:
                     valor_kg = preco_total / (quantidade / 1000)
-
             except:
                 valor_kg = None
 
@@ -186,9 +194,8 @@ def extrair_dados_nota(html: str):
         if not preco_total:
             continue
 
-        # =========================
-        # 📦 ADD ITEM (SEM REMOVER DUPLICATA)
-        # =========================
+        print(f"[DEBUG] ✅ ITEM EXTRAÍDO: nome={nome} | codigo={codigo} | preco={preco_total}")
+
         resultado["itens"].append({
             "nome": nome,
             "codigo": codigo,
@@ -197,5 +204,7 @@ def extrair_dados_nota(html: str):
             "preco_total": preco_total,
             "valor_kg": round(valor_kg, 2) if valor_kg else None
         })
+
+    print(f"\n[DEBUG] 📦 TOTAL FINAL DE ITENS: {len(resultado['itens'])}")
 
     return resultado

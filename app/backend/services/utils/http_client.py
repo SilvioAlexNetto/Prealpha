@@ -18,15 +18,24 @@ async def buscar_url(url: str) -> str:
         Exception: se não conseguir acessar ou status != 200
     """
     try:
+        print(f"[DEBUG] 🔗 Buscando URL: {url}")
+        
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
             response = await client.get(url)
 
+            print(f"[DEBUG] 🌐 Status HTTP: {response.status_code}")
+
+
         if response.status_code != 200:
             raise Exception(f"Erro HTTP: {response.status_code}")
+        
+        print(f"[DEBUG] 📄 HTML tamanho: {len(response.text)}")
+
 
         return response.text
 
     except httpx.ReadTimeout:
+        print(f"[ERRO] HTTP_CLIENT: {str(e)}")
         raise Exception("Tempo de requisição excedido")
 
     except httpx.RequestError as e:
