@@ -8,7 +8,7 @@ import re
 def extrair_codigo_produto(texto: str):
     texto_limpo = texto.replace(".", " ").replace(",", " ")
 
-    candidatos = re.findall(r"\b\d{4,14}\b", texto_limpo)
+    candidatos = re.findall(r"\b\d{3,14}\b", texto_limpo)
 
     for codigo in candidatos:
         # ignora se tiver data no texto (linha administrativa)
@@ -57,6 +57,14 @@ def extrair_nome_produto(texto: str):
 
     # limpa espaços
     texto = re.sub(r"\s+", " ", texto).strip()
+    # remove trecho "(Código: xxx)"
+    texto = re.sub(r"\(.*?c[oó]digo.*?\)", "", texto, flags=re.I)
+
+    # remove Qtde e unidade
+    texto = re.sub(r"Qtde\.:.*", "", texto, flags=re.I)
+
+    # remove Vl. Unit e Vl. Total
+    texto = re.sub(r"Vl\.?.*", "", texto, flags=re.I)
 
     return texto
 
@@ -121,7 +129,7 @@ def extrair_dados_nota(html: str):
             continue
 
         if re.search(
-            r"(cnpj|cpf|pagamento|forma|troco|valor total)",
+            r"(cnpj|cpf|pagamento|forma|troco|valor a pagar|valor pago|qtd\. total|itens)",
             texto,
             re.I
         ):
