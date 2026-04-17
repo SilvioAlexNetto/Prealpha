@@ -392,9 +392,21 @@ export default function Estoque() {
                 body: JSON.stringify({ url })
             });
 
+            console.log("STATUS:", res.status);
+
+            if (!res.ok) {
+                const text = await res.text();
+                console.error("Erro backend:", text);
+                alert("Erro no servidor");
+                return;
+            }
+
             const data = await res.json();
 
+            console.log("RESPOSTA BACKEND:", data);
+
             if (!data || !data.itens || data.itens.length === 0) {
+                console.warn("Itens vazios ou inválidos:", data);
                 alert("Nenhum item encontrado na nota.");
                 return;
             }
@@ -403,7 +415,7 @@ export default function Estoque() {
             setItensSelecionados([]);
 
         } catch (e) {
-            console.error(e);
+            console.error("ERRO FRONT:", e);
             alert("Erro ao processar QR Code");
         }
     }

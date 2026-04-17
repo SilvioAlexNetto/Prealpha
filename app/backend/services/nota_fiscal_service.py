@@ -88,6 +88,8 @@ async def ler_nota_fiscal(url: str):
         # =========================
         # 📤 4. RETORNO FINAL
         # =========================
+        print("ITENS NORMALIZADOS:", len(itens_normalizados))
+
         return {
             "mercado": mercado,
             "data": data,
@@ -95,6 +97,9 @@ async def ler_nota_fiscal(url: str):
         }
 
     except Exception as e:
-        return {
-            "erro": str(e)
-        }
+        print("ERRO INTERNO:", e)
+    return {
+        "mercado": None,
+        "data": None,
+        "itens": []
+    }
