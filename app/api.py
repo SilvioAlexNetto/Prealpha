@@ -10,12 +10,13 @@ from .backend.services.cardapio_service import (
     carregar_consumidos
 )
 
+from contextlib import asynccontextmanager
 
-
-from .database.database import (
+from app.database.database import (
     listar_estoque_atual,
     adicionar_item_estoque_atual,
-    get_connection
+    get_connection,
+    criar_tabelas
 )
 
 
@@ -38,6 +39,19 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {"status": "API HealthCare rodando"}
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 🔥 STARTUP
+    print("[STARTUP] Criando tabelas...")
+    criar_tabelas()
+
+    yield
+
+    # 🔻 SHUTDOWN (se quiser usar depois)
+    print("[SHUTDOWN] Encerrando aplicação...")
+
+app = FastAPI(lifespan=lifespan)
 
 # =========================
 # RECEITAS
