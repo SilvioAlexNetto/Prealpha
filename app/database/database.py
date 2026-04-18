@@ -68,7 +68,7 @@ def criar_tabelas():
     """)
 
     cursor.execute("""
-    CREATE TABLE produtos_codigo (
+    CREATE TABLE IF NOT EXISTS produtos_codigo (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         mercado TEXT,
         codigo TEXT,
