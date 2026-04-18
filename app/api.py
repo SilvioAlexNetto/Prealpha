@@ -40,7 +40,18 @@ app.add_middleware(
 def root():
     return {"status": "API HealthCare rodando"}
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 🔥 STARTUP
+    print("[STARTUP] Criando tabelas...")
+    criar_tabelas()
 
+    yield
+
+    # 🔻 SHUTDOWN (se quiser usar depois)
+    print("[SHUTDOWN] Encerrando aplicação...")
+
+app = FastAPI(lifespan=lifespan)
 
 # =========================
 # RECEITAS

@@ -199,4 +199,4 @@ def adicionar_item_estoque_andamento(nome, quantidade, unidade, data):
 # GARANTIA DE ESTRUTURA
 # =========================
 
-criar_tabelas()
+# criar_tabelas()
