@@ -1,16 +1,19 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+
+# =========================
+# IMPORTS INTERNOS
+# =========================
 from app.backend.services.FabricaReceitas import gerar_tudo
 from app.backend.services.nota_fiscal_service import ler_nota_fiscal
-from .backend.services.cardapio_service import (
+from app.backend.services.cardapio_service import (
     carregar_receitas,
     listar_ingredientes_e_unidades,
     carregar_sobras,
     montar_cardapio,
     carregar_consumidos
 )
-
-from contextlib import asynccontextmanager
 
 from app.database.database import (
     listar_estoque_atual,
@@ -19,15 +22,32 @@ from app.database.database import (
     criar_tabelas
 )
 
+# =========================
+# LIFESPAN (STARTUP/SHUTDOWN)
+# =========================
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("[STARTUP] Criando tabelas...")
+    try:
+        criar_tabelas()
+    except Exception as e:
+        print("ERRO AO CRIAR TABELAS:", e)
 
-app = FastAPI()
+    yield
+
+    print("[SHUTDOWN] Encerrando aplicação...")
+
+# =========================
+# APP (CRIAÇÃO CORRETA)
+# =========================
+app = FastAPI(lifespan=lifespan)
 
 # =========================
 # CORS
 # =========================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # depois você pode restringir
     allow_methods=["*"],
     allow_credentials=True,
     allow_headers=["*"],
@@ -39,19 +59,6 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {"status": "API HealthCare rodando"}
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # 🔥 STARTUP
-    print("[STARTUP] Criando tabelas...")
-    criar_tabelas()
-
-    yield
-
-    # 🔻 SHUTDOWN (se quiser usar depois)
-    print("[SHUTDOWN] Encerrando aplicação...")
-
-app = FastAPI(lifespan=lifespan)
 
 # =========================
 # RECEITAS
@@ -108,10 +115,8 @@ async def salvar_estoque(request: Request):
     return {"status": "ok"}
 
 # =========================
-# CARDÁPIO (DEBUG MODE)
+# CARDÁPIO
 # =========================
-
-
 @app.post("/cardapio")
 async def gerar_cardapio_api(request: Request):
     try:
@@ -155,6 +160,7 @@ async def gerar_cardapio_api(request: Request):
         import traceback
         traceback.print_exc()
         return {"erro": str(e)}
+
 # =========================
 # INGREDIENTES
 # =========================
@@ -162,7 +168,9 @@ async def gerar_cardapio_api(request: Request):
 def get_ingredientes():
     return listar_ingredientes_e_unidades()
 
-
+# =========================
+# NOTA FISCAL
+# =========================
 @app.post("/nota-fiscal/ler")
 async def ler_nota(request: Request):
     data = await request.json()
