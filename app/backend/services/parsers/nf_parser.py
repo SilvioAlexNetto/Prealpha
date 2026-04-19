@@ -114,14 +114,6 @@ def extrair_dados_nota(html: str):
     print("\n[DEBUG] 🧠 TEXTO NORMALIZADO:")
     print(texto[:500])
 
-    # =========================
-    # 🔥 ENCONTRAR TODOS OS PRODUTOS
-    # =========================
-    pattern = re.compile(
-        r"(.*?)\(Código:\s*(\d+)\s*\)(.*?)Vl\.?\s*Total\s*(\d+[\.,]\d{2})",
-        re.IGNORECASE
-    )
-
     matches = list(pattern.finditer(texto))
 
     print(f"\n[DEBUG] 🔍 TOTAL MATCHES: {len(matches)}")
