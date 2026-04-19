@@ -1,6 +1,6 @@
 import httpx
 import difflib
-
+import re
 from app.backend.services.core.normalizacao import limpar_nome_produto
 from app.database.database import get_connection
 
@@ -228,14 +228,14 @@ async def resolver_nome(nome_original: str):
     # fallback: ainda tenta nome da API
     nome_api = await buscar_openfoodfacts(nome_normalizado)
 
-    # prioridade: nome sem marca
+    # prioridade: API se for melhor
+    if nome_api and len(nome_api) > len(nome_sem_marca):
+        salvar_cache(nome_original, nome_api)
+        return nome_api
+
     if nome_sem_marca and len(nome_sem_marca) > 3:
         salvar_cache(nome_original, nome_sem_marca)
         return nome_sem_marca
-
-    if nome_api:
-        salvar_cache(nome_original, nome_api)
-        return nome_api
 
     # =========================
     # 4. FALLBACK FINAL

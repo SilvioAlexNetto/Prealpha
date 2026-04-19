@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import re
 from app.backend.services.core.normalizacao import limpar_nome_produto
-
+from app.backend.services.core.produto_codigo_service import buscar_produto_por_codigo, salvar_produto_codigo
 
 pattern = re.compile(
     r"([A-Z0-9\s\.\-\/]+?)\s*\(Código:\s*(\d+)\s*\)\s*(.*?)\s*Vl\.?\s*Total\s*(\d+[\.,]\d{2})",
@@ -128,8 +128,22 @@ def extrair_dados_nota(html: str):
             # =========================
             # 🧠 LIMPEZA DO NOME
             # =========================
-            nome = limpar_nome_produto(nome_bruto)
+            nome = None
 
+            mercado = resultado.get("mercado") or "global"
+
+            # 🔥 1. tenta buscar no banco
+            if codigo:
+                nome = buscar_produto_por_codigo(mercado, codigo)
+
+            # 🔥 2. se não encontrou, processa
+            if not nome:
+                nome = limpar_nome_produto(nome_bruto)
+
+                # 🔥 3. salva aprendizado
+                if codigo and nome:
+                    salvar_produto_codigo(mercado, codigo, nome)
+                    
             # fallback se vier lixo
             if len(nome) < 3:
                 nome = nome_bruto.strip()
