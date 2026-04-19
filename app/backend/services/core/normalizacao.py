@@ -23,8 +23,8 @@ def limpar_nome_produto(nome):
     # remove código tipo (Código: 123)
     nome = re.sub(r"\(.*?codigo.*?\)", "", nome)
 
-    # remove números + unidades
-    nome = re.sub(r"\b\d+[\.,]?\d*\s?(kg|g|mg|l|ml|un|und)\b", "", nome)
+    # 🔥 NÃO remove mais unidade (já corrigido)
+    # nome = re.sub(...)
 
     # remove números soltos
     nome = re.sub(r"\b\d+\b", "", nome)
@@ -32,17 +32,9 @@ def limpar_nome_produto(nome):
     # remove lixo comum
     nome = re.sub(r"\b(tr|cx|pct|embalagem)\b", "", nome)
 
-    # remove marcas comuns
+    # 🔥 BLACKLIST MINIMAL (fallback só)
     blacklist = [
-        "italac", "piracanjuba", "nestle", "itambe", "tirol", "batavo",
-        "garoto", "lacta", "hersheys", "arcor",
-        "marilan", "piraque", "bauducco",
-        "sadia", "perdigao", "seara",
-        "coca", "cocacola", "pepsi", "fanta", "sprite",
-        "quaker", "yoki", "camil",
-        "hemmer", "quero", "fugini",
-        "pilao", "melitta", "trescoracoes",
-        "tradicional", "original"
+        "tradicional", "original", "extra", "premium"
     ]
 
     palavras = nome.split()
@@ -52,10 +44,20 @@ def limpar_nome_produto(nome):
         if p not in blacklist and len(p) > 2
     ]
 
+    # 🔥 normalização leve (mantida)
+    substituicoes = {
+        "integ": "integral",
+        "desnat": "desnatado",
+        "semi": "semidesnatado"
+    }
+
+    palavras = [substituicoes.get(p, p) for p in palavras]
+
     if not palavras:
         return nome[:30] if nome else "produto"
 
     return " ".join(palavras[:4]).strip()
+
 
 
 # =========================

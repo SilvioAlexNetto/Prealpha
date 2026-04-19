@@ -64,10 +64,60 @@ def fuzzy_match(nome_normalizado: str, cache_rows):
 
     return None
 
+# =========================
+# 🧹 REMOVE MARCA DO NOME
+# =========================
+def remover_marca(nome: str, marca: str):
+    if not nome or not marca:
+        return nome
+
+    nome = nome.lower()
+    marca = marca.lower()
+
+    # remove marca exata
+    nome = nome.replace(marca, "")
+
+    # limpa espaços
+    nome = re.sub(r"\s+", " ", nome).strip()
+
+    return nome
 
 # =========================
 # 🌍 OPEN FOOD FACTS
 # =========================
+
+async def buscar_marca_openfoodfacts(nome: str):
+    try:
+        url = "https://world.openfoodfacts.org/cgi/search.pl"
+
+        params = {
+            "search_terms": nome,
+            "search_simple": 1,
+            "action": "process",
+            "json": 1,
+            "page_size": 3
+        }
+
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.get(url, params=params)
+
+        if response.status_code != 200:
+            return None
+
+        data = response.json()
+        produtos = data.get("products", [])
+
+        for p in produtos:
+            marca = p.get("brands")
+            if marca:
+                # pega primeira marca
+                return marca.split(",")[0].strip().lower()
+
+        return None
+
+    except:
+        return None
+    
 async def buscar_openfoodfacts(nome: str):
     try:
         url = "https://world.openfoodfacts.org/cgi/search.pl"
@@ -163,7 +213,25 @@ async def resolver_nome(nome_original: str):
     # =========================
     # 3. API EXTERNA
     # =========================
+
+    # 🔥 tenta buscar marca primeiro
+    marca = await buscar_marca_openfoodfacts(nome_normalizado)
+
+    nome_sem_marca = nome_original
+
+    if marca:
+        nome_sem_marca = remover_marca(nome_original, marca)
+
+    # limpa novamente após remover marca
+    nome_sem_marca = limpar_nome_produto(nome_sem_marca)
+
+    # fallback: ainda tenta nome da API
     nome_api = await buscar_openfoodfacts(nome_normalizado)
+
+    # prioridade: nome sem marca
+    if nome_sem_marca and len(nome_sem_marca) > 3:
+        salvar_cache(nome_original, nome_sem_marca)
+        return nome_sem_marca
 
     if nome_api:
         salvar_cache(nome_original, nome_api)
