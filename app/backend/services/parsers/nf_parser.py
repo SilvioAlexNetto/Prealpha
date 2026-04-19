@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import re
+from app.backend.services.core.normalizacao import limpar_nome_produto
 
 
 pattern = re.compile(
