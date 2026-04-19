@@ -72,8 +72,9 @@ def extrair_nome_produto(texto: str):
 # =========================
 # 🧾 PARSER PRINCIPAL
 # =========================
+
 def extrair_dados_nota(html: str):
-    print("[DEBUG] 🧾 Iniciando parser")
+    print("[DEBUG] 🧾 Parser NÍVEL PRODUÇÃO iniciado")
 
     soup = BeautifulSoup(html, "html.parser")
 
@@ -101,133 +102,113 @@ def extrair_dados_nota(html: str):
     # 📅 DATA
     # =========================
     try:
-        data_match = soup.find(string=re.compile(r"\d{2}/\d{2}/\d{4}"))
+        texto_full = soup.get_text(" ", strip=True)
+
+        data_match = re.search(r"\d{2}/\d{2}/\d{4}", texto_full)
         if data_match:
-            resultado["data"] = data_match.strip()
+            resultado["data"] = data_match.group()
     except:
         pass
 
     # =========================
-    # 🧾 ITENS
+    # 🧠 TEXTO LIMPO GLOBAL
     # =========================
-    itens_html = soup.find_all(["tr", "div"])
+    texto = soup.get_text(" ", strip=True)
 
-    print(f"[DEBUG] 🔍 Total de elementos encontrados: {len(itens_html)}")
+    # remove espaços duplicados
+    texto = re.sub(r"\s+", " ", texto)
 
-    for item in itens_html:
-        texto = item.get_text(" ", strip=True)
+    print("\n[DEBUG] 🧠 TEXTO NORMALIZADO:")
+    print(texto[:500])
 
-        print(f"\n[DEBUG] 🔹 TEXTO BRUTO: {texto}")
+    # =========================
+    # 🔥 ENCONTRAR TODOS OS PRODUTOS
+    # =========================
+    pattern = re.compile(
+        r"(.*?)\(Código:\s*(\d+)\s*\)(.*?)Vl\.?\s*Total\s*(\d+[\.,]\d{2})",
+        re.IGNORECASE
+    )
 
-        # =========================
-        # 🚫 FILTROS INTELIGENTES
-        # =========================
-        if len(texto) < 10:
-            continue
+    matches = list(pattern.finditer(texto))
 
-        if not re.search(r"(R\$|Vl\.?\s*Total)", texto, re.I):
-            continue
+    print(f"\n[DEBUG] 🔍 TOTAL MATCHES: {len(matches)}")
 
-        if re.search(
-            r"(cnpj|cpf|pagamento|forma|troco|valor a pagar|valor pago|qtd\. total|itens)",
-            texto,
-            re.I
-        ):
-            continue
+    for match in matches:
+        try:
+            nome_bruto = match.group(1).strip()
+            codigo = match.group(2)
+            trecho_meio = match.group(3)
+            preco_str = match.group(4)
 
-        # precisa ter letras (nome de produto)
-        if not any(c.isalpha() for c in texto):
-            continue
+            # =========================
+            # 🧠 LIMPEZA DO NOME
+            # =========================
+            nome = limpar_nome_produto(nome_bruto)
 
-        # =========================
-        # EXTRAÇÕES
-        # =========================
-        codigo = extrair_codigo_produto(texto)
-        nome = extrair_nome_produto(texto)
-        print(f"[DEBUG] 🧠 NOME FINAL: {nome}")
+            # fallback se vier lixo
+            if len(nome) < 3:
+                nome = nome_bruto.strip()
 
-        # =========================
-        # 📦 QUANTIDADE
-        # =========================
-        qtd_match = re.search(
-            r"(\d+[\.,]?\d*)\s?(kg|g|mg|l|ml|un|und)",
-            texto,
-            re.I
-        )
-
-        quantidade = None
-        unidade = None
-
-        if qtd_match:
-            quantidade = float(qtd_match.group(1).replace(",", "."))
-            unidade = qtd_match.group(2).lower()
-
-        # =========================
-        # 💰 PREÇO
-        # =========================
-        preco_match = re.search(
-            r"Vl\.?\s*Total\s*(\d+[\.,]\d{2})",
-            texto,
-            re.I
-        )
-
-        if not preco_match:
-            preco_match = re.search(
-                r"(?:R\$\s*)?(\d+[\.,]\d{2})",
-                texto
+            # =========================
+            # 📦 QUANTIDADE
+            # =========================
+            qtd_match = re.search(
+                r"Qtde\.:\s*(\d+[\.,]?\d*)",
+                trecho_meio,
+                re.IGNORECASE
             )
 
-        preco_total = None
+            quantidade = None
+            if qtd_match:
+                quantidade = float(qtd_match.group(1).replace(",", "."))
 
-        if preco_match:
-            preco_total = float(preco_match.group(1).replace(",", "."))
-        
-        print(f"[DEBUG] 💰 PREÇO EXTRAÍDO: {preco_total}")
+            # =========================
+            # 📏 UNIDADE
+            # =========================
+            un_match = re.search(
+                r"UN:\s*(kg|g|mg|l|ml|un|und)",
+                trecho_meio,
+                re.IGNORECASE
+            )
 
-        # =========================
-        # 💸 VALOR POR KG
-        # =========================
-        valor_kg = None
+            unidade = None
+            if un_match:
+                unidade = un_match.group(1).lower()
 
-        match_kg = re.search(
-            r"(?:R\$)?\s*(\d+[\.,]\d{2})\s*/\s*(kg|l)",
-            texto,
-            re.I
-        )
+            # =========================
+            # 💰 PREÇO
+            # =========================
+            preco_total = float(preco_str.replace(",", "."))
 
-        if match_kg:
-            valor_kg = float(match_kg.group(1).replace(",", "."))
+            # =========================
+            # 💸 VALOR POR KG
+            # =========================
+            valor_kg = None
 
-        elif preco_total and quantidade and unidade:
-            try:
-                if unidade in ["kg", "l"]:
-                    valor_kg = preco_total / quantidade
+            if quantidade and unidade:
+                try:
+                    if unidade in ["kg", "l"]:
+                        valor_kg = preco_total / quantidade
+                    elif unidade in ["g", "ml"]:
+                        valor_kg = preco_total / (quantidade / 1000)
+                except:
+                    pass
 
-                elif unidade in ["g", "ml"]:
-                    valor_kg = preco_total / (quantidade / 1000)
-            except:
-                valor_kg = None
+            print(f"[DEBUG] ✅ ITEM: {nome} | {codigo} | R$ {preco_total}")
 
-        # =========================
-        # 🚫 VALIDAÇÃO FINAL
-        # =========================
-        if not nome or len(nome) < 3:
+            resultado["itens"].append({
+                "nome": nome,
+                "codigo": codigo,
+                "quantidade": quantidade,
+                "unidade": unidade,
+                "preco_total": preco_total,
+                "valor_kg": round(valor_kg, 2) if valor_kg else None
+            })
+
+        except Exception as e:
+            print("[ERRO ITEM]", e)
             continue
 
-        if not preco_total:
-            continue
-
-        print(f"[DEBUG] ✅ ITEM EXTRAÍDO: nome={nome} | codigo={codigo} | preco={preco_total}")
-
-        resultado["itens"].append({
-            "nome": nome,
-            "codigo": codigo,
-            "quantidade": quantidade,
-            "unidade": unidade,
-            "preco_total": preco_total,
-            "valor_kg": round(valor_kg, 2) if valor_kg else None
-        })
-
-    print(f"\n[DEBUG] 📦 TOTAL FINAL DE ITENS: {len(resultado['itens'])}")
+    print(f"\n[DEBUG] 📦 TOTAL FINAL: {len(resultado['itens'])}")
 
     return resultado
