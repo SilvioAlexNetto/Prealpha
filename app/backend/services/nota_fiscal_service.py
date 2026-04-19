@@ -19,7 +19,7 @@ async def ler_nota_fiscal(url: str):
         # =========================
         # 🧾 2. PARSEAR NOTA
         # =========================
-        dados = extrair_dados_nota(html)
+        dados = await extrair_dados_nota(html)
 
         # =========================
         # 🧠 3. NORMALIZAR DADOS
