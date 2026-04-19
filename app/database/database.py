@@ -77,6 +77,16 @@ def criar_tabelas():
     );    
     """)
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS aprendizado_semantico (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    entrada TEXT,
+    normalizado TEXT,
+    categoria TEXT,
+    confirmado INTEGER DEFAULT 0
+    );
+    """)
+
     conn.commit()
     conn.close()
 
@@ -194,6 +204,68 @@ def adicionar_item_estoque_andamento(nome, quantidade, unidade, data):
 
     conn.commit()
     conn.close()
+
+
+def salvar_aprendizado(entrada, resolvido, categoria):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO aprendizado_semantico
+        (entrada, normalizado, categoria, confirmado)
+        VALUES (?, ?, ?, 0)
+    """, (entrada, resolvido, categoria))
+
+    conn.commit()
+    conn.close()
+
+def confirmar_aprendizado(id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE aprendizado_semantico
+        SET confirmado = 1
+        WHERE id = ?
+    """, (id,))
+
+    conn.commit()
+
+
+def corrigir_aprendizado(id, novo_nome, categoria):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE aprendizado_semantico
+        SET normalizado = ?, categoria = ?, confirmado = 1
+        WHERE id = ?
+    """, (novo_nome, categoria, id))
+
+    conn.commit()
+
+
+def montar_base_viva():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT normalizado, categoria
+        FROM aprendizado_semantico
+        WHERE confirmado = 1
+    """)
+
+    rows = cursor.fetchall()
+
+    base = {}
+
+    for r in rows:
+        cat = r["categoria"]
+        nome = r["normalizado"]
+
+        base.setdefault(cat, []).append(nome)
+
+    return base
 
 # =========================
 # GARANTIA DE ESTRUTURA

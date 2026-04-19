@@ -405,13 +405,26 @@ export default function Estoque() {
 
             console.log("RESPOSTA BACKEND:", data);
 
-            if (!data || !data.itens || data.itens.length === 0) {
-                console.warn("Itens vazios ou inválidos:", data);
+            if (!data?.itens?.length) {
                 alert("Nenhum item encontrado na nota.");
                 return;
             }
 
-            setNotaFiscal(data);
+            // 🔥 NORMALIZA PARA UI
+            const itensFormatados = data.itens.map(item => ({
+                nome: item.nome_resolvido || item.nome,
+                categoria: item.categoria,
+                quantidade: item.quantidade,
+                unidade: item.unidade,
+                preco_total: item.preco_total,
+                score: item.score
+            }));
+
+            setNotaFiscal({
+                ...data,
+                itens: itensFormatados
+            });
+
             setItensSelecionados([]);
 
         } catch (e) {
