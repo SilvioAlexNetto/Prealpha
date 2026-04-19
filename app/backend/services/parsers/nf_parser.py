@@ -2,29 +2,18 @@ from bs4 import BeautifulSoup
 import re
 
 
+pattern = re.compile(
+    r"([A-Z0-9\s\.\-\/]+?)\s*\(Código:\s*(\d+)\s*\)\s*(.*?)\s*Vl\.?\s*Total\s*(\d+[\.,]\d{2})",
+    re.IGNORECASE
+)
+
 # =========================
 # 🔢 CÓDIGO DO PRODUTO
 # =========================
 def extrair_codigo_produto(texto: str):
-    texto_limpo = texto.replace(".", " ").replace(",", " ")
-
-    candidatos = re.findall(r"\b\d{3,14}\b", texto_limpo)
-
-    for codigo in candidatos:
-        # ignora se tiver data no texto (linha administrativa)
-        if re.search(r"\d{2}/\d{2}/\d{4}", texto):
-            continue
-
-        # ignora anos tipo 2023
-        if len(codigo) == 4 and codigo.startswith("20"):
-            continue
-
-        # ignora códigos inválidos
-        if codigo.startswith("000"):
-            continue
-
-        return codigo
-
+    match = re.search(r"\(Código:\s*(\d+)\)", texto, re.I)
+    if match:
+        return match.group(1)
     return None
 
 
@@ -32,11 +21,24 @@ def extrair_codigo_produto(texto: str):
 # 🧠 NOME LIMPO
 # =========================
 def extrair_nome_produto(texto: str):
-    
+    # remove "(Código: xxx)"
+    texto = re.sub(r"\(.*?c[oó]digo.*?\)", "", texto, flags=re.I)
+
+    # corta antes de Qtde (sem destruir tudo)
+    texto = re.split(r"Qtde\.:", texto, flags=re.I)[0]
+
     # remove preço
     texto = re.sub(r"R\$\s*\d+[\.,]\d{2}", "", texto)
 
-    # remove quantidade/unidade
+    # remove Vl. Unit / Total
+    texto = re.sub(r"Vl\.?\s*Unit\.\s*\d+[\.,]\d{2}", "", texto, flags=re.I)
+    
+    texto = re.sub(r"Vl\.?\s*Total\s*\d+[\.,]\d{2}", "", texto, flags=re.I)
+
+    # remove números grandes (códigos)
+    texto = re.sub(r"\b\d{4,14}\b", "", texto)
+
+    # remove unidades
     texto = re.sub(
         r"\d+[\.,]?\d*\s?(kg|g|mg|l|ml|un|und)",
         "",
@@ -44,30 +46,20 @@ def extrair_nome_produto(texto: str):
         flags=re.I
     )
 
-    # remove códigos grandes
-    texto = re.sub(r"\b\d{4,14}\b", "", texto)
+    # remove estados isolados no começo (SP, RJ, etc)
+    texto = re.sub(r"^(sp|rj|mg|es)\s+", "", texto, flags=re.I)
 
-    # remove palavras lixo
+    # remove lixo
     texto = re.sub(
-        r"\b(cnpj|cpf|cod|codigo|valor|total|item)\b",
+        r"\b(cnpj|cpf|valor|total|item)\b",
         "",
         texto,
         flags=re.I
     )
 
-    # limpa espaços
     texto = re.sub(r"\s+", " ", texto).strip()
-    # remove trecho "(Código: xxx)"
-    texto = re.sub(r"\(.*?c[oó]digo.*?\)", "", texto, flags=re.I)
-
-    # remove Qtde e unidade
-    texto = re.sub(r"Qtde\.:.*", "", texto, flags=re.I)
-
-    # remove Vl. Unit e Vl. Total
-    texto = re.sub(r"Vl\.?.*", "", texto, flags=re.I)
 
     return texto
-
 
 # =========================
 # 🧾 PARSER PRINCIPAL
