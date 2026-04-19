@@ -18,45 +18,68 @@ def normalizar(texto):
 # 🧠 LIMPA NOME DE PRODUTO
 # =========================
 def limpar_nome_produto(nome):
+    if not nome:
+        return "produto"
+
     nome = normalizar(nome)
 
-    # remove código tipo (Código: 123)
-    nome = re.sub(r"\(.*?codigo.*?\)", "", nome)
+    # =========================
+    # 🧾 REMOVE CÓDIGO DA NOTA
+    # =========================
+    nome = re.sub(r"\(.*?c[oó]digo.*?\)", "", nome)
 
-    # 🔥 NÃO remove mais unidade (já corrigido)
-    # nome = re.sub(...)
+    # =========================
+    # 💰 REMOVE PREÇOS
+    # =========================
+    nome = re.sub(r"r\$\s*\d+[\.,]\d{2}", "", nome)
 
-    # remove números soltos
-    nome = re.sub(r"\b\d+\b", "", nome)
+    # =========================
+    # 📦 REMOVE PESO / VOLUME DO NOME
+    # (400g, 1kg, 1l, 500 ml etc)
+    # =========================
+    nome = re.sub(r"\b\d+[\.,]?\d*\s?(kg|g|mg|l|ml)\b", "", nome)
 
-    # remove lixo comum
-    nome = re.sub(r"\b(tr|cx|pct|embalagem)\b", "", nome)
+    # =========================
+    # 🔢 REMOVE CÓDIGOS NUMÉRICOS GRANDES
+    # =========================
+    nome = re.sub(r"\b\d{4,}\b", "", nome)
 
-    # 🔥 BLACKLIST MINIMAL (fallback só)
-    blacklist = [
-        "tradicional", "original", "extra", "premium"
-    ]
+    # =========================
+    # 🧾 REMOVE UNIDADES SOLTAS
+    # =========================
+    nome = re.sub(r"\b(un|und|cx|pct|lt|emb|pack)\b", "", nome)
+
+    # =========================
+    # 🏷️ REMOÇÃO FORTE DE MARCAS (CORE MARKETPLACE)
+    # =========================
+    MARCAS = {
+        "piracanjuba", "nestle", "italac", "itambe", "tirol",
+        "batavo", "visconti", "bauducco", "marilan", "piraque",
+        "sadia", "perdigao", "seara", "aurora",
+        "coca", "cocacola", "pepsi", "fanta", "sprite",
+        "garoto", "lacta", "hersheys",
+        "yoki", "camil", "quaker",
+        "melitta", "pilao", "3coracoes", "trescoracoes",
+        "fugini", "quero", "hemmer"
+    }
 
     palavras = nome.split()
 
-    palavras = [
-        p for p in palavras
-        if p not in blacklist and len(p) > 2
-    ]
+    palavras_filtradas = []
+    for p in palavras:
+        if p in MARCAS:
+            continue
+        if len(p) <= 2:
+            continue
+        palavras_filtradas.append(p)
 
-    # 🔥 normalização leve (mantida)
-    substituicoes = {
-        "integ": "integral",
-        "desnat": "desnatado",
-        "semi": "semidesnatado"
-    }
+    if not palavras_filtradas:
+        return nome.strip()[:30] or "produto"
 
-    palavras = [substituicoes.get(p, p) for p in palavras]
-
-    if not palavras:
-        return nome[:30] if nome else "produto"
-
-    return " ".join(palavras[:4]).strip()
+    # =========================
+    # ✂️ LIMITE DE TOKENS (estilo marketplace)
+    # =========================
+    return " ".join(palavras_filtradas[:5]).strip()
 
 
 
