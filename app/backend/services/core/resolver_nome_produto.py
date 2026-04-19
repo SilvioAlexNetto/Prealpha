@@ -1,6 +1,7 @@
 import httpx
 import difflib
 import re
+from difflib import SequenceMatcher
 from app.backend.services.core.normalizacao import limpar_nome_produto
 from app.database.database import get_connection
 
@@ -42,6 +43,34 @@ def salvar_cache(nome_original: str, nome_normalizado: str):
     finally:
         conn.close()
 
+
+def similaridade(a: str, b: str) -> float:
+    return SequenceMatcher(None, a, b).ratio()
+
+
+def melhor_match_api(nome_limpo: str, produtos: list):
+    melhor = None
+    melhor_score = 0
+
+    for p in produtos:
+        nome_api = p.get("product_name")
+
+        if not nome_api:
+            continue
+
+        nome_api_limpo = limpar_nome_produto(nome_api)
+
+        score = similaridade(nome_limpo, nome_api_limpo)
+
+        if score > melhor_score:
+            melhor_score = score
+            melhor = nome_api_limpo
+
+    # só aceita se for confiável
+    if melhor and melhor_score >= 0.75:
+        return melhor
+
+    return None
 
 # =========================
 # 🧠 FUZZY MATCH
@@ -180,6 +209,29 @@ async def buscar_openfoodfacts_por_ean(codigo: str):
         return None
 
 
+async def buscar_openfoodfacts_raw(nome: str):
+    try:
+        url = "https://world.openfoodfacts.org/cgi/search.pl"
+
+        params = {
+            "search_terms": nome,
+            "search_simple": 1,
+            "action": "process",
+            "json": 1,
+            "page_size": 5
+        }
+
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.get(url, params=params)
+
+        if response.status_code != 200:
+            return None
+
+        return response.json()
+
+    except:
+        return None
+    
 # =========================
 # 🧠 RESOLVER NOME FINAL
 # =========================
@@ -236,12 +288,17 @@ async def resolver_nome(nome_original: str):
     nome_sem_marca = limpar_nome_produto(nome_sem_marca)
 
     # fallback: ainda tenta nome da API
-    nome_api = await buscar_openfoodfacts(nome_normalizado)
+    data_api = await buscar_openfoodfacts_raw(nome_normalizado)
 
-    # prioridade: API se for melhor
-    if nome_api and len(nome_api) > len(nome_sem_marca):
-        salvar_cache(nome_original, nome_api)
-        return nome_api
+    nome_api_final = None
+
+    if data_api:
+        produtos = data_api.get("products", [])
+        nome_api_final = melhor_match_api(nome_normalizado, produtos)
+
+    if nome_api_final:
+        salvar_cache(nome_original, nome_api_final)
+        return nome_api_final
     
     nome_sem_marca = re.sub(r"\b\d+[\.,]?\d*\s?(kg|g|mg|l|ml)\b", "", nome_sem_marca)
 
