@@ -149,10 +149,21 @@ def calcular_valor_unitario(quantidade, preco_total):
 
 
 # =========================
+# 🧠 NOVO: IDENTIFICA FRACIONADO
+# =========================
+def eh_fracionado(unidade):
+    unidade = normalizar(unidade)
+    return unidade in ["kg", "g", "mg", "l", "ml"]
+
+
+# =========================
 # 🧾 NORMALIZA ITEM COMPLETO
 # =========================
 def normalizar_item(item):
     nome_original = item.get("nome")
+
+    # 🔥 extrai embalagem ANTES de limpar nome
+    qtd_emb, un_emb = extrair_embalagem_completa(nome_original)
 
     nome = limpar_nome_produto(nome_original)
 
@@ -165,13 +176,21 @@ def normalizar_item(item):
     except:
         quantidade_compra = None
 
-    # 🔥 usa versão mais inteligente
-    qtd_emb, un_emb = extrair_embalagem_completa(nome_original)
+    # =========================
+    # 🔥 NOVA REGRA INTELIGENTE
+    # =========================
+    if unidade_compra and eh_fracionado(unidade_compra):
+        # ✅ produto por peso/volume (já é consumo real)
+        quantidade_final = quantidade_compra
+        unidade_final = unidade_compra
 
-    if qtd_emb and un_emb and quantidade_compra:
+    elif qtd_emb and un_emb and quantidade_compra:
+        # ✅ produto unitário com embalagem
         quantidade_final = quantidade_compra * qtd_emb
         unidade_final = un_emb
+
     else:
+        # fallback
         quantidade_final = quantidade_compra
         unidade_final = unidade_compra
 
