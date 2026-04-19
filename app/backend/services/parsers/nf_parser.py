@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
 import re
-from app.backend.services.core.normalizacao import limpar_nome_produto
+from app.backend.services.core.normalizacao import limpar_nome_produto, extrair_embalagem_completa
 from app.backend.services.core.produto_codigo_service import buscar_produto_por_codigo, salvar_produto_codigo
+
 
 pattern = re.compile(
     r"([A-Z0-9\s\.\-\/]+?)\s*\(Código:\s*(\d+)\s*\)\s*(.*?)\s*Vl\.?\s*Total\s*(\d+[\.,]\d{2})",
@@ -143,7 +144,7 @@ def extrair_dados_nota(html: str):
                 # 🔥 3. salva aprendizado
                 if codigo and nome:
                     salvar_produto_codigo(mercado, codigo, nome)
-                    
+
             # fallback se vier lixo
             if len(nome) < 3:
                 nome = nome_bruto.strip()
@@ -195,11 +196,22 @@ def extrair_dados_nota(html: str):
 
             print(f"[DEBUG] ✅ ITEM: {nome} | {codigo} | R$ {preco_total}")
 
+            # 🔥 tenta extrair embalagem real
+            qtd_emb, un_emb = extrair_embalagem_completa(nome_bruto)
+
+            quantidade_final = quantidade
+            unidade_final = unidade
+
+            # 🔥 REGRA INTELIGENTE
+            if unidade in ["un", "und"] and qtd_emb and un_emb:
+                quantidade_final = quantidade * qtd_emb if quantidade else qtd_emb
+                unidade_final = un_emb
+
             resultado["itens"].append({
                 "nome": nome,
                 "codigo": codigo,
-                "quantidade": quantidade,
-                "unidade": unidade,
+                "quantidade": quantidade_final,
+                "unidade": unidade_final,
                 "preco_total": preco_total,
                 "valor_kg": round(valor_kg, 2) if valor_kg else None
             })
