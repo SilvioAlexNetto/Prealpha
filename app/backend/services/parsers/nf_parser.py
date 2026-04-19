@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
 import re
-from app.backend.services.core.normalizacao import limpar_nome_produto, extrair_embalagem_completa
+from app.backend.services.core.normalizacao import extrair_embalagem_completa
 from app.backend.services.core.produto_codigo_service import buscar_produto_por_codigo, salvar_produto_codigo
+from app.backend.services.core.resolver_nome_produto import resolver_nome
 
 
 pattern = re.compile(
@@ -67,7 +68,7 @@ def extrair_nome_produto(texto: str):
 # 🧾 PARSER PRINCIPAL
 # =========================
 
-def extrair_dados_nota(html: str):
+async def extrair_dados_nota(html: str):
     print("[DEBUG] 🧾 Parser NÍVEL PRODUÇÃO iniciado")
 
     soup = BeautifulSoup(html, "html.parser")
@@ -139,7 +140,7 @@ def extrair_dados_nota(html: str):
 
             # 🔥 2. se não encontrou, processa
             if not nome:
-                nome = limpar_nome_produto(nome_bruto)
+                nome = await resolver_nome(nome_bruto)
 
                 # 🔥 3. salva aprendizado
                 if codigo and nome:
