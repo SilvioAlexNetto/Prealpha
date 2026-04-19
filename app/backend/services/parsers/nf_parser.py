@@ -140,7 +140,8 @@ async def extrair_dados_nota(html: str):
 
             # 🔥 2. se não encontrou, processa
             if not nome:
-                nome = await resolver_nome(nome_bruto)
+                nome_pre = extrair_nome_produto(nome_bruto)
+                nome = await resolver_nome(nome_pre)
 
                 # 🔥 3. salva aprendizado
                 if codigo and nome:

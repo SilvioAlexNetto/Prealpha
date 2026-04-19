@@ -217,12 +217,22 @@ async def resolver_nome(nome_original: str):
     # 🔥 tenta buscar marca primeiro
     marca = await buscar_marca_openfoodfacts(nome_normalizado)
 
-    nome_sem_marca = nome_original
+    nome_sem_marca = nome_normalizado
 
+    # remove marca
     if marca:
-        nome_sem_marca = remover_marca(nome_original, marca)
+        nome_sem_marca = remover_marca(nome_normalizado, marca)
+    else:
+        nome_sem_marca = nome_normalizado
 
-    # limpa novamente após remover marca
+    # remove unidade
+    nome_sem_marca = re.sub(
+        r"\b\d+[\.,]?\d*\s?(kg|g|mg|l|ml)\b",
+        "",
+        nome_sem_marca
+    )
+
+    # limpa final
     nome_sem_marca = limpar_nome_produto(nome_sem_marca)
 
     # fallback: ainda tenta nome da API
@@ -232,6 +242,8 @@ async def resolver_nome(nome_original: str):
     if nome_api and len(nome_api) > len(nome_sem_marca):
         salvar_cache(nome_original, nome_api)
         return nome_api
+    
+    nome_sem_marca = re.sub(r"\b\d+[\.,]?\d*\s?(kg|g|mg|l|ml)\b", "", nome_sem_marca)
 
     if nome_sem_marca and len(nome_sem_marca) > 3:
         salvar_cache(nome_original, nome_sem_marca)
