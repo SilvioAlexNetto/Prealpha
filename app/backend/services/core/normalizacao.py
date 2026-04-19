@@ -20,13 +20,19 @@ def normalizar(texto):
 def limpar_nome_produto(nome):
     nome = normalizar(nome)
 
+    # remove código tipo (Código: 123)
+    nome = re.sub(r"\(.*?codigo.*?\)", "", nome)
+
     # remove números + unidades
     nome = re.sub(r"\b\d+[\.,]?\d*\s?(kg|g|mg|l|ml|un|und)\b", "", nome)
 
     # remove números soltos
     nome = re.sub(r"\b\d+\b", "", nome)
 
-    # remove marcas comuns (expandível)
+    # remove lixo comum
+    nome = re.sub(r"\b(tr|cx|pct|embalagem)\b", "", nome)
+
+    # remove marcas comuns
     blacklist = [
         "italac", "piracanjuba", "nestle", "itambe", "tirol", "batavo",
         "garoto", "lacta", "hersheys", "arcor",
@@ -47,12 +53,9 @@ def limpar_nome_produto(nome):
     ]
 
     if not palavras:
-        return "produto"
+        return nome[:30] if nome else "produto"
 
-    # pega no máximo 3 palavras
-    nome_final = " ".join(palavras[:3])
-
-    return nome_final.strip()
+    return " ".join(palavras[:4]).strip()
 
 
 # =========================
@@ -69,7 +72,7 @@ def normalizar_unidade(quantidade, unidade):
     except:
         return None, unidade
 
-    # 🔥 PADRÃO: TUDO PARA BASE (g / ml / un)
+    # 🔥 base padrão
 
     if unidade == "kg":
         return quantidade * 1000, "g"
@@ -77,10 +80,58 @@ def normalizar_unidade(quantidade, unidade):
     if unidade == "l":
         return quantidade * 1000, "ml"
 
-    if unidade in ["g", "ml", "un", "und"]:
-        return quantidade, "g" if unidade == "g" else ("ml" if unidade == "ml" else "un")
+    if unidade in ["g", "ml"]:
+        return quantidade, unidade
+
+    if unidade in ["un", "und"]:
+        return quantidade, "un"
 
     return quantidade, unidade
+
+
+# =========================
+# 📦 EXTRAÇÃO SIMPLES
+# =========================
+def extrair_medida_embalagem(nome: str):
+    nome = normalizar(nome)
+
+    match = re.search(r"(\d+[\.,]?\d*)\s?(kg|g|mg|l|ml)", nome)
+
+    if not match:
+        return None, None
+
+    qtd = float(match.group(1).replace(",", "."))
+    unidade = match.group(2)
+
+    return qtd, unidade
+
+
+# =========================
+# 🔥 EXTRAÇÃO AVANÇADA
+# =========================
+def extrair_embalagem_completa(nome: str):
+    nome = normalizar(nome)
+
+    # 🔥 multipack (6x200ml)
+    match_multi = re.search(
+        r"(\d+)\s*[xX]\s*(\d+[\.,]?\d*)\s?(kg|g|mg|l|ml)",
+        nome
+    )
+
+    if match_multi:
+        qtd_packs = int(match_multi.group(1))
+        qtd_unit = float(match_multi.group(2).replace(",", "."))
+        unidade = match_multi.group(3)
+
+        return qtd_packs * qtd_unit, unidade
+
+    # 🔥 c/12 ou 12un
+    match_un = re.search(r"(?:c\/)?\s*(\d+)\s*(un|und)", nome)
+    if match_un:
+        return float(match_un.group(1)), "un"
+
+    # 🔥 padrão simples
+    return extrair_medida_embalagem(nome)
 
 
 # =========================
@@ -90,7 +141,7 @@ def calcular_valor_unitario(quantidade, preco_total):
     try:
         if quantidade and preco_total:
             valor = float(preco_total) / float(quantidade)
-            return round(valor, 2)
+            return round(valor, 4)
     except:
         pass
 
@@ -101,19 +152,42 @@ def calcular_valor_unitario(quantidade, preco_total):
 # 🧾 NORMALIZA ITEM COMPLETO
 # =========================
 def normalizar_item(item):
-    nome = limpar_nome_produto(item.get("nome"))
+    nome_original = item.get("nome")
 
-    quantidade = item.get("quantidade")
-    unidade = item.get("unidade")
+    nome = limpar_nome_produto(nome_original)
+
+    quantidade_compra = item.get("quantidade")
+    unidade_compra = item.get("unidade")
     preco_total = item.get("preco_total")
 
-    quantidade, unidade = normalizar_unidade(quantidade, unidade)
+    try:
+        quantidade_compra = float(quantidade_compra)
+    except:
+        quantidade_compra = None
 
-    valor_unitario = calcular_valor_unitario(quantidade, preco_total)
+    # 🔥 usa versão mais inteligente
+    qtd_emb, un_emb = extrair_embalagem_completa(nome_original)
+
+    if qtd_emb and un_emb and quantidade_compra:
+        quantidade_final = quantidade_compra * qtd_emb
+        unidade_final = un_emb
+    else:
+        quantidade_final = quantidade_compra
+        unidade_final = unidade_compra
+
+    quantidade_final, unidade_final = normalizar_unidade(
+        quantidade_final,
+        unidade_final
+    )
+
+    valor_unitario = calcular_valor_unitario(
+        quantidade_final,
+        preco_total
+    )
 
     return {
         "nome": nome,
-        "quantidade": quantidade,
-        "unidade": unidade,
+        "quantidade": quantidade_final,
+        "unidade": unidade_final,
         "valor_unitario": valor_unitario
     }
