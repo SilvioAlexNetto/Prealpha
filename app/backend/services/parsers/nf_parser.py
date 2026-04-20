@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import re
 from app.backend.services.core.normalizacao import extrair_embalagem_completa
 from app.backend.services.core.produto_codigo_service import buscar_produto_por_codigo, salvar_produto_codigo
-from app.backend.services.core.resolver_nome_produto import resolver_nome
+from app.backend.services.utils.categoria_resolver import resolver_categoria_final as resolver_nome
 
 
 pattern = re.compile(

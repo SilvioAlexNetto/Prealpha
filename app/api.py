@@ -15,6 +15,8 @@ from app.backend.services.cardapio_service import (
     carregar_consumidos
 )
 
+from app.backend.services.core.embedding_index import construir_index
+
 from app.database.database import (
     listar_estoque_atual,
     adicionar_item_estoque_atual,
@@ -29,7 +31,8 @@ from app.database.database import (
 async def lifespan(app: FastAPI):
     print("[STARTUP] Criando tabelas...")
     try:
-        criar_tabelas()
+        criar_tabelas(),
+        construir_index()
     except Exception as e:
         print("ERRO AO CRIAR TABELAS:", e)
 

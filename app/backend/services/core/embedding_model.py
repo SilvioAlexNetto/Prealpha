@@ -11,5 +11,5 @@ model = SentenceTransformer(
 print(f"[EMBEDDING MODEL] carregado em {device}")
 
 
-def encode(text):
-    return model.encode(text)
+def encode(texts):
+    return model.encode(texts, convert_to_numpy=True, normalize_embeddings=True)

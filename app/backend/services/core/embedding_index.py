@@ -18,7 +18,7 @@ def construir_index():
 
     for categoria, itens in base.items():
         for item in itens:
-            item_norm = normalizar(item)
+            item_norm = item.lower()
 
             textos.append(item_norm)
             mapeamento.append((item, categoria))
@@ -60,6 +60,8 @@ def buscar_similar(nome: str, top_k=1):
         "score": score
     }
 
-
 def atualizar_modelo():
-    construir_index()  # sua função do FAISS
+    global index, mapeamento
+    index = None
+    mapeamento = []
+    construir_index()
