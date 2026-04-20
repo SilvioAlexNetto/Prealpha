@@ -31,8 +31,8 @@ from app.database.database import (
 async def lifespan(app: FastAPI):
     print("[STARTUP] Criando tabelas...")
     try:
-        criar_tabelas(),
-        construir_index()
+        criar_tabelas()
+        
     except Exception as e:
         print("ERRO AO CRIAR TABELAS:", e)
 
