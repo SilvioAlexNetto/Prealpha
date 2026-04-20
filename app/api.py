@@ -15,7 +15,6 @@ from app.backend.services.cardapio_service import (
     carregar_consumidos
 )
 
-from app.backend.services.core.embedding_index import construir_index
 
 from app.database.database import (
     listar_estoque_atual,
