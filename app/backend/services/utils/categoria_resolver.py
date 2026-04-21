@@ -22,7 +22,7 @@ def construir_vocabulario():
 
     return vocab
 
-def resolver_categoria_final(nome: str):
+async def resolver_categoria_final(nome: str):
     nome_norm = normalizar(nome)
 
     vocab = construir_vocabulario()
