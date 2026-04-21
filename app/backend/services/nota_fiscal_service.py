@@ -38,26 +38,19 @@ async def ler_nota_fiscal(url: str):
         itens_normalizados = []
 
         for item in itens:
-            nome_data = item.get("nome")
+            nome_original = extrair_nome_string(item.get("nome"))
 
-            if not nome_data:
+            if not nome_original:
                 continue
 
-            if isinstance(nome_data, dict):
-                nome_original = nome_data.get("nome_final")
-            else:
-                nome_original = nome_data
-
             codigo = item.get("codigo")
-
             nome_resolvido = None
 
             # =========================
-            # 1. CACHE LOCAL POR CÓDIGO
+            # 1. CACHE LOCAL
             # =========================
             if codigo:
                 nome_cache = buscar_produto_por_codigo(mercado, codigo)
-
                 if nome_cache:
                     nome_resolvido = nome_cache
 
@@ -66,28 +59,25 @@ async def ler_nota_fiscal(url: str):
             # =========================
             if not nome_resolvido and codigo and is_ean(codigo):
                 nome_api = await buscar_openfoodfacts_por_ean(codigo)
-
                 if nome_api:
                     nome_resolvido = nome_api
-                
 
             # =========================
-            # 3. FALLBACK → NOME
+            # 3. FALLBACK
             # =========================
             if not nome_resolvido:
-                nome_resolvido = await resolver_nome(nome_original)
+                nome_resolvido = resolver_nome(nome_original)
 
-            # =========================
-            # 4. SALVAR APRENDIZADO
-            # =========================
-            nome_original = extrair_nome_string(item.get("nome"))
+            # garante string
+            if isinstance(nome_resolvido, dict):
+                nome_resolvido = nome_resolvido.get("nome_final")
 
             itens_normalizados.append({
-                "nome": nome_original,            # UI
-                "nome_resolvido": nome_resolvido, # 🔥 NOVO INTELIGENTE
+                "nome": nome_original,
+                "nome_resolvido": nome_resolvido,
                 "quantidade": item.get("quantidade"),
                 "unidade": item.get("unidade"),
-                "valor_kg": item.get("valor_kg", None),
+                "valor_kg": item.get("valor_kg"),
                 "preco_total": item.get("preco_total")
             })
 
