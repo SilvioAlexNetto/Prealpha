@@ -66,7 +66,7 @@ async def ler_nota_fiscal(url: str):
             # 3. FALLBACK
             # =========================
             if not nome_resolvido:
-                nome_resolvido = resolver_nome(nome_original)
+                nome_resolvido = await resolver_nome(nome_original)
 
             # garante string
             if isinstance(nome_resolvido, dict):
