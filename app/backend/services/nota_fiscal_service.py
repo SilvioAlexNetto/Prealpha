@@ -7,6 +7,10 @@ from app.backend.services.core.produto_codigo_service import (
     is_ean
 )
 
+def extrair_nome_string(nome):
+    if isinstance(nome, dict):
+        return nome.get("nome_final")
+    return nome
 
 
 async def ler_nota_fiscal(url: str):
@@ -34,12 +38,15 @@ async def ler_nota_fiscal(url: str):
         itens_normalizados = []
 
         for item in itens:
-            nome = item.get("nome")
+            nome_data = item.get("nome")
 
-            if not nome:
+            if not nome_data:
                 continue
 
-            nome_original = nome
+            if isinstance(nome_data, dict):
+                nome_original = nome_data.get("nome_final")
+            else:
+                nome_original = nome_data
 
             codigo = item.get("codigo")
 
@@ -73,8 +80,7 @@ async def ler_nota_fiscal(url: str):
             # =========================
             # 4. SALVAR APRENDIZADO
             # =========================
-            if codigo and nome_resolvido:
-                salvar_produto_codigo(mercado, codigo, nome_resolvido)
+            nome_original = extrair_nome_string(item.get("nome"))
 
             itens_normalizados.append({
                 "nome": nome_original,            # UI
