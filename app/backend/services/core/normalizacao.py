@@ -17,7 +17,7 @@ def normalizar(texto):
 # =========================
 # 🧠 LIMPA NOME DE PRODUTO
 # =========================
-async def limpar_nome_produto(nome):
+def limpar_nome_produto(nome):
     if not nome:
         return "produto"
 
