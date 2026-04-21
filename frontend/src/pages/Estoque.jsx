@@ -395,29 +395,38 @@ export default function Estoque() {
             console.log("STATUS:", res.status);
 
             if (!res.ok) {
-                const text = await res.text();
-                console.error("Erro backend:", text);
-                alert("Erro no servidor");
+                let erroMsg = "Erro no servidor";
+
+                try {
+                    const errJson = await res.json();
+                    erroMsg = errJson.erro || erroMsg;
+                } catch { }
+
+                console.error("Erro backend:", erroMsg);
+                alert(erroMsg);
                 return;
             }
 
             const data = await res.json();
 
-            console.log("RESPOSTA BACKEND:", data);
+            console.log("🧾 NOTA:", {
+                mercado: data.mercado,
+                data: data.data,
+                totalItens: data.itens?.length
+            });
 
             if (!data?.itens?.length) {
                 alert("Nenhum item encontrado na nota.");
                 return;
             }
 
-            // 🔥 NORMALIZA PARA UI
             const itensFormatados = data.itens.map(item => ({
                 nome: item.nome_resolvido || item.nome,
-                categoria: item.categoria,
-                quantidade: item.quantidade,
-                unidade: item.unidade,
-                preco_total: item.preco_total,
-                score: item.score
+                categoria: item.categoria || "outros",
+                quantidade: item.quantidade ?? 1,
+                unidade: item.unidade || "un",
+                preco_total: item.preco_total ?? 0,
+                score: item.score ?? 0
             }));
 
             setNotaFiscal({
@@ -432,6 +441,7 @@ export default function Estoque() {
             alert("Erro ao processar QR Code");
         }
     }
+
 
     async function iniciarLeituraCodigo() {
         if (quaggaAtivoRef.current) return;

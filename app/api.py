@@ -91,6 +91,7 @@ async def salvar_estoque(request: Request):
         itens = []
 
     conn = get_connection()
+    conn.cursor()
     conn.execute("DELETE FROM estoque_atual")
     conn.commit()
     conn.close()

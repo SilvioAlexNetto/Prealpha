@@ -77,16 +77,6 @@ def criar_tabelas():
     );    
     """)
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS aprendizado_semantico (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    entrada TEXT,
-    normalizado TEXT,
-    categoria TEXT,
-    confirmado INTEGER DEFAULT 0
-    );
-    """)
-
     conn.commit()
     conn.close()
 
